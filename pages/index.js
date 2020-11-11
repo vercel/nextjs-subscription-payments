@@ -5,9 +5,18 @@ import SupabaseAuth from '../components/SupabaseAuth';
 
 const fetcher = (url, token) =>
   fetch(url, {
-    method: 'GET',
+    method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/json', token }),
     credentials: 'same-origin',
+    body: JSON.stringify({
+      price: 'price_1HmFr0K3BFlKVaHOseYaVud0',
+      allow_promotion_codes: true,
+      success_url: window.location.origin,
+      cancel_url: window.location.origin,
+      metadata: {
+        tax_rate: 'none',
+      },
+    }),
   }).then((res) => res.json());
 
 const Index = () => {
