@@ -15,7 +15,7 @@ export default function Account() {
       // Get the user's active subscription.
       const { data: subscription, error } = await supabase
         .from('subscriptions')
-        .select('*')
+        .select('*, prices(*, products(*))')
         .in('status', ['trialing', 'active'])
         .single();
       if (error) return;

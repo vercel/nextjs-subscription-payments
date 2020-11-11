@@ -2,6 +2,7 @@ import { stripe } from '../../utils/initStripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
+  manageSubscriptionStatusChange,
 } from '../../utils/useDatabase';
 
 // Stripe requires the raw body to construct the event.
@@ -68,25 +69,24 @@ const webhookHandler = async (req, res) => {
           case 'customer.subscription.created':
           case 'customer.subscription.updated':
           case 'customer.subscription.deleted':
-            // const subscription = event.data.object as Stripe.Subscription;
-            // await manageSubscriptionStatusChange(
-            //   subscription.id,
-            //   event.type === 'customer.subscription.created'
-            // );
+            await manageSubscriptionStatusChange(
+              event.data.object.id,
+              event.type === 'customer.subscription.created'
+            );
             break;
           case 'checkout.session.completed':
-            // const checkoutSession = event.data
-            //   .object as Stripe.Checkout.Session;
-            // if (checkoutSession.mode === 'subscription') {
-            //   const subscriptionId = checkoutSession.subscription as string;
-            //   await manageSubscriptionStatusChange(subscriptionId, true);
-            // }
+            const checkoutSession = event.data.object;
+            if (checkoutSession.mode === 'subscription') {
+              const subscriptionId = checkoutSession.subscription;
+              await manageSubscriptionStatusChange(subscriptionId, true);
+            }
             break;
           default:
             throw new Error('Unhandled relevant event!');
         }
       } catch (error) {
-        return resp.status(400).send('Webhook handler failed. View logs.');
+        console.log(error);
+        return res.status(400).send('Webhook handler failed. View logs.');
       }
     }
 
