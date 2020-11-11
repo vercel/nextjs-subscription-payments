@@ -13,7 +13,7 @@ const fetcher = (url, token) =>
 const Index = () => {
   const { user, session } = useUser();
   const { data, error } = useSWR(
-    session ? ['/api/getUser', session.access_token] : null,
+    session ? ['/api/createCheckoutSession', session.access_token] : null,
     fetcher
   );
   if (!user) {
