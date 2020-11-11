@@ -1,8 +1,8 @@
-import { stripe } from '../../../utils/initStripe';
+import { stripe } from '../../utils/initStripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
-} from '../../../utils/useDatabase';
+} from '../../utils/useDatabase';
 
 // Stripe requires the raw body to construct the event.
 export const config = {
