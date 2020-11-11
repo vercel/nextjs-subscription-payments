@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { getStripe } from '../utils/initStripejs';
-import { useUser } from '../utils/useUser';
+import { useAuth } from '../utils/useAuth';
 
 export default function Pricing() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { session } = useUser();
+  const { session } = useAuth();
 
   useEffect(() => {
     async function getProducts() {

@@ -1,10 +1,10 @@
-import { useUser } from '../utils/useUser';
+import { useAuth } from '../utils/useAuth';
 import { supabase } from '../utils/initSupabase';
 import SupabaseAuth from '../components/SupabaseAuth';
 import Pricing from '../components/Pricing';
 
 const Index = () => {
-  const { user } = useUser();
+  const { user } = useAuth();
   if (!user) {
     return (
       <>

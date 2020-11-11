@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './initSupabase';
 
-const useUser = () => {
+const useAuth = () => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
 
@@ -24,4 +24,4 @@ const useUser = () => {
   return { user, session };
 };
 
-export { useUser };
+export { useAuth };
