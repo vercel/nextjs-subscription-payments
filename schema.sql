@@ -15,17 +15,17 @@ create policy "Can update own user data." on users for update using (auth.uid() 
 /**
 * This trigger automatically creates a user entry when a new user signs up via Supabase Auth.
 */ 
-create function handle_new_user () 
+create function auth.handle_new_user() 
 returns trigger as $$
 begin
   insert into public.users (id)
   values (new.id);
   return new;
 end;
-$$ language plpgsql;
-create trigger on_auth_user_inserted
+$$ language plpgsql security definer;
+create trigger on_auth_user_created
   after insert on auth.users
-  for each row execute procedure handle_new_user();
+  for each row execute procedure auth.handle_new_user();
 
 /**
 * CUSTOMERS
