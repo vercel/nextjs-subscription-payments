@@ -1,7 +1,7 @@
 import { useAuth } from '../utils/useAuth';
 import { supabase } from '../utils/initSupabase';
 import SupabaseAuth from '../components/SupabaseAuth';
-import Pricing from '../components/Pricing';
+import Account from '../components/Account';
 
 const Index = () => {
   const { user } = useAuth();
@@ -33,7 +33,7 @@ const Index = () => {
       <div>
         <p>You're signed in. Email: {user.email}</p>
       </div>
-      <Pricing />
+      <Account />
     </div>
   );
 };
