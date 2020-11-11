@@ -14,11 +14,13 @@ export default function SupabaseAuth() {
         : await supabase.auth.signUp({ email, password });
     if (!error && !user) alert('Check your email for the login link!');
     if (error) alert(error.message);
-    // Add the user data to the users table.
-    await supabase
-      .from('users')
-      .update({ first_name: firstName, last_name: lastName })
-      .eq('id', user.id);
+    if (type === 'SIGNUP') {
+      // Add the user data to the users table.
+      await supabase
+        .from('users')
+        .update({ first_name: firstName, last_name: lastName })
+        .eq('id', user.id);
+    }
   };
 
   async function handleOAuthLogin(provider) {

@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import { useUser } from '../utils/useUser';
 import { supabase } from '../utils/initSupabase';
 import SupabaseAuth from '../components/SupabaseAuth';
+import Pricing from '../components/Pricing';
 
 const fetcher = (url, token) =>
   fetch(url, {
@@ -22,7 +23,7 @@ const fetcher = (url, token) =>
 const Index = () => {
   const { user, session } = useUser();
   const { data, error } = useSWR(
-    session ? ['/api/createCheckoutSession', session.access_token] : null,
+    false ? ['/api/createCheckoutSession', session.access_token] : null,
     fetcher
   );
   if (!user) {
@@ -62,6 +63,7 @@ const Index = () => {
       ) : (
         <div>Loading...</div>
       )}
+      <Pricing />
     </div>
   );
 };
