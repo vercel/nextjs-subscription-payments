@@ -130,6 +130,17 @@ create table subscriptions (
 alter table subscriptions enable row level security;
 create policy "Can only view own subs data." on subscriptions for select using (auth.uid() = user_id);
 
+
+create view active_subscriptions as 
+select 
+    subscriptions.id as subscription_id,
+    subscriptions.user_id as user_id,
+    products.access_role as access_role
+from subscriptions
+    inner join prices on prices.id = subscriptions.price_id
+    inner join products on products.id = prices.product_id
+where subscriptions.status = 'trialing' or subscriptions.status = 'active';
+
 /**
 * POSTS
 */
