@@ -1,22 +1,12 @@
 import { stripe } from '../../utils/initStripe';
 import { supabaseAdmin } from '../../utils/initSupabaseAdmin';
 import { createOrRetrieveCustomer } from '../../utils/useDatabase';
+import { getURL } from '../../utils/helpers';
 
 const createCheckoutSession = async (req, res) => {
   if (req.method === 'POST') {
     const token = req.headers.token;
-    const {
-      price,
-      success_url,
-      cancel_url,
-      quantity = 1,
-      payment_method_types = ['card'],
-      metadata = {},
-      tax_rates = [],
-      allow_promotion_codes = false,
-      trial_from_plan = true,
-      line_items,
-    } = req.body;
+    const { price, quantity = 1, metadata = {} } = req.body;
 
     const { data: user, error } = await supabaseAdmin.auth.api.getUser(token);
     if (error) return res.status(401).json({ error: error.message });
@@ -27,25 +17,23 @@ const createCheckoutSession = async (req, res) => {
     });
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types,
+      payment_method_types: ['card'],
+      billing_address_collection: 'required',
       customer,
-      line_items: line_items
-        ? line_items
-        : [
-            {
-              price,
-              quantity,
-              tax_rates,
-            },
-          ],
+      line_items: [
+        {
+          price,
+          quantity,
+        },
+      ],
       mode: 'subscription',
-      allow_promotion_codes,
+      allow_promotion_codes: true,
       subscription_data: {
-        trial_from_plan,
+        trial_from_plan: true,
         metadata,
       },
-      success_url,
-      cancel_url,
+      success_url: getURL(),
+      cancel_url: getURL(),
     });
 
     return res.status(200).json({ sessionId: session.id });

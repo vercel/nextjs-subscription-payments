@@ -8,6 +8,7 @@
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^1.11.0",
     "@supabase/supabase-js": "^1.0.1",
     "next": "latest",
     "react": "^16.13.1",

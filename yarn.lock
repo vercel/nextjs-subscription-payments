@@ -1134,6 +1134,11 @@
   dependencies:
     mkdirp "^1.0.4"
 
+"@stripe/stripe-js@^1.11.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.11.0.tgz#00e812d72a7760dae08237875066d263671478ee"
+  integrity sha512-SDNZKuETBEVkernd1tq8tL6wNfVKrl24Txs3p+4NYxoaIbNaEO7mrln/2Y/WRcQBWjagvhDIM5I6+X1rfK0qhQ==
+
 "@supabase/gotrue-js@^1.7.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@supabase/gotrue-js/-/gotrue-js-1.7.1.tgz#96b9aa7162a8d31dc7d5917456d9750edefe5cab"
