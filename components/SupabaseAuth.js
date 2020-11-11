@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { supabase } from '../utils/initSupabase';
 
 export default function SupabaseAuth() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -12,6 +14,11 @@ export default function SupabaseAuth() {
         : await supabase.auth.signUp({ email, password });
     if (!error && !user) alert('Check your email for the login link!');
     if (error) alert(error.message);
+    // Add the user data to the users table.
+    await supabase
+      .from('users')
+      .update({ first_name: firstName, last_name: lastName })
+      .eq('id', user.id);
   };
 
   async function handleOAuthLogin(provider) {
@@ -31,6 +38,24 @@ export default function SupabaseAuth() {
 
   return (
     <div>
+      <div>
+        <label>First name</label>
+        <input
+          type="text"
+          placeholder="Your first name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Last Name</label>
+        <input
+          type="text"
+          placeholder="Your last name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+      </div>
       <div>
         <label>Email</label>
         <input
