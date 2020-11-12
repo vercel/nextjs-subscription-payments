@@ -7,19 +7,19 @@ import Pricing from './Pricing';
 
 export default function Account() {
   const [subscription, setSubscription] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { session } = useAuth();
 
   useEffect(() => {
     async function getSubscription() {
       // Get the user's active subscription.
-      const { data: subscription, error } = await supabase
+      const { data: subscription } = await supabase
         .from('subscriptions')
         .select('*, prices(*, products(*))')
         .in('status', ['trialing', 'active'])
         .single();
-      if (error) return;
       setSubscription(subscription);
+      setLoading(false);
     }
     getSubscription();
   }, []);
@@ -27,20 +27,34 @@ export default function Account() {
   const redirectToCustomerPortal = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const formData = new FormData(event.target);
-    const price = formData.get('price');
-    const { sessionId } = await postData({
-      url: '/api/createCheckoutSession',
-      data: { price },
+    const { url } = await postData({
+      url: '/api/createPortalLink',
       token: session.access_token,
     });
-    const stripe = await getStripe();
-    const { error } = stripe.redirectToCheckout({ sessionId });
-    if (error) alert(error.message);
-    setLoading(false);
+    window.location.assign(url);
   };
 
-  if (!subscription) return <Pricing />;
+  if (!loading && !subscription) return <Pricing />;
 
-  return <pre>{JSON.stringify(subscription, null, 2)}</pre>;
+  if (subscription)
+    return (
+      <div>
+        <p>{`You're subscribed to the ${
+          subscription.prices.products.name
+        } pricing plan, paying ${new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: subscription.prices.currency,
+        }).format((subscription.prices.unit_amount / 100).toFixed(2))} per ${
+          subscription.prices.interval
+        }, giving you the access role: ${
+          subscription.prices.products.access_role
+        }. 🥳`}</p>
+        <button
+          disabled={loading}
+          onClick={redirectToCustomerPortal}
+        >{`Access the customer portal`}</button>
+      </div>
+    );
+
+  return <p>Loading...</p>;
 }

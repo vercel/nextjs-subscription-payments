@@ -97,19 +97,9 @@ const manageSubscriptionStatusChange = async (
     .eq('stripe_customer_id', customerId)
     .single();
   if (noCustomerError) throw noCustomerError;
-  // For a create action, check if already created via another event.
-  if (createAction) {
-    const { data: subsDoc } = await supabaseAdmin
-      .from('subscriptions')
-      .select('id')
-      .eq('id', subscription.id)
-      .single();
-    if (subsDoc) {
-      // Abort
-      return;
-    } else if (subscription.default_payment_method)
-      await copyBillingDetailsToCustomer(subscription.default_payment_method);
-  }
+  // For a new subscription copy the billing details to the customer object.
+  if (createAction && subscription.default_payment_method)
+    await copyBillingDetailsToCustomer(subscription.default_payment_method);
   // Upsert the latest status of the subscription object.
   const subscriptionData = {
     id: subscription.id,

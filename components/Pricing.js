@@ -16,7 +16,7 @@ export default function Pricing() {
         .from('products')
         .select('*, prices(*)')
         .eq('active', true)
-        // .order('metadata:index') // TODO: is it possible to order by JSONB?
+        // .order('metadata->index') // Bug: https://github.com/supabase/postgrest-js/issues/131
         .order('unit_amount', { foreignTable: 'prices' });
       if (error) alert(error.message);
       setProducts(products);
