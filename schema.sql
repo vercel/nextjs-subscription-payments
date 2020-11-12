@@ -6,7 +6,7 @@ create table users (
   -- UUID from auth.users
   id uuid references auth.users not null primary key,
   first_name text,
-  last_name text,
+  last_name text
 );
 alter table users enable row level security;
 create policy "Can view own user data." on users for select using (auth.uid() = id);
@@ -66,7 +66,7 @@ create policy "Allow public read-only access." on products for select using (tru
 * PRICES
 * Note: prices are created and managed in Stripe and synced to our DB via Stripe webhooks.
 */
-create type pricing_type as enum ('one_time', 'recurring')
+create type pricing_type as enum ('one_time', 'recurring');
 create type pricing_plan_interval as enum ('day', 'week', 'month', 'year');
 create table prices (
   -- Price ID from Stripe, e.g. price_1234.
@@ -151,3 +151,33 @@ create table posts (
   title text not null,
   content text not null
 );
+
+
+create function user_access_level (_user_id uuid) 
+returns content_access_role as $$
+declare
+  basic_subcriptions smallint;
+  premium_subcriptions smallint;
+begin
+
+  premium_subcriptions := (
+    select count(subscription_id) 
+    from active_subscriptions 
+    where user_id = _user_id and access_role = 'premium'
+  );
+  if premium_subcriptions > 0 then 
+    return 'premium'::content_access_role;
+  end if;
+  
+  basic_subcriptions := (
+    select count(subscription_id) 
+    from active_subscriptions 
+    where user_id = _user_id and access_role = 'basic'
+  );
+  if basic_subcriptions > 0 then 
+    return 'basic'::content_access_role;
+  end if;
+  
+  return 'free'::content_access_role;
+end;
+$$ language plpgsql;
