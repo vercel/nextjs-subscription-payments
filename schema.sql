@@ -131,16 +131,6 @@ alter table subscriptions enable row level security;
 create policy "Can only view own subs data." on subscriptions for select using (auth.uid() = user_id);
 
 
-create view active_subscriptions as 
-select 
-    subscriptions.id as subscription_id,
-    subscriptions.user_id as user_id,
-    products.access_role as access_role
-from subscriptions
-    inner join prices on prices.id = subscriptions.price_id
-    inner join products on products.id = prices.product_id
-where subscriptions.status = 'trialing' or subscriptions.status = 'active';
-
 /**
 * POSTS
 */
@@ -152,32 +142,39 @@ create table posts (
   content text not null
 );
 
+create policy 'Check access level' on posts for select
+using (
+  -- If it is free, everyone can access
+  posts.access_level = 'free'::content_access_role
 
-create function user_access_level (_user_id uuid) 
-returns content_access_role as $$
-declare
-  basic_subcriptions smallint;
-  premium_subcriptions smallint;
-begin
+  -- If it'ss basic content, only 'basic' and 'premium' subscribers can access
+  or (
+    posts.access_level = 'basic'::content_access_role
+    and 
+    auth.uid() in (
+      select 
+          subscriptions.user_id
+      from subscriptions
+          inner join prices on prices.id = subscriptions.price_id
+          inner join products on products.id = prices.product_id
+      where 
+        (products.access_role = 'basic' or products.access_role = 'premium')  and (subscriptions.status = 'trialing' or subscriptions.status = 'active')
+    )
+  )
+  
+  -- If it's premium content, 'premium' subscribers can access
+  or (
+    posts.access_level = 'premium'::content_access_role
+    and 
+    auth.uid() in (
+      select 
+          subscriptions.user_id
+      from subscriptions
+          inner join prices on prices.id = subscriptions.price_id
+          inner join products on products.id = prices.product_id
+      where 
+        products.access_role = 'premium' and (subscriptions.status = 'trialing' or subscriptions.status = 'active')
+    )
+  )
+);
 
-  premium_subcriptions := (
-    select count(subscription_id) 
-    from active_subscriptions 
-    where user_id = _user_id and access_role = 'premium'
-  );
-  if premium_subcriptions > 0 then 
-    return 'premium'::content_access_role;
-  end if;
-  
-  basic_subcriptions := (
-    select count(subscription_id) 
-    from active_subscriptions 
-    where user_id = _user_id and access_role = 'basic'
-  );
-  if basic_subcriptions > 0 then 
-    return 'basic'::content_access_role;
-  end if;
-  
-  return 'free'::content_access_role;
-end;
-$$ language plpgsql;
