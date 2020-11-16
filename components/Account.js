@@ -3,6 +3,7 @@ import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { useAuth } from '../utils/useAuth';
 import Pricing from './Pricing';
+import Posts from './Posts';
 
 export default function Account() {
   const [subscription, setSubscription] = useState(null);
@@ -33,7 +34,13 @@ export default function Account() {
     window.location.assign(url);
   };
 
-  if (!loading && !subscription) return <Pricing />;
+  if (!loading && !subscription)
+    return (
+      <>
+        <Posts />
+        <Pricing />
+      </>
+    );
 
   if (subscription)
     return (
@@ -52,6 +59,7 @@ export default function Account() {
           disabled={loading}
           onClick={redirectToCustomerPortal}
         >{`Access the customer portal`}</button>
+        <Posts />
       </div>
     );
 
