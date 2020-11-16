@@ -11,12 +11,13 @@ export default function Pricing() {
 
   useEffect(() => {
     async function getProducts() {
-      // Load all products and prices.
+      // Load all active products and prices.
       const { data: products, error } = await supabase
         .from('products')
         .select('*, prices(*)')
         .eq('active', true)
-        // .order('metadata->index') // Bug: https://github.com/supabase/postgrest-js/issues/131
+        .eq('prices.active', true)
+        .order('metadata->index')
         .order('unit_amount', { foreignTable: 'prices' });
       if (error) alert(error.message);
       setProducts(products);

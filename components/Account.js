@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
-import { getStripe } from '../utils/initStripejs';
 import { useAuth } from '../utils/useAuth';
 import Pricing from './Pricing';
 
