@@ -142,7 +142,7 @@ create table posts (
   content text not null
 );
 
-create policy 'Allow access based on subscription status.' on posts for select
+create policy "Allow access based on subscription status." on posts for select
 using (
   -- If it's a free post, everyone can access.
   posts.access_level = 'free'::content_access_role
