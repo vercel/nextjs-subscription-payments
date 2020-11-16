@@ -142,12 +142,12 @@ create table posts (
   content text not null
 );
 
-create policy 'Check access level' on posts for select
+create policy 'Allow access based on subscription status.' on posts for select
 using (
-  -- If it is free, everyone can access
+  -- If it's a free post, everyone can access.
   posts.access_level = 'free'::content_access_role
 
-  -- If it'ss basic content, only 'basic' and 'premium' subscribers can access
+  -- If it's a basic post, only 'basic' and 'premium' subscribers can access.
   or (
     posts.access_level = 'basic'::content_access_role
     and 
@@ -158,11 +158,12 @@ using (
           inner join prices on prices.id = subscriptions.price_id
           inner join products on products.id = prices.product_id
       where 
-        (products.access_role = 'basic' or products.access_role = 'premium')  and (subscriptions.status = 'trialing' or subscriptions.status = 'active')
+        (products.access_role = 'basic' or products.access_role = 'premium')  
+        and (subscriptions.status = 'trialing' or subscriptions.status = 'active')
     )
   )
   
-  -- If it's premium content, 'premium' subscribers can access
+  -- If it's a premium post, only 'premium' subscribers can access.
   or (
     posts.access_level = 'premium'::content_access_role
     and 
@@ -173,7 +174,8 @@ using (
           inner join prices on prices.id = subscriptions.price_id
           inner join products on products.id = prices.product_id
       where 
-        products.access_role = 'premium' and (subscriptions.status = 'trialing' or subscriptions.status = 'active')
+        products.access_role = 'premium' 
+        and (subscriptions.status = 'trialing' or subscriptions.status = 'active')
     )
   )
 );
