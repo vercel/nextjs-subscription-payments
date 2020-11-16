@@ -142,15 +142,16 @@ create table posts (
   title text not null,
   content text not null
 );
+alter table posts enable row level security;
 
 create policy "Allow access based on subscription status." on posts for select
 using (
   -- If it's a free post, everyone can access.
-  posts.access_level = 'free'::content_access_role
+  access_level = 'free'::content_access_role
 
   -- If it's a basic post, only 'basic' and 'premium' subscribers can access.
   or (
-    posts.access_level = 'basic'::content_access_role
+    access_level = 'basic'::content_access_role
     and 
     auth.uid() in (
       select 
@@ -166,7 +167,7 @@ using (
   
   -- If it's a premium post, only 'premium' subscribers can access.
   or (
-    posts.access_level = 'premium'::content_access_role
+    access_level = 'premium'::content_access_role
     and 
     auth.uid() in (
       select 
