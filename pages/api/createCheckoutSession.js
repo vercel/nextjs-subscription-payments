@@ -32,8 +32,8 @@ const createCheckoutSession = async (req, res) => {
         trial_from_plan: true,
         metadata,
       },
-      success_url: getURL(),
-      cancel_url: getURL(),
+      success_url: `${getURL()}/account`,
+      cancel_url: `${getURL()}/account`,
     });
 
     return res.status(200).json({ sessionId: session.id });

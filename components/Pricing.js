@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
@@ -6,8 +7,8 @@ import { useAuth } from '../utils/useAuth';
 
 export default function Pricing() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const { session } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const { user, session } = useAuth();
 
   useEffect(() => {
     async function getProducts() {
@@ -21,6 +22,7 @@ export default function Pricing() {
         .order('unit_amount', { foreignTable: 'prices' });
       if (error) alert(error.message);
       setProducts(products);
+      setLoading(false);
     }
     getProducts();
   }, []);
@@ -40,6 +42,8 @@ export default function Pricing() {
     if (error) alert(error.message);
     setLoading(false);
   };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div>
@@ -63,7 +67,7 @@ export default function Pricing() {
                 }`}</option>
               ))}
             </select>
-            <button type="submit" disabled={loading}>
+            <button type="submit" disabled={!user || loading}>
               Subscribe
             </button>
           </form>
