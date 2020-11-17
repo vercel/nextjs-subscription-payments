@@ -2,16 +2,42 @@ import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { useAuth } from '../utils/useAuth';
-import Pricing from './Pricing';
+import Pricing from '../components/Pricing';
+import SupabaseAuth from '../components/SupabaseAuth';
+
+const SignIn = () => (
+  <>
+    <p>Hi there!</p>
+    <p>You are not signed in.</p>
+    <div>
+      <SupabaseAuth />
+    </div>
+  </>
+);
+
+const SignOut = () => (
+  <p
+    style={{
+      display: 'inline-block',
+      color: 'blue',
+      textDecoration: 'underline',
+      cursor: 'pointer',
+    }}
+    onClick={() => supabase.auth.signOut()}
+  >
+    Sign out
+  </p>
+);
 
 export default function Account() {
   const [subscription, setSubscription] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { session } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { user, session } = useAuth();
 
   useEffect(() => {
     async function getSubscription() {
       // Get the user's active subscription.
+      setLoading(true);
       const { data: subscription } = await supabase
         .from('subscriptions')
         .select('*, prices(*, products(*))')
@@ -20,8 +46,8 @@ export default function Account() {
       setSubscription(subscription);
       setLoading(false);
     }
-    getSubscription();
-  }, []);
+    if (user) getSubscription();
+  }, [user]);
 
   const redirectToCustomerPortal = async (event) => {
     event.preventDefault();
@@ -33,16 +59,18 @@ export default function Account() {
     window.location.assign(url);
   };
 
-  if (!loading && !subscription)
+  if (!user || (!loading && !subscription))
     return (
       <>
+        {user ? <SignOut /> : <SignIn />}
         <Pricing />
       </>
     );
 
-  if (subscription)
+  if (user && subscription)
     return (
       <div>
+        <SignOut />
         <p>{`You're subscribed to the ${
           subscription.prices.products.name
         } pricing plan, paying ${new Intl.NumberFormat('en-US', {
