@@ -1,6 +1,7 @@
 {
-  "name": "with-supabase-auth",
-  "version": "1.0.0",
+  "name": "nextjs-subscription-starter",
+  "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +15,18 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "stripe": "^8.121.0",
-    "swr": "0.2.3"
+    "swr": "0.2.3",
+    "tailwindcss": "^1.9.6"
   },
-  "license": "MIT"
+  "devDependencies": {
+    "postcss-flexbugs-fixes": "^5.0.1",
+    "postcss-preset-env": "^6.7.0",
+    "prettier": "^2.1.2"
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "none"
+  }
 }
