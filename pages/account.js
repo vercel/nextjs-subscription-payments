@@ -2,31 +2,14 @@ import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { useAuth } from '../utils/useAuth';
-import Pricing from '../components/Pricing';
-import SupabaseAuth from '../components/SupabaseAuth';
-
-const SignIn = () => (
-  <>
-    <p>Hi there!</p>
-    <p>You are not signed in.</p>
-    <div>
-      <SupabaseAuth />
-    </div>
-  </>
-);
+import SignIn from '../components/SignIn';
+import LoadingDots from '../components/LoadingDots';
+import Button from '../components/Button/Button';
 
 const SignOut = () => (
-  <p
-    style={{
-      display: 'inline-block',
-      color: 'blue',
-      textDecoration: 'underline',
-      cursor: 'pointer',
-    }}
-    onClick={() => supabase.auth.signOut()}
-  >
-    Sign out
-  </p>
+  <Button variant="slim" onClick={() => supabase.auth.signOut()}>
+    Sign Out
+  </Button>
 );
 
 export default function Account() {
@@ -54,17 +37,18 @@ export default function Account() {
     setLoading(true);
     const { url } = await postData({
       url: '/api/createPortalLink',
-      token: session.access_token,
+      token: session.access_token
     });
     window.location.assign(url);
   };
 
   if (!user || (!loading && !subscription))
-    return (
-      <>
-        {user ? <SignOut /> : <SignIn />}
-        <Pricing />
-      </>
+    return user ? (
+      <div className="m-6">
+        <SignOut />
+      </div>
+    ) : (
+      <SignIn />
     );
 
   if (user && subscription)
@@ -75,7 +59,7 @@ export default function Account() {
           subscription.prices.products.name
         } pricing plan, paying ${new Intl.NumberFormat('en-US', {
           style: 'currency',
-          currency: subscription.prices.currency,
+          currency: subscription.prices.currency
         }).format((subscription.prices.unit_amount / 100).toFixed(2))} per ${
           subscription.prices.interval
         }, giving you the access role: ${
@@ -88,5 +72,9 @@ export default function Account() {
       </div>
     );
 
-  return <p>Loading...</p>;
+  return (
+    <div className="m-6">
+      <LoadingDots />
+    </div>
+  );
 }

@@ -11,9 +11,13 @@
   "dependencies": {
     "@stripe/stripe-js": "^1.11.0",
     "@supabase/supabase-js": "^1.0.4",
+    "classnames": "^2.2.6",
+    "email-validator": "^2.0.4",
     "next": "latest",
     "react": "^16.13.1",
+    "react-aria": "^3.1.1",
     "react-dom": "^16.13.1",
+    "react-merge-refs": "^1.1.0",
     "stripe": "^8.121.0",
     "swr": "0.2.3",
     "tailwindcss": "^1.9.6"
