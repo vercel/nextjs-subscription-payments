@@ -1,10 +1,12 @@
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { useAuth } from '../utils/useAuth';
 import SignIn from '../components/SignIn';
 import LoadingDots from '../components/LoadingDots';
-import Button from '../components/Button/Button';
+import Button from '../components/Button';
+import Text from '../components/Text';
 
 const SignOut = () => (
   <Button variant="slim" onClick={() => supabase.auth.signOut()}>
@@ -13,27 +15,25 @@ const SignOut = () => (
 );
 
 export default function Account() {
-  const [subscription, setSubscription] = useState(null);
+  const [subscriptions, setSubscriptions] = useState(null);
   const [loading, setLoading] = useState(false);
   const { user, session } = useAuth();
 
   useEffect(() => {
-    async function getSubscription() {
+    async function getSubscriptions() {
       // Get the user's active subscription.
       setLoading(true);
-      const { data: subscription } = await supabase
+      const { data: subscriptions } = await supabase
         .from('subscriptions')
         .select('*, prices(*, products(*))')
-        .in('status', ['trialing', 'active'])
-        .single();
-      setSubscription(subscription);
+        .in('status', ['trialing', 'active']);
+      setSubscriptions(subscriptions);
       setLoading(false);
     }
-    if (user) getSubscription();
+    if (user) getSubscriptions();
   }, [user]);
 
-  const redirectToCustomerPortal = async (event) => {
-    event.preventDefault();
+  const redirectToCustomerPortal = async () => {
     setLoading(true);
     const { url } = await postData({
       url: '/api/createPortalLink',
@@ -42,39 +42,63 @@ export default function Account() {
     window.location.assign(url);
   };
 
-  if (!user || (!loading && !subscription))
-    return user ? (
+  if (loading)
+    return (
+      <div className="m-6">
+        <LoadingDots />
+      </div>
+    );
+
+  if (user)
+    return (
       <div className="m-6">
         <SignOut />
+        <Text variant="pageHeading">My Account</Text>
+        <div className="grid lg:grid-cols-12">
+          <div className="lg:col-span-8 pr-4">
+            <div>
+              <Text variant="sectionHeading">Email</Text>
+              <span>{user.email}</span>
+            </div>
+            <div className="mt-5">
+              <Text variant="sectionHeading">{`Subscription${
+                subscriptions?.length > 1 ? 's' : ''
+              }`}</Text>
+              {subscriptions?.length >= 1 ? (
+                subscriptions.map((subscription) => (
+                  <p key={subscription.id}>{`${
+                    subscription.prices.products.name
+                  }: ${new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: subscription.prices.currency
+                  }).format(
+                    (subscription.prices.unit_amount / 100).toFixed(2)
+                  )} per ${subscription.prices.interval}.`}</p>
+                ))
+              ) : (
+                <Link href="/pricing">
+                  <a>See pricing</a>
+                </Link>
+              )}
+            </div>
+            <div className="mt-5">
+              <Text variant="sectionHeading">Manage Subscription</Text>
+              <p>
+                View and download your invoices, change your subscription plan,
+                or update your payment details:
+              </p>
+              <Button
+                variant="slim"
+                disabled={loading || !subscriptions}
+                onClick={redirectToCustomerPortal}
+              >
+                Access the customer portal
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
-    ) : (
-      <SignIn />
     );
 
-  if (user && subscription)
-    return (
-      <div>
-        <SignOut />
-        <p>{`You're subscribed to the ${
-          subscription.prices.products.name
-        } pricing plan, paying ${new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: subscription.prices.currency
-        }).format((subscription.prices.unit_amount / 100).toFixed(2))} per ${
-          subscription.prices.interval
-        }, giving you the access role: ${
-          subscription.prices.products.access_role
-        }. 🥳`}</p>
-        <button
-          disabled={loading}
-          onClick={redirectToCustomerPortal}
-        >{`Access the customer portal`}</button>
-      </div>
-    );
-
-  return (
-    <div className="m-6">
-      <LoadingDots />
-    </div>
-  );
+  return <SignIn />;
 }
