@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../utils/initSupabase';
+import Input from './Input';
+import Button from './Button';
 
 export default function SupabaseAuth() {
   const [firstName, setFirstName] = useState('');
@@ -41,57 +43,16 @@ export default function SupabaseAuth() {
   return (
     <div>
       <div>
-        <label>First name</label>
-        <input
-          type="text"
-          placeholder="Your first name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Last Name</label>
-        <input
-          type="text"
-          placeholder="Your last name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Email</label>
-        <input
-          type="text"
-          placeholder="Your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Password</label>
-        <input
-          type="password"
-          placeholder="Your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <button
-          onClick={() => {
-            handleLogin('SIGNUP', email, password);
-          }}
-        >
-          Sign up
-        </button>
-        <button
+        <Button
+          variant="slim"
+          // loading={loading}
+          // disabled={disabled}
           onClick={() => {
             handleLogin('LOGIN', email, password);
           }}
         >
-          {password.length ? 'Sign in' : 'Send magic link'}
-        </button>
+          {password.length ? 'Sign In' : 'Send Magic Link'}
+        </Button>
       </div>
 
       <div>

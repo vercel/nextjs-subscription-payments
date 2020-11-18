@@ -4,6 +4,7 @@ import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { getStripe } from '../utils/initStripejs';
 import { useAuth } from '../utils/useAuth';
+import Button from './Button/Button';
 
 export default function Pricing() {
   const [products, setProducts] = useState([]);
@@ -35,7 +36,7 @@ export default function Pricing() {
     const { sessionId } = await postData({
       url: '/api/createCheckoutSession',
       data: { price },
-      token: session.access_token,
+      token: session.access_token
     });
     const stripe = await getStripe();
     const { error } = stripe.redirectToCheckout({ sessionId });
@@ -46,30 +47,38 @@ export default function Pricing() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="m-6">
+      <h1 className="text-3xl font-black mb-8">Pricing Plans</h1>
       {products.map((product) => (
-        <div key={product.id}>
+        <div
+          key={product.id}
+          className="border-gray-200 border p-8 rounded-lg mb-8 max-w-md"
+        >
           {product.image ? <img src={product.image} alt={product.name} /> : ''}
-          <h2>{product.name}</h2>
+          <h2 className="text-xl font-bold">{product.name}</h2>
           <p>{product.description}</p>
-          <form onSubmit={handleCheckout}>
+          <form onSubmit={handleCheckout} className="flex flex-col space-y-4">
             <label htmlFor="price">Choose pricing plan</label>
-            <select id="price" name="price">
+            <select
+              id="price"
+              name="price"
+              className="mt-1 block form-select w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm text-sm"
+            >
               {product.prices.map((price) => (
                 <option
                   key={price.id}
                   value={price.id}
                 >{`${new Intl.NumberFormat('en-US', {
                   style: 'currency',
-                  currency: price.currency,
+                  currency: price.currency
                 }).format((price.unit_amount / 100).toFixed(2))} per ${
                   price.interval
                 }`}</option>
               ))}
             </select>
-            <button type="submit" disabled={!user || loading}>
+            <Button variant="slim" type="submit" disabled={!user || loading}>
               Subscribe
-            </button>
+            </Button>
           </form>
         </div>
       ))}
