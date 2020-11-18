@@ -13,7 +13,7 @@ const createCheckoutSession = async (req, res) => {
 
     const customer = await createOrRetrieveCustomer({
       uuid: user.id,
-      email: user.email,
+      email: user.email
     });
 
     const session = await stripe.checkout.sessions.create({
@@ -23,17 +23,17 @@ const createCheckoutSession = async (req, res) => {
       line_items: [
         {
           price,
-          quantity,
-        },
+          quantity
+        }
       ],
       mode: 'subscription',
       allow_promotion_codes: true,
       subscription_data: {
         trial_from_plan: true,
-        metadata,
+        metadata
       },
       success_url: `${getURL()}/account`,
-      cancel_url: `${getURL()}/account`,
+      cancel_url: `${getURL()}/pricing`
     });
 
     return res.status(200).json({ sessionId: session.id });

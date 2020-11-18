@@ -1,32 +1,12 @@
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { postData } from '../utils/helpers';
-import { supabase } from '../utils/initSupabase';
 import { getStripe } from '../utils/initStripejs';
 import { useAuth } from '../utils/useAuth';
 import Button from './Button/Button';
 
-export default function Pricing() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function Pricing({ products }) {
+  const [loading, setLoading] = useState(false);
   const { user, session } = useAuth();
-
-  useEffect(() => {
-    async function getProducts() {
-      // Load all active products and prices.
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*, prices(*)')
-        .eq('active', true)
-        .eq('prices.active', true)
-        .order('metadata->index')
-        .order('unit_amount', { foreignTable: 'prices' });
-      if (error) alert(error.message);
-      setProducts(products);
-      setLoading(false);
-    }
-    getProducts();
-  }, []);
 
   const handleCheckout = async (event) => {
     event.preventDefault();
@@ -43,8 +23,6 @@ export default function Pricing() {
     if (error) alert(error.message);
     setLoading(false);
   };
-
-  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="m-6">
