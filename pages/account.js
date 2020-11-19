@@ -41,7 +41,7 @@ export default function Account() {
     window.location.assign(url);
   };
 
-  if (user && !loading)
+  if (user)
     return (
       <div className="m-6">
         <SignOut />
@@ -56,7 +56,11 @@ export default function Account() {
               <Text variant="sectionHeading">{`Subscription${
                 subscriptions?.length > 1 ? 's' : ''
               }`}</Text>
-              {subscriptions?.length >= 1 ? (
+              {loading ? (
+                <div className="m-6">
+                  <LoadingDots />
+                </div>
+              ) : subscriptions?.length >= 1 ? (
                 subscriptions.map((subscription) => (
                   <p key={subscription.id}>{`${
                     subscription.prices.products.name
@@ -81,7 +85,7 @@ export default function Account() {
               </p>
               <Button
                 variant="slim"
-                disabled={loading || !subscriptions}
+                disabled={loading || !subscriptions?.length}
                 onClick={redirectToCustomerPortal}
               >
                 Access the customer portal
