@@ -1,21 +1,26 @@
-import Router from 'next/router';
-import { useAuth } from '../utils/useAuth';
-import SignUp from '../components/SignUp';
-import Button from '../components/Button/Button';
+import { supabase } from '../utils/initSupabase';
+import Pricing from '../components/Pricing';
 
-const Index = () => {
-  const { user } = useAuth();
+export default function PricingPage({ products }) {
+  return <Pricing products={products} />;
+}
 
-  if (user) {
-    return (
-      <div className="m-6">
-        <p className="text-lg font-semibold mb-4">You are signed in.</p>
-        <Button onClick={() => Router.push('/account')}>View Account</Button>
-      </div>
-    );
-  }
+export async function getStaticProps() {
+  // Load all active products and prices at build time.
+  const { data: products, error } = await supabase
+    .from('products')
+    .select('*, prices(*)')
+    .eq('active', true)
+    .eq('prices.active', true)
+    .order('metadata->index')
+    .order('unit_amount', { foreignTable: 'prices' });
+  if (error) console.log(error.message);
 
-  return <SignUp />;
-};
-
-export default Index;
+  return {
+    props: {
+      products
+    },
+    // Refetch and rebuild pricing page every minute.
+    revalidate: 60
+  };
+}
