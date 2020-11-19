@@ -7,12 +7,6 @@ import LoadingDots from '../components/LoadingDots';
 import Button from '../components/Button';
 import Text from '../components/Text';
 
-const SignOut = () => (
-  <Button variant="slim" onClick={() => supabase.auth.signOut()}>
-    Sign Out
-  </Button>
-);
-
 export default function Account() {
   const [subscriptions, setSubscriptions] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -44,7 +38,16 @@ export default function Account() {
   if (user)
     return (
       <div className="m-6">
-        <SignOut />
+        <Button
+          variant="slim"
+          loading={loading}
+          onClick={() => {
+            setLoading(true);
+            supabase.auth.signOut();
+          }}
+        >
+          Sign Out
+        </Button>
         <Text variant="pageHeading">My Account</Text>
         <div className="grid lg:grid-cols-12">
           <div className="lg:col-span-8 pr-4">
