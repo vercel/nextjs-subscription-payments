@@ -1,9 +1,12 @@
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { validate } from 'email-validator';
 import { supabase } from '../utils/initSupabase';
-import Input from './Input';
-import Button from './Button';
-import Logo from './Logo';
+import { useAuth } from '../utils/useAuth';
+import Input from '../components/Input';
+import Button from '../components/Button';
+import Logo from '../components/Logo';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +17,8 @@ const SignUp = () => {
   const [message, setMessage] = useState('');
   const [dirty, setDirty] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -58,6 +63,10 @@ const SignUp = () => {
     handleValidation();
   }, [handleValidation]);
 
+  useEffect(() => {
+    if (user) router.push('/account');
+  }, [user]);
+
   return (
     <form
       onSubmit={handleSignup}
@@ -88,9 +97,11 @@ const SignUp = () => {
         <span className="pt-1 text-center text-sm">
           <span className="text-accents-7">Do you have an account?</span>
           {` `}
-          <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-            Log In
-          </a>
+          <Link href="/signin">
+            <a className="text-accent-9 font-bold hover:underline cursor-pointer">
+              Sign In
+            </a>
+          </Link>
         </span>
       </div>
     </form>

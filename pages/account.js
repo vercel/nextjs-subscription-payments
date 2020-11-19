@@ -68,7 +68,7 @@ export default function Account() {
                   )} per ${subscription.prices.interval}.`}</p>
                 ))
               ) : (
-                <Link href="/pricing">
+                <Link href="/">
                   <a>See pricing</a>
                 </Link>
               )}

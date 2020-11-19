@@ -27,20 +27,14 @@ const SignIn = () => {
       handleValidation();
     }
 
-    try {
-      setLoading(true);
-      setMessage('');
-      const { error } = await supabase.auth.signIn({ email, password });
-
-      if (error) {
-        throw error;
-      }
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-      setMessage(e.message);
-      setLoading(false);
+    setLoading(true);
+    setMessage('');
+    const { error } = await supabase.auth.signIn({ email, password });
+    if (error) {
+      console.log(error);
+      setMessage(error.message);
     }
+    setLoading(false);
   };
 
   const handleValidation = useCallback(() => {
