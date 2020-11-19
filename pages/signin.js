@@ -34,16 +34,14 @@ const SignIn = () => {
       console.log(error);
       setMessage(error.message);
     }
+    if (!password) setMessage('Check your email for the magic link.');
     setLoading(false);
   };
 
   const handleValidation = useCallback(() => {
-    // Test for Alphanumeric password
-    const validPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(password);
-
     // Unable to send form unless fields are valid.
     if (dirty) {
-      setDisabled(!validate(email) || password.length < 7 || !validPassword);
+      setDisabled(!validate(email));
     }
   }, [email, password, dirty]);
 
@@ -81,7 +79,7 @@ const SignIn = () => {
               loading={loading}
               disabled={disabled}
             >
-              Sign In
+              {password.length ? 'Sign In' : 'Send Magic Link'}
             </Button>
             <div className="pt-1 text-center text-sm">
               <span className="text-accents-7">Don't have an account?</span>
