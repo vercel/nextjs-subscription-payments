@@ -3,21 +3,14 @@ import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { useAuth } from '../utils/useAuth';
-import SignIn from '../components/SignIn';
 import LoadingDots from '../components/LoadingDots';
 import Button from '../components/Button';
 import Text from '../components/Text';
 
-const SignOut = () => (
-  <Button variant="slim" onClick={() => supabase.auth.signOut()}>
-    Sign Out
-  </Button>
-);
-
 export default function Account() {
   const [subscriptions, setSubscriptions] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user, session } = useAuth();
+  const { user, session } = useAuth({ redirectTo: '/signin' });
 
   useEffect(() => {
     async function getSubscriptions() {
@@ -42,17 +35,19 @@ export default function Account() {
     window.location.assign(url);
   };
 
-  if (loading)
-    return (
-      <div className="m-6">
-        <LoadingDots />
-      </div>
-    );
-
   if (user)
     return (
       <div className="m-6">
-        <SignOut />
+        <Button
+          variant="slim"
+          loading={loading}
+          onClick={() => {
+            setLoading(true);
+            supabase.auth.signOut();
+          }}
+        >
+          Sign Out
+        </Button>
         <Text variant="pageHeading">My Account</Text>
         <div className="grid lg:grid-cols-12">
           <div className="lg:col-span-8 pr-4">
@@ -64,7 +59,11 @@ export default function Account() {
               <Text variant="sectionHeading">{`Subscription${
                 subscriptions?.length > 1 ? 's' : ''
               }`}</Text>
-              {subscriptions?.length >= 1 ? (
+              {loading ? (
+                <div className="m-6">
+                  <LoadingDots />
+                </div>
+              ) : subscriptions?.length >= 1 ? (
                 subscriptions.map((subscription) => (
                   <p key={subscription.id}>{`${
                     subscription.prices.products.name
@@ -76,7 +75,7 @@ export default function Account() {
                   )} per ${subscription.prices.interval}.`}</p>
                 ))
               ) : (
-                <Link href="/pricing">
+                <Link href="/">
                   <a>See pricing</a>
                 </Link>
               )}
@@ -89,7 +88,7 @@ export default function Account() {
               </p>
               <Button
                 variant="slim"
-                disabled={loading || !subscriptions}
+                disabled={loading || !subscriptions?.length}
                 onClick={redirectToCustomerPortal}
               >
                 Access the customer portal
@@ -100,5 +99,9 @@ export default function Account() {
       </div>
     );
 
-  return <SignIn />;
+  return (
+    <div className="m-6">
+      <LoadingDots />
+    </div>
+  );
 }

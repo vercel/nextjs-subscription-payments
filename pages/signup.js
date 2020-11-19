@@ -1,19 +1,26 @@
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { validate } from 'email-validator';
 import { supabase } from '../utils/initSupabase';
-import Input from './Input';
-import Button from './Button';
-import Logo from './Logo';
+import { useAuth } from '../utils/useAuth';
+import Input from '../components/Input';
+import Button from '../components/Button';
+import Logo from '../components/Logo';
 
-const SignIn = () => {
+const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [dirty, setDirty] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
 
-  const handleSignin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     if (!dirty && !disabled) {
@@ -24,11 +31,16 @@ const SignIn = () => {
     try {
       setLoading(true);
       setMessage('');
-      const { error } = await supabase.auth.signIn({ email, password });
+      const { error, user } = await supabase.auth.signUp({ email, password });
 
       if (error) {
         throw error;
       }
+
+      await supabase
+        .from('users')
+        .update({ first_name: firstName, last_name: lastName })
+        .eq('id', user.id);
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -51,9 +63,13 @@ const SignIn = () => {
     handleValidation();
   }, [handleValidation]);
 
+  useEffect(() => {
+    if (user) router.push('/account');
+  }, [user]);
+
   return (
     <form
-      onSubmit={handleSignin}
+      onSubmit={handleSignup}
       className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto mt-16"
     >
       <div className="flex justify-center pb-12 ">
@@ -63,6 +79,8 @@ const SignIn = () => {
         {message && (
           <div className="text-red border border-red p-3">{message}</div>
         )}
+        <Input placeholder="First Name" onChange={setFirstName} />
+        <Input placeholder="Last Name" onChange={setLastName} />
         <Input type="email" placeholder="Email" onChange={setEmail} />
         <Input type="password" placeholder="Password" onChange={setPassword} />
         <div className="pt-2 w-full flex flex-col">
@@ -72,12 +90,22 @@ const SignIn = () => {
             loading={loading}
             disabled={disabled}
           >
-            Sign In
+            Sign Up
           </Button>
         </div>
+
+        <span className="pt-1 text-center text-sm">
+          <span className="text-accents-7">Do you have an account?</span>
+          {` `}
+          <Link href="/signin">
+            <a className="text-accent-9 font-bold hover:underline cursor-pointer">
+              Sign In
+            </a>
+          </Link>
+        </span>
       </div>
     </form>
   );
 };
 
-export default SignIn;
+export default SignUp;

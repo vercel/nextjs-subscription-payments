@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { postData } from '../utils/helpers';
 import { getStripe } from '../utils/initStripejs';
@@ -6,11 +7,16 @@ import Button from './Button/Button';
 
 export default function Pricing({ products }) {
   const [loading, setLoading] = useState(false);
-  const { user, session } = useAuth();
+  const router = useRouter();
+  const { session } = useAuth();
 
   const handleCheckout = async (event) => {
     event.preventDefault();
     setLoading(true);
+    if (!session) {
+      router.push('/signin');
+      return;
+    }
     const formData = new FormData(event.target);
     const price = formData.get('price');
     const { sessionId } = await postData({
@@ -54,7 +60,7 @@ export default function Pricing({ products }) {
                 }`}</option>
               ))}
             </select>
-            <Button variant="slim" type="submit" disabled={!user || loading}>
+            <Button variant="slim" type="submit" loading={loading}>
               Subscribe
             </Button>
           </form>

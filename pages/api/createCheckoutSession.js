@@ -33,7 +33,7 @@ const createCheckoutSession = async (req, res) => {
         metadata
       },
       success_url: `${getURL()}/account`,
-      cancel_url: `${getURL()}/pricing`
+      cancel_url: `${getURL()}/`
     });
 
     return res.status(200).json({ sessionId: session.id });
