@@ -3,16 +3,13 @@ import { stripe } from './initStripe';
 import { toDateTime } from './helpers';
 
 const upsertProductRecord = async (product) => {
-  const { accessRole, ...rawMetadata } = product.metadata;
-
   const productData = {
     id: product.id,
     active: product.active,
     name: product.name,
     description: product.description,
-    access_role: accessRole ?? null,
     image: product.images?.[0] ?? null,
-    metadata: rawMetadata,
+    metadata: product.metadata
   };
 
   const { error } = await supabaseAdmin
@@ -34,7 +31,7 @@ const upsertPriceRecord = async (price) => {
     interval: price.recurring?.interval ?? null,
     interval_count: price.recurring?.interval_count ?? null,
     trial_period_days: price.recurring?.trial_period_days ?? null,
-    metadata: price.metadata,
+    metadata: price.metadata
   };
 
   const { error } = await supabaseAdmin
@@ -54,8 +51,8 @@ const createOrRetrieveCustomer = async ({ email, uuid }) => {
     // No customer record found, let's create one.
     const customerData = {
       metadata: {
-        supabaseUUID: uuid,
-      },
+        supabaseUUID: uuid
+      }
     };
     if (email) customerData.email = email;
     const customer = await stripe.customers.create(customerData);
@@ -84,13 +81,13 @@ const manageSubscriptionStatusChange = async (
   createAction = false
 ) => {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
-    expand: ['default_payment_method'],
+    expand: ['default_payment_method']
   });
   const customerId = subscription.customer;
   // Get customer's UUID from mapping table
   const {
     data: { id: uuid },
-    error: noCustomerError,
+    error: noCustomerError
   } = await supabaseAdmin
     .from('customers')
     .select('id')
@@ -124,7 +121,7 @@ const manageSubscriptionStatusChange = async (
       : null,
     trial_end: subscription.trial_end
       ? toDateTime(subscription.trial_end)
-      : null,
+      : null
   };
 
   const { error } = await supabaseAdmin
@@ -140,5 +137,5 @@ export {
   upsertProductRecord,
   upsertPriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange,
+  manageSubscriptionStatusChange
 };

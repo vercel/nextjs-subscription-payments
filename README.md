@@ -8,7 +8,6 @@ The all-in-one starter kit for high-performance SaaS applications. With a few cl
 - Powerful data access & management tooling on top of PostgreSQL with [Supabase](https://supabase.io/docs/guides/database).
 - Integration with Stripe Checkout and the Stripe customer portal, all plumbing already set up.
 - Automatic syncing of pricing plans, and subscription statuses via Stripe webhooks.
-- User-specific data access policies based on the user's subscription status.
 
 ## Demo
 
@@ -107,7 +106,7 @@ For Stripe to automatically bill your users for recurring payments, you need to 
 
 Stripe Checkout currently supports pricing plans that bill a predefined amount at a specific interval. More complex plans (e.g. different pricing tiers or seats) are not yet supported.
 
-For example, this extension works well for business models with different access level tiers, e.g.:
+For example, this extension works well for business models with different pricing tiers, e.g.:
 
 - Product 1: Basic membership
   - Price 1: 10 USD per month
@@ -121,12 +120,6 @@ For example, this extension works well for business models with different access
   - Price 3: 16 GBP per month
   - Price 4: 160 GBP per year
   - [...]: additional currency and interval combinations
-
-### Set content access roles on your products.
-
-If you want to give users that are subscribed to a certain product special access, you can set an `accessRole` on the product using the Stripe metadata. When creating a product in the Stripe Dashboard, click "Additional options" > "Add metadata" and add the `accessRole` key and a value, e.g. `premium`.
-
-The `accessRole` value will be synced to the product in your Supabase database in the `access_role` column. This means we can use it to create sophisticated data access policies, as you can see in the [schema.sql](./schema.sql) file.
 
 ### Configure the Stripe customer portal
 
