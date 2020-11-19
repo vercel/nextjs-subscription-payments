@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
 import { useAuth } from '../utils/useAuth';
-import SignIn from '../components/SignIn';
 import LoadingDots from '../components/LoadingDots';
 import Button from '../components/Button';
 import Text from '../components/Text';
@@ -17,7 +16,7 @@ const SignOut = () => (
 export default function Account() {
   const [subscriptions, setSubscriptions] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user, session } = useAuth();
+  const { user, session } = useAuth({ redirectTo: '/signin' });
 
   useEffect(() => {
     async function getSubscriptions() {
@@ -42,14 +41,7 @@ export default function Account() {
     window.location.assign(url);
   };
 
-  if (loading)
-    return (
-      <div className="m-6">
-        <LoadingDots />
-      </div>
-    );
-
-  if (user)
+  if (user && !loading)
     return (
       <div className="m-6">
         <SignOut />
@@ -100,5 +92,9 @@ export default function Account() {
       </div>
     );
 
-  return <SignIn />;
+  return (
+    <div className="m-6">
+      <LoadingDots />
+    </div>
+  );
 }
