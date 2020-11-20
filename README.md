@@ -18,9 +18,9 @@ The all-in-one starter kit for high-performance SaaS applications. With a few cl
 Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) or [npx](https://github.com/zkat/npx#readme) to bootstrap the example:
 
 ```bash
-npx create-next-app --example saas-starter my-saas-app
+npx create-next-app --example https://github.com/supabase/supabase/tree/master/examples/nextjs-with-supabase-auth my-saas-app
 # or
-yarn create next-app --example saas-starter my-saas-app
+yarn create next-app --example https://github.com/supabase/supabase/tree/master/examples/nextjs-with-supabase-auth my-saas-app
 ```
 
 ## Configuration
