@@ -90,7 +90,7 @@ export default function Pricing({ products }) {
                       {priceString}
                     </span>
                     <span className="text-base font-medium text-gray-500">
-                      /mo
+                      /{billingInterval}
                     </span>
                   </p>
                   <Button
