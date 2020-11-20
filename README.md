@@ -1,4 +1,4 @@
-# Next.js SaaS Starter
+# Next.js Subscription Payments Starter
 
 The all-in-one starter kit for high-performance SaaS applications. With a few clicks, Next.js developers can clone, deploy and fully customize their own SaaS subscription application.
 
@@ -12,6 +12,10 @@ The all-in-one starter kit for high-performance SaaS applications. With a few cl
 ## Demo
 
 - https://nextjs-subscription-payments-starter.vercel.app/
+
+## Architecture
+
+![Architecture diagram](./architecture_diagram.svg)
 
 ## How to use
 
