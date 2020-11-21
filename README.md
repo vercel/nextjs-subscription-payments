@@ -71,9 +71,7 @@ yarn dev
 
 ## Deploy with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/git?s=https%3A%2F%2Fgithub.com%2Fsupabase%2Fsupabase%2Ftree%2Fmaster%2Fexamples%2Fnextjs-with-supabase-auth&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_KEY&envDescription=Find%20the%20Supabase%20URL%20and%20key%20in%20your%20auto-generated%20docs%20at%20app.supabase.io&project-name=nextjs-with-supabase-auth&repo-name=nextjs-with-supabase-auth)
-
-You will be asked for the `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_KEY` from step 2 above.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fthorwebdev%2Fnextjs-saas-starter&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,STRIPE_WEBHOOK_SECRET&envDescription=Add%20your%20API%20keys%20from%20the%20Supabase%20and%20Stripe%20Dashboards&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter%20Demo&demo-url=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2F&demo-image=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2Fdemo.png)
 
 ### Configure Supabase Auth
 
@@ -105,6 +103,8 @@ Here's how to set up the webhook and configure your extension to use it:
    - `customer.subscription.deleted`
 
 1. Update your webhook’s signing secret (such as, `whsec_12345678`) in Vercel: Project > Settings > Environment Variables.
+
+**NOTE:** You will need to redeploy your project for env var changes to take effect. In your Vercel project, select the "Deployments" tab, click on the last deployment, then click on the menue button next to the "Visit" button and select "Redeploy".
 
 ### Create product and pricing information
 
