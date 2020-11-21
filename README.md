@@ -13,9 +13,11 @@ The all-in-one starter kit for high-performance SaaS applications. With a few cl
 
 - https://nextjs-subscription-payments-starter.vercel.app/
 
+[![Foo](./public/demo.png)](https://nextjs-subscription-payments-starter.vercel.app/)
+
 ## Architecture
 
-![Architecture diagram](./architecture_diagram.svg)
+![Architecture diagram](./public/architecture_diagram.svg)
 
 ## How to use
 
