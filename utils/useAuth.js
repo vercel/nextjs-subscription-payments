@@ -17,10 +17,11 @@ const useAuth = (options) => {
         setSession(session);
         setUser(session?.user ?? null);
         if (event === 'SIGNED_OUT' && options?.redirectTo)
-          router.push(options.redirectTo);
+          router.replace(options.redirectTo);
       }
     );
-    if (!session?.user && options?.redirectTo) router.push(options.redirectTo);
+    if (!session?.user && options?.redirectTo)
+      router.replace(options.redirectTo);
     return () => {
       authListener.unsubscribe();
     };

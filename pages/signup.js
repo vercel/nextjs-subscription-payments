@@ -64,7 +64,7 @@ const SignUp = () => {
   }, [handleValidation]);
 
   useEffect(() => {
-    if (user) router.push('/account');
+    if (user) router.replace('/account');
   }, [user]);
 
   return (
