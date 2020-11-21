@@ -37,7 +37,7 @@ Sign up to Supabase - [https://app.supabase.io](https://app.supabase.io) and cre
 
 ### 2. Set up your database tables and auth policies
 
-TODO
+In your Supabase dashboard, go to the SQL editor. There, the welcome tab has a "Quick Start" section. Select the "Stripe Subscriptions" quick start (it has the same content as the [`schema.sql` file](./schema.sql)) and hit the "RUN" button.
 
 #### [Optional] - Set up OAuth providers
 
@@ -51,9 +51,13 @@ Create a copy of `.env.local.example`:
 cp .env.local.example .env.local
 ```
 
-Go to the Project Settings (the cog icon), open the API tab, and find your API URL, the public `anon` key, and the secret `service_role` key and set them in your newly created `.env.local` file.
+In your [Supabase Dashboard](https://app.supabase.io/), go to the Project Settings (the cog icon), open the API tab, and find your API URL, the public `anon` key, and the secret `service_role` key and set them in your newly created `.env.local` file.
 
 ### 4. Get your Stripe credentials
+
+In your [Stripe Dashboard](https://dashboard.stripe.com/apikeys), go to Developers > API keys, and copy the publishable key and the secret key to your `.env.local` file.
+
+The webhook secret differs for local testing vs. when deployed to Vercel. Follow the instructions below to get the corresponding webhook secret.
 
 ## Test locally with the Stripe CLi
 
@@ -69,6 +73,16 @@ yarn dev
 
 ### Use the Stripe CLI to test webhooks
 
+First [install the CLI](https://stripe.com/docs/stripe-cli) and [link your Stripe account](https://stripe.com/docs/stripe-cli#login-account).
+
+Next, start the webhook forwarding:
+
+```bash
+stripe listen --forward-to=localhost:3000/api/webhooks
+```
+
+The CLI will print a webhook secret (such as, `whsec_12345678`) to the console. Set `STRIPE_WEBHOOK_SECRET` to this value in your `.env.local` file.
+
 ## Deploy with Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fthorwebdev%2Fnextjs-saas-starter&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,STRIPE_WEBHOOK_SECRET&envDescription=Add%20your%20API%20keys%20from%20the%20Supabase%20and%20Stripe%20Dashboards&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter%20Demo&demo-url=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2F&demo-image=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2Fdemo.png)
@@ -81,9 +95,9 @@ After deploying, copy the deployment URL and navigate to your Supabase project s
 
 ### Configure Stripe webhooks
 
-You need to set up a webhook that synchronizes relevant details from Stripe with your Cloud Firestore. This includes product and pricing data from the Stripe Dashboard, as well as customer's subscription details.
+You need to set up a webhook that synchronizes relevant details from Stripe with your Supabase Database. This includes product and pricing data from the Stripe Dashboard, as well as customers' subscription details.
 
-Here's how to set up the webhook and configure your extension to use it:
+Here's how to set up the webhook and configure your project to use it:
 
 1. Configure your webhook:
 
@@ -102,17 +116,17 @@ Here's how to set up the webhook and configure your extension to use it:
    - `customer.subscription.updated`
    - `customer.subscription.deleted`
 
-1. Update your webhook’s signing secret (such as, `whsec_12345678`) in Vercel: Project > Settings > Environment Variables.
+1. Once created, you can click to reveal your webhook signing secret. Copy the webhook secret (`whsec_***`) and add it to the environment variables in your [Vercel Dashboard](https://vercel.com/dashboard): Project > Settings > Environment Variables.
 
-**NOTE:** You will need to redeploy your project for env var changes to take effect. In your Vercel project, select the "Deployments" tab, click on the last deployment, then click on the menue button next to the "Visit" button and select "Redeploy".
+**NOTE:** After adding an environment variable, you will need to rebuild your project for it to become available within your code. In your project Dashboard, navigate to the "Deployments" tab, select the most recent deployment, click the overflow menu button (next to the "Visit" button) and select "Redeploy".
 
 ### Create product and pricing information
 
-For Stripe to automatically bill your users for recurring payments, you need to create your product and pricing information in the [Stripe Dashboard](https://dashboard.stripe.com/test/products). When you create or update your product and price information in the Stripe Dashboard these details are automatically synced with your Supabase database, as long as the webhook is configured correctly as described above.
+For Stripe to automatically bill your users for recurring payments, you need to create your product and pricing information in the [Stripe Dashboard](https://dashboard.stripe.com/test/products). When you create or update your product and price information, the changes are automatically synced with your Supabase database, as long as the webhook is configured correctly as described above.
 
 Stripe Checkout currently supports pricing plans that bill a predefined amount at a specific interval. More complex plans (e.g. different pricing tiers or seats) are not yet supported.
 
-For example, this extension works well for business models with different pricing tiers, e.g.:
+For example, you can create business models with different pricing tiers, e.g.:
 
 - Product 1: Basic membership
   - Price 1: 10 USD per month
