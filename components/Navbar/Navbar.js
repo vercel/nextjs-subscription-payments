@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import s from './Navbar.module.css';
 import Logo from '../Logo';
+import { supabase } from '../../utils/initSupabase';
+import { useAuth } from '../../utils/useAuth';
 
 const Navbar = () => {
+  const { user } = useAuth();
   return (
     <div className={s.root}>
       <div className="mx-auto max-w-8xl px-6">
@@ -17,13 +20,24 @@ const Navbar = () => {
               <Link href="/">
                 <a className={s.link}>Pricing</a>
               </Link>
+              <Link href="/account">
+                <a className={s.link}>Account</a>
+              </Link>
             </nav>
           </div>
 
           <div className="flex flex-1 justify-end space-x-8">
-            <Link href="/account">
-              <a className={s.link}>Account</a>
-            </Link>
+            {user ? (
+              <Link href="#">
+                <a className={s.link} onClick={() => supabase.auth.signOut()}>
+                  Sign out
+                </a>
+              </Link>
+            ) : (
+              <Link href="/signin">
+                <a className={s.link}>Sign in</a>
+              </Link>
+            )}
           </div>
         </div>
       </div>

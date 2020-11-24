@@ -48,16 +48,6 @@ export default function Account() {
   if (user)
     return (
       <div className="m-6">
-        <Button
-          variant="slim"
-          loading={loading}
-          onClick={() => {
-            setLoading(true);
-            supabase.auth.signOut();
-          }}
-        >
-          Sign Out
-        </Button>
         <Text variant="pageHeading">My Account</Text>
         <div className="grid lg:grid-cols-12">
           <div className="lg:col-span-8 pr-4">
