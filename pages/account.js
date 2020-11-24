@@ -8,22 +8,32 @@ import Button from '../components/Button';
 import Text from '../components/Text';
 
 export default function Account() {
+  const [userDetails, setUserDetails] = useState(null);
   const [subscriptions, setSubscriptions] = useState(null);
   const [loading, setLoading] = useState(false);
   const { user, session } = useAuth({ redirectTo: '/signin' });
 
+  // Get the user details.
+  const getUserDetails = () => supabase.from('users').select('*').single();
+
+  // Get the user's active subscriptions.
+  const getSubscriptions = () =>
+    supabase
+      .from('subscriptions')
+      .select('*, prices(*, products(*))')
+      .in('status', ['trialing', 'active']);
+
   useEffect(() => {
-    async function getSubscriptions() {
-      // Get the user's active subscription.
+    if (user) {
       setLoading(true);
-      const { data: subscriptions } = await supabase
-        .from('subscriptions')
-        .select('*, prices(*, products(*))')
-        .in('status', ['trialing', 'active']);
-      setSubscriptions(subscriptions);
-      setLoading(false);
+      Promise.allSettled([getUserDetails(), getSubscriptions()]).then(
+        (results) => {
+          setUserDetails(results[0].value.data);
+          setSubscriptions(results[1].value.data);
+          setLoading(false);
+        }
+      );
     }
-    if (user) getSubscriptions();
   }, [user]);
 
   const redirectToCustomerPortal = async () => {
@@ -52,8 +62,53 @@ export default function Account() {
         <div className="grid lg:grid-cols-12">
           <div className="lg:col-span-8 pr-4">
             <div>
+              <Text variant="sectionHeading">Name</Text>
+              <span>
+                {userDetails ? (
+                  `${userDetails.first_name} ${userDetails.last_name}`
+                ) : (
+                  <div className="m-6">
+                    <LoadingDots />
+                  </div>
+                )}
+              </span>
+            </div>
+            <div className="mt-5">
               <Text variant="sectionHeading">Email</Text>
               <span>{user.email}</span>
+            </div>
+            <div className="mt-5">
+              <Text variant="sectionHeading">Billing address</Text>
+              {userDetails?.billing_address ? (
+                <span>
+                  <p>{userDetails.billing_address.line1}</p>
+                  {userDetails.billing_address.line2 ? (
+                    <p>{userDetails.billing_address.line2}</p>
+                  ) : (
+                    ''
+                  )}
+                  <p>
+                    {userDetails.billing_address.city ??
+                      userDetails.billing_address.country}
+                  </p>
+                  <p>{`${
+                    userDetails.billing_address.state ??
+                    userDetails.billing_address.country
+                  } ${userDetails.billing_address.postal_code}`}</p>
+                </span>
+              ) : (
+                ''
+              )}
+            </div>
+            <div className="mt-5">
+              <Text variant="sectionHeading">Card</Text>
+              {userDetails?.payment_method ? (
+                <span>
+                  {`${userDetails.payment_method.brand} ****${userDetails.payment_method.last4}`}
+                </span>
+              ) : (
+                ''
+              )}
             </div>
             <div className="mt-5">
               <Text variant="sectionHeading">{`Subscription${
