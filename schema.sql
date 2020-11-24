@@ -6,7 +6,11 @@ create table users (
   -- UUID from auth.users
   id uuid references auth.users not null primary key,
   first_name text,
-  last_name text
+  last_name text,
+  -- The customer's billing address, stored in JSON format.
+  billing_address jsonb,
+  -- Stores your customer's payment instruments.
+  payment_method jsonb
 );
 alter table users enable row level security;
 create policy "Can view own user data." on users for select using (auth.uid() = id);

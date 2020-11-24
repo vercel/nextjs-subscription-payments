@@ -70,10 +70,18 @@ const createOrRetrieveCustomer = async ({ email, uuid }) => {
 /**
  * Copies the billing details from the payment method to the customer object.
  */
-const copyBillingDetailsToCustomer = async (payment_method) => {
+const copyBillingDetailsToCustomer = async (uuid, payment_method) => {
   const customer = payment_method.customer;
   const { name, phone, address } = payment_method.billing_details;
   await stripe.customers.update(customer, { name, phone, address });
+  const { error } = await supabaseAdmin
+    .from('users')
+    .update({
+      billing_address: address,
+      payment_method: payment_method[payment_method.type]
+    })
+    .eq('id', uuid);
+  if (error) throw error;
 };
 
 const manageSubscriptionStatusChange = async (
@@ -84,7 +92,7 @@ const manageSubscriptionStatusChange = async (
     expand: ['default_payment_method']
   });
   const customerId = subscription.customer;
-  // Get customer's UUID from mapping table
+  // Get customer's UUID from mapping table.
   const {
     data: { id: uuid },
     error: noCustomerError
@@ -96,7 +104,10 @@ const manageSubscriptionStatusChange = async (
   if (noCustomerError) throw noCustomerError;
   // For a new subscription copy the billing details to the customer object.
   if (createAction && subscription.default_payment_method)
-    await copyBillingDetailsToCustomer(subscription.default_payment_method);
+    await copyBillingDetailsToCustomer(
+      uuid,
+      subscription.default_payment_method
+    );
   // Upsert the latest status of the subscription object.
   const subscriptionData = {
     id: subscription.id,
