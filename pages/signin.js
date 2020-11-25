@@ -57,7 +57,7 @@ const SignIn = () => {
     return (
       <form
         onSubmit={handleSignin}
-        className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto mt-16"
+        className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-32"
       >
         <div className="flex justify-center pb-12 ">
           <Logo width="64px" height="64px" />

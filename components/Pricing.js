@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { postData } from '../utils/helpers';
@@ -29,25 +30,25 @@ export default function Pricing({ products }) {
   };
 
   return (
-    <div className="bg-white">
-      <div className="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+    <section className="bg-black">
+      <div className="max-w-6xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:flex-col sm:align-center">
-          <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
+          <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
-          <p className="mt-5 text-xl text-gray-500 sm:text-center">
+          <p className="mt-5 text-xl text-accents-6 sm:text-center sm:text-2xl max-w-2xl m-auto">
             Start building for free, then add a site plan to go live. Account
             plans unlock additional features.
           </p>
-          <div className="relative self-center mt-6 bg-gray-100 rounded-lg p-0.5 flex sm:mt-8">
+          <div className="relative self-center mt-6 bg-primary-2 rounded-lg p-0.5 flex sm:mt-8 border border-accents-0">
             <button
               onClick={() => setBillingInterval('month')}
               type="button"
               className={`${
                 billingInterval === 'month'
-                  ? 'relative w-1/2 bg-white border-gray-200 rounded-md shadow-sm'
-                  : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm'
-              } py-2 text-sm font-medium text-gray-700 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
+                  ? 'relative w-1/2 bg-accents-1 border-accents-0 rounded-md shadow-sm text-white'
+                  : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm text-accents-4'
+              } m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
             >
               Monthly billing
             </button>
@@ -56,9 +57,9 @@ export default function Pricing({ products }) {
               type="button"
               className={`${
                 billingInterval === 'year'
-                  ? 'relative w-1/2 bg-white border-gray-200 rounded-md shadow-sm'
-                  : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm'
-              } py-2 text-sm font-medium text-gray-700 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
+                  ? 'relative w-1/2 bg-accents-1 border-accents-0 rounded-md shadow-sm text-white'
+                  : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm text-accents-4'
+              } m-1 py-2 text-sm font-medium  whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
             >
               Yearly billing
             </button>
@@ -71,25 +72,31 @@ export default function Pricing({ products }) {
             );
             const priceString = new Intl.NumberFormat('en-US', {
               style: 'currency',
-              currency: price.currency
+              currency: price.currency,
+              minimumFractionDigits: 0
             }).format(price.unit_amount / 100);
             return (
               <div
                 key={product.id}
-                className="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200"
+                className={cn(
+                  'rounded-lg shadow-sm divide-y divide-accents-2 bg-primary-2',
+                  {
+                    'border border-pink': product.name === 'Freelancer'
+                  }
+                )}
               >
                 <div className="p-6">
-                  <h2 className="text-lg leading-6 font-medium text-gray-900">
+                  <h2 className="text-2xl leading-6 font-semibold text-white">
                     {product.name}
                   </h2>
-                  <p className="mt-4 text-sm text-gray-500">
+                  <p className="mt-4 text-accents-5">
                     All the basics for starting a new business
                   </p>
                   <p className="mt-8">
-                    <span className="text-4xl font-extrabold text-gray-900">
+                    <span className="text-5xl font-extrabold white">
                       {priceString}
                     </span>
-                    <span className="text-base font-medium text-gray-500">
+                    <span className="text-base font-medium text-accents-8">
                       /{billingInterval}
                     </span>
                   </p>
@@ -98,7 +105,7 @@ export default function Pricing({ products }) {
                     type="button"
                     loading={loading}
                     onClick={() => handleCheckout(price.id)}
-                    className="mt-8 block w-full bg-gray-800 border border-gray-800 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900"
+                    className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900"
                   >
                     {`Buy ${product.name}`}
                   </Button>
@@ -107,7 +114,50 @@ export default function Pricing({ products }) {
             );
           })}
         </div>
+        <div>
+          <p className="mt-24 text-xs uppercase text-accents-3 sm:text-center font-bold tracking-widest">
+            Brought to you by
+          </p>
+          <div className="my-12 space-y-4 sm:mt-8 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 md:mx-auto md:max-w-2xl md:grid-cols-4">
+            <div className="flex items-center justify-start">
+              <a href="https://nextjs.org" aria-label="Next.js Link">
+                <img
+                  src="/nextjs.svg"
+                  alt="Next.js Logo"
+                  className="h-12 text-primary"
+                />
+              </a>
+            </div>
+            <div className="flex items-center justify-start">
+              <a href="https://vercel.com" aria-label="Vercel.com Link">
+                <img
+                  src="/vercel.svg"
+                  alt="Vercel.com Logo"
+                  className="h-6 text-primary"
+                />
+              </a>
+            </div>
+            <div className="flex items-center justify-start">
+              <a href="https://stripe.com" aria-label="stripe.com Link">
+                <img
+                  src="/stripe.svg"
+                  alt="stripe.com Logo"
+                  className="h-12 text-primary"
+                />
+              </a>
+            </div>
+            <div className="flex items-center justify-start">
+              <a href="https://supabase.io" aria-label="supabase.io Link">
+                <img
+                  src="/supabase.svg"
+                  alt="supabase.io Logo"
+                  className="h-12 text-primary"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

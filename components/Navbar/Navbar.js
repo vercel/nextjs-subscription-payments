@@ -8,7 +8,7 @@ const Navbar = () => {
   const { user } = useAuth();
   return (
     <div className={s.root}>
-      <div className="mx-auto max-w-8xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 relative">
           <div className="flex flex-1 items-center">
             <Link href="/">
