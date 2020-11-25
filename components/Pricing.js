@@ -31,7 +31,7 @@ export default function Pricing({ products }) {
 
   return (
     <section className="bg-black">
-      <div className="max-w-6xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
             Pricing Plans
@@ -115,10 +115,10 @@ export default function Pricing({ products }) {
           })}
         </div>
         <div>
-          <p className="mt-24 text-xs uppercase text-accents-3 sm:text-center font-bold tracking-widest">
+          <p className="mt-24 text-xs uppercase text-accents-3 text-center font-bold tracking-widest">
             Brought to you by
           </p>
-          <div className="my-12 space-y-4 sm:mt-8 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 md:mx-auto md:max-w-2xl md:grid-cols-4">
+          <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-4">
             <div className="flex items-center justify-start">
               <a href="https://nextjs.org" aria-label="Next.js Link">
                 <img
