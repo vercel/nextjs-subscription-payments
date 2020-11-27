@@ -30,7 +30,7 @@ export default function Pricing({ products }) {
   };
 
   return (
-    <section className="bg-black">
+    <section>
       <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
@@ -46,22 +46,22 @@ export default function Pricing({ products }) {
               type="button"
               className={`${
                 billingInterval === 'month'
-                  ? 'relative w-1/2 bg-accents-1 border-accents-0 rounded-md shadow-sm text-white'
+                  ? 'relative w-1/2 bg-secondary border-accents-0 rounded-md shadow-sm text-primary-2'
                   : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm text-accents-4'
               } m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
             >
-              Monthly billing
+              Monthly
             </button>
             <button
               onClick={() => setBillingInterval('year')}
               type="button"
               className={`${
                 billingInterval === 'year'
-                  ? 'relative w-1/2 bg-accents-1 border-accents-0 rounded-md shadow-sm text-white'
+                  ? 'relative w-1/2 bg-secondary border-accents-0 rounded-md shadow-sm text-primary-2'
                   : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm text-accents-4'
               } m-1 py-2 text-sm font-medium  whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
             >
-              Yearly billing
+              Yearly
             </button>
           </div>
         </div>
