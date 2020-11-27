@@ -1,8 +1,8 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
-import { supabase } from '../utils/initSupabase';
-import { useAuth } from '../utils/useAuth';
+import { useUser } from '../components/UserContext';
 import LoadingDots from '../components/LoadingDots';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -22,33 +22,12 @@ function Card({ title, description, footer, children }) {
   );
 }
 export default function Account() {
-  const [userDetails, setUserDetails] = useState(null);
-  const [subscriptions, setSubscriptions] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const { user, session } = useAuth({ redirectTo: '/signin' });
-
-  // Get the user details.
-  const getUserDetails = () => supabase.from('users').select('*').single();
-
-  // Get the user's active subscriptions.
-  const getSubscriptions = () =>
-    supabase
-      .from('subscriptions')
-      .select('*, prices(*, products(*))')
-      .in('status', ['trialing', 'active']);
+  const router = useRouter();
+  const { userLoaded, user, session, userDetails, subscription } = useUser();
 
   useEffect(() => {
-    if (user) {
-      setLoading(true);
-      Promise.allSettled([getUserDetails(), getSubscriptions()]).then(
-        (results) => {
-          setUserDetails(results[0].value.data);
-          setSubscriptions(results[1].value.data);
-          setLoading(false);
-        }
-      );
-    }
+    if (!user) router.replace('/signin');
   }, [user]);
 
   const redirectToCustomerPortal = async () => {
@@ -60,7 +39,6 @@ export default function Account() {
     window.location.assign(url);
   };
 
-  const subscription = subscriptions && subscriptions[0];
   const subscriptionName = subscription && subscription.prices.products.name;
   const subscriptionPrice =
     subscription &&
@@ -97,7 +75,7 @@ export default function Account() {
               <Button
                 variant="slim"
                 loading={checkoutLoading}
-                disabled={checkoutLoading || !subscriptions?.length}
+                disabled={checkoutLoading || !subscription}
                 onClick={redirectToCustomerPortal}
               >
                 Open customer portal
@@ -106,7 +84,7 @@ export default function Account() {
           }
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
-            {loading ? (
+            {!userLoaded ? (
               <div className="h-12 mb-6">
                 <LoadingDots />
               </div>
@@ -114,7 +92,7 @@ export default function Account() {
               `${subscriptionPrice}/month`
             ) : (
               <Link href="/">
-                <a>See pricing</a>
+                <a>Choose your plan</a>
               </Link>
             )}
           </div>
