@@ -89,7 +89,7 @@ export default function Account() {
                 <LoadingDots />
               </div>
             ) : subscriptionPrice ? (
-              `${subscriptionPrice}/month`
+              `${subscriptionPrice}/${subscription.prices.interval}`
             ) : (
               <Link href="/">
                 <a>Choose your plan</a>
