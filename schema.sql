@@ -1,3 +1,6 @@
+-- turn off realtime subscriptions for this schema.
+drop publication if exists supabase_realtime;
+
 /** 
 * USERS
 * Note: This table contains user data. Users should only be able to view and update their own data.
