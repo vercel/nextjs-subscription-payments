@@ -51,6 +51,9 @@ module.exports = {
       },
       lineHeight: {
         'extra-loose': '2.2'
+      },
+      letterSpacing: {
+        widest: '0.3em'
       }
     }
   }

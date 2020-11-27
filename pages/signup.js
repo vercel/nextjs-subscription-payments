@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { validate } from 'email-validator';
 import { supabase } from '../utils/initSupabase';
-import { useAuth } from '../utils/useAuth';
+import { useUser } from '../components/UserContext';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Logo from '../components/Logo';
@@ -18,7 +18,7 @@ const SignUp = () => {
   const [dirty, setDirty] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signUp } = useUser();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const SignUp = () => {
     try {
       setLoading(true);
       setMessage('');
-      const { error, user } = await supabase.auth.signUp({ email, password });
+      const { error, user } = await signUp({ email, password });
 
       if (error) {
         throw error;
@@ -70,7 +70,7 @@ const SignUp = () => {
   return (
     <form
       onSubmit={handleSignup}
-      className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto mt-16"
+      className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-16"
     >
       <div className="flex justify-center pb-12 ">
         <Logo width="64px" height="64px" />

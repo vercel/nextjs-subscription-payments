@@ -2,8 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { validate } from 'email-validator';
-import { supabase } from '../utils/initSupabase';
-import { useAuth } from '../utils/useAuth';
+import { useUser } from '../components/UserContext';
 import LoadingDots from '../components/LoadingDots';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -17,7 +16,7 @@ const SignIn = () => {
   const [dirty, setDirty] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signIn } = useUser();
 
   const handleSignin = async (e) => {
     e.preventDefault();
@@ -29,7 +28,7 @@ const SignIn = () => {
 
     setLoading(true);
     setMessage('');
-    const { error } = await supabase.auth.signIn({ email, password });
+    const { error } = await signIn({ email, password });
     if (error) {
       console.log(error);
       setMessage(error.message);
@@ -57,7 +56,7 @@ const SignIn = () => {
     return (
       <form
         onSubmit={handleSignin}
-        className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto mt-16"
+        className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-32"
       >
         <div className="flex justify-center pb-12 ">
           <Logo width="64px" height="64px" />

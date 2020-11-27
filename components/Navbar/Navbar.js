@@ -1,14 +1,13 @@
 import Link from 'next/link';
 import s from './Navbar.module.css';
 import Logo from '../Logo';
-import { supabase } from '../../utils/initSupabase';
-import { useAuth } from '../../utils/useAuth';
+import { useUser } from '../../components/UserContext';
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useUser();
   return (
     <div className={s.root}>
-      <div className="mx-auto max-w-8xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 relative">
           <div className="flex flex-1 items-center">
             <Link href="/">
@@ -29,7 +28,7 @@ const Navbar = () => {
           <div className="flex flex-1 justify-end space-x-8">
             {user ? (
               <Link href="#">
-                <a className={s.link} onClick={() => supabase.auth.signOut()}>
+                <a className={s.link} onClick={() => signOut()}>
                   Sign out
                 </a>
               </Link>
