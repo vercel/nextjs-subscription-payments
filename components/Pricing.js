@@ -10,12 +10,16 @@ export default function Pricing({ products }) {
   const [billingInterval, setBillingInterval] = useState('month');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { session } = useUser();
+  const { session, userLoaded, subscription } = useUser();
 
   const handleCheckout = async (price) => {
     setLoading(true);
     if (!session) {
       router.push('/signin');
+      return;
+    }
+    if (subscription) {
+      router.push('/account');
       return;
     }
     const { sessionId } = await postData({
@@ -81,7 +85,9 @@ export default function Pricing({ products }) {
                 className={cn(
                   'rounded-lg shadow-sm divide-y divide-accents-2 bg-primary-2',
                   {
-                    'border border-pink': product.name === 'Freelancer'
+                    'border border-pink': subscription
+                      ? product.name === subscription?.prices?.products.name
+                      : product.name === 'Freelancer'
                   }
                 )}
               >
@@ -103,11 +109,14 @@ export default function Pricing({ products }) {
                   <Button
                     variant="slim"
                     type="button"
+                    disabled={session && !userLoaded}
                     loading={loading}
                     onClick={() => handleCheckout(price.id)}
                     className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900"
                   >
-                    {`Buy ${product.name}`}
+                    {product.name === subscription?.prices?.products.name
+                      ? 'Manage subscription'
+                      : 'Subscribe'}
                   </Button>
                 </div>
               </div>

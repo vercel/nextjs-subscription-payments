@@ -59,7 +59,11 @@ export const UserContextProvider = (props) => {
     subscription,
     signIn: (options) => supabase.auth.signIn(options),
     signUp: (options) => supabase.auth.signUp(options),
-    signOut: () => supabase.auth.signOut()
+    signOut: () => {
+      setUserDetails(null);
+      setSubscription(null);
+      return supabase.auth.signOut();
+    }
   };
   return <UserContext.Provider value={value} {...props} />;
 };
