@@ -115,7 +115,7 @@ export default function Pricing({ products }) {
                     className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900"
                   >
                     {product.name === subscription?.prices?.products.name
-                      ? 'Manage subscription'
+                      ? 'Manage'
                       : 'Subscribe'}
                   </Button>
                 </div>

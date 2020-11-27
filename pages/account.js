@@ -92,7 +92,7 @@ export default function Account() {
               `${subscriptionPrice}/month`
             ) : (
               <Link href="/">
-                <a>See pricing</a>
+                <a>Choose your plan</a>
               </Link>
             )}
           </div>
