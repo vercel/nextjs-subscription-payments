@@ -104,16 +104,7 @@ export default function Account() {
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {userDetails ? (
-              <Input
-                type="text"
-                placeholder="Guillermo Rauch"
-                defaultValue={
-                  userDetails
-                    ? `${userDetails.first_name} ${userDetails.last_name}`
-                    : undefined
-                }
-                className="rounded-md text-base max-w-sm p-0"
-              />
+              `${userDetails.first_name} ${userDetails.last_name}`
             ) : (
               <div className="h-8 mb-6">
                 <LoadingDots />
@@ -127,12 +118,7 @@ export default function Account() {
           footer={<p>We will email you to verify the change.</p>}
         >
           <p className="text-xl mt-8 mb-4 font-semibold">
-            <Input
-              type="email"
-              placeholder="rauchg@vercel.com"
-              defaultValue={user ? user.email : undefined}
-              className="rounded-md text-base max-w-sm pl-0"
-            />
+            {user ? user.email : undefined}
           </p>
         </Card>
       </div>

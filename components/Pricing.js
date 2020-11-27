@@ -50,9 +50,9 @@ export default function Pricing({ products }) {
               type="button"
               className={`${
                 billingInterval === 'month'
-                  ? 'relative w-1/2 bg-accents-1 border-accents-0 rounded-md shadow-sm text-white'
-                  : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm text-accents-4'
-              } m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
+                  ? 'relative w-1/2 bg-accents-1 border-accents-0 shadow-sm text-white'
+                  : 'ml-0.5 relative w-1/2 border border-transparent text-accents-4'
+              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
             >
               Monthly billing
             </button>
@@ -61,9 +61,9 @@ export default function Pricing({ products }) {
               type="button"
               className={`${
                 billingInterval === 'year'
-                  ? 'relative w-1/2 bg-accents-1 border-accents-0 rounded-md shadow-sm text-white'
-                  : 'ml-0.5 relative w-1/2 border border-transparent rounded-mdm text-accents-4'
-              } m-1 py-2 text-sm font-medium  whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8`}
+                  ? 'relative w-1/2 bg-accents-1 border-accents-0 shadow-sm text-white'
+                  : 'ml-0.5 relative w-1/2 border border-transparent text-accents-4'
+              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
             >
               Yearly billing
             </button>

@@ -7,7 +7,7 @@
 }
 
 .root:focus {
-  @apply shadow-outline outline-none;
+  @apply outline-none ring-2 ring-pink ring-opacity-50;
 }
 
 .root[data-active] {
