@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import s from './Navbar.module.css';
 import Logo from '../Logo';
-import { useAuth } from '../../utils/useAuth';
+import { useUser } from '../../components/UserContext';
 
 const Navbar = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useUser();
   return (
     <div className={s.root}>
       <div className="mx-auto max-w-6xl px-6">

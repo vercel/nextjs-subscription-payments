@@ -3,14 +3,14 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { postData } from '../utils/helpers';
 import { getStripe } from '../utils/initStripejs';
-import { useAuth } from '../utils/useAuth';
+import { useUser } from '../components/UserContext';
 import Button from './Button/Button';
 
 export default function Pricing({ products }) {
   const [billingInterval, setBillingInterval] = useState('month');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { session } = useAuth();
+  const { session } = useUser();
 
   const handleCheckout = async (price) => {
     setLoading(true);

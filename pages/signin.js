@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { validate } from 'email-validator';
-import { useAuth } from '../utils/useAuth';
+import { useUser } from '../components/UserContext';
 import LoadingDots from '../components/LoadingDots';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -16,7 +16,7 @@ const SignIn = () => {
   const [dirty, setDirty] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
-  const { user, signIn } = useAuth();
+  const { user, signIn } = useUser();
 
   const handleSignin = async (e) => {
     e.preventDefault();
