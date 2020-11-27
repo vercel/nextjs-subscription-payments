@@ -1,11 +1,11 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 import { supabase } from './initSupabase';
 
-const useAuth = (options) => {
+export const AuthContext = createContext();
+
+export const AuthProvider = (props) => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
-  const router = useRouter();
 
   useEffect(() => {
     const session = supabase.auth.session();
@@ -16,19 +16,29 @@ const useAuth = (options) => {
         console.log(`Supbase auth event: ${event}`);
         setSession(session);
         setUser(session?.user ?? null);
-        if (event === 'SIGNED_OUT' && options?.redirectTo)
-          router.replace(options.redirectTo);
       }
     );
-    if (!session?.user && options?.redirectTo)
-      router.replace(options.redirectTo);
+
     return () => {
       authListener.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { user, session };
+  const value = {
+    user,
+    session,
+    signIn: (options) => supabase.auth.signIn(options),
+    signUp: (options) => supabase.auth.signUp(options),
+    signOut: () => supabase.auth.signOut()
+  };
+  return <AuthContext.Provider value={value} {...props} />;
 };
 
-export { useAuth };
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error(`useAuth must be used within a AuthProvider.`);
+  }
+  return context;
+};

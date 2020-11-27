@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import { validate } from 'email-validator';
-import { supabase } from '../utils/initSupabase';
 import { useAuth } from '../utils/useAuth';
 import LoadingDots from '../components/LoadingDots';
 import Input from '../components/Input';
@@ -17,7 +16,7 @@ const SignIn = () => {
   const [dirty, setDirty] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signIn } = useAuth();
 
   const handleSignin = async (e) => {
     e.preventDefault();
@@ -29,7 +28,7 @@ const SignIn = () => {
 
     setLoading(true);
     setMessage('');
-    const { error } = await supabase.auth.signIn({ email, password });
+    const { error } = await signIn({ email, password });
     if (error) {
       console.log(error);
       setMessage(error.message);

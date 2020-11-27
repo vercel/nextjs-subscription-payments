@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { supabase } from '../utils/initSupabase';
@@ -26,7 +27,8 @@ export default function Account() {
   const [subscriptions, setSubscriptions] = useState(null);
   const [loading, setLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const { user, session } = useAuth({ redirectTo: '/signin' });
+  const router = useRouter();
+  const { user, session } = useAuth();
 
   // Get the user details.
   const getUserDetails = () => supabase.from('users').select('*').single();
@@ -49,6 +51,10 @@ export default function Account() {
         }
       );
     }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) router.replace('/signin');
   }, [user]);
 
   const redirectToCustomerPortal = async () => {
