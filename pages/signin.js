@@ -23,7 +23,6 @@ const SignIn = () => {
 
     const { error } = await signIn({ email, password });
     if (error) {
-      console.log(error);
       setMessage(error.message);
     }
     if (!password) {

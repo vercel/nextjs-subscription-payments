@@ -35,7 +35,6 @@ const SignUp = () => {
         .eq('id', user.id);
       setLoading(false);
     } catch (e) {
-      console.log(e);
       setMessage(e.message);
       setLoading(false);
     }
