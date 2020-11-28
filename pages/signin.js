@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useCallback } from 'react';
-import { validate } from 'email-validator';
+import { useEffect, useState } from 'react';
 import { useUser } from '../components/UserContext';
 import LoadingDots from '../components/LoadingDots';
 import Input from '../components/Input';
@@ -13,43 +12,30 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [dirty, setDirty] = useState(false);
-  const [disabled, setDisabled] = useState(false);
   const router = useRouter();
   const { user, signIn } = useUser();
 
   const handleSignin = async (e) => {
     e.preventDefault();
 
-    if (!dirty && !disabled) {
-      setDirty(true);
-      handleValidation();
-    }
-
     setLoading(true);
     setMessage('');
+
     const { error } = await signIn({ email, password });
     if (error) {
       console.log(error);
       setMessage(error.message);
     }
-    if (!password) setMessage('Check your email for the magic link.');
+    if (!password) {
+      setMessage('Check your email for the magic link.');
+    }
     setLoading(false);
   };
 
-  const handleValidation = useCallback(() => {
-    // Unable to send form unless fields are valid.
-    if (dirty) {
-      setDisabled(!validate(email));
+  useEffect(() => {
+    if (user) {
+      router.replace('/account');
     }
-  }, [email, password, dirty]);
-
-  useEffect(() => {
-    handleValidation();
-  }, [handleValidation]);
-
-  useEffect(() => {
-    if (user) router.replace('/account');
   }, [user]);
 
   if (!user)
@@ -63,9 +49,14 @@ const SignIn = () => {
         </div>
         <div className="flex flex-col space-y-4">
           {message && (
-            <div className="text-red border border-red p-3">{message}</div>
+            <div className="text-pink border border-pink p-3">{message}</div>
           )}
-          <Input type="email" placeholder="Email" onChange={setEmail} />
+          <Input
+            type="email"
+            placeholder="Email"
+            onChange={setEmail}
+            required
+          />
           <Input
             type="password"
             placeholder="Password"
@@ -76,7 +67,7 @@ const SignIn = () => {
               variant="slim"
               type="submit"
               loading={loading}
-              disabled={disabled}
+              disabled={loading}
             >
               {password.length ? 'Sign In' : 'Send Magic Link'}
             </Button>

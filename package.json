@@ -12,7 +12,6 @@
     "@stripe/stripe-js": "^1.11.0",
     "@supabase/supabase-js": "^1.0.7",
     "classnames": "^2.2.6",
-    "email-validator": "^2.0.4",
     "next": "10.0.3",
     "react": "^17.0.1",
     "react-aria": "^3.1.1",
