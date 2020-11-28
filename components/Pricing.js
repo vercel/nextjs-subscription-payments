@@ -127,7 +127,7 @@ export default function Pricing({ products }) {
           <p className="mt-24 text-xs uppercase text-accents-3 text-center font-bold tracking-widest">
             Brought to you by
           </p>
-          <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-4">
+          <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
             <div className="flex items-center justify-start">
               <a href="https://nextjs.org" aria-label="Next.js Link">
                 <img
@@ -160,7 +160,16 @@ export default function Pricing({ products }) {
                 <img
                   src="/supabase.svg"
                   alt="supabase.io Logo"
-                  className="h-12 text-primary"
+                  className="h-10 text-primary"
+                />
+              </a>
+            </div>
+            <div className="flex items-center justify-start">
+              <a href="https://github.com" aria-label="github.com Link">
+                <img
+                  src="/github.svg"
+                  alt="github.com Logo"
+                  className="h-8 text-primary"
                 />
               </a>
             </div>
