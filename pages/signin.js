@@ -2,9 +2,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useUser } from '../components/UserContext';
-import LoadingDots from '../components/LoadingDots';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import LoadingDots from '../components/ui/LoadingDots';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 import Logo from '../components/icons/Logo';
 
 const SignIn = () => {

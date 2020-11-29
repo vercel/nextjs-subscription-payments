@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../utils/initSupabase';
 import { useUser } from '../components/UserContext';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 import Logo from '../components/icons/Logo';
 
 const SignUp = () => {
