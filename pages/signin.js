@@ -5,7 +5,7 @@ import { useUser } from '../components/UserContext';
 import LoadingDots from '../components/LoadingDots';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import Logo from '../components/Logo';
+import Logo from '../components/icons/Logo';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');

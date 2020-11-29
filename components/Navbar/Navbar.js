@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import s from './Navbar.module.css';
-import Logo from '../Logo';
+import Logo from '../icons/Logo';
 import { useUser } from '../../components/UserContext';
 
 const Navbar = () => {
