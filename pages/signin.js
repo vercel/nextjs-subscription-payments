@@ -56,7 +56,13 @@ const SignIn = () => {
           </div>
           <div className="flex flex-col space-y-4">
             {message && (
-              <div className="text-pink border border-pink p-3">{message}</div>
+              <div
+                className={`text-${password ? 'pink' : 'green'} border border-${
+                  password ? 'pink' : 'green'
+                } p-3`}
+              >
+                {message}
+              </div>
             )}
             <Input
               type="email"
@@ -102,7 +108,7 @@ const SignIn = () => {
         <Button
           variant="slim"
           type="submit"
-          loading={loading}
+          disabled={loading}
           onClick={() => handleOAuthSignIn('github')}
         >
           <GitHub />

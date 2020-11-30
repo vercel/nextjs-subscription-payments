@@ -8,6 +8,7 @@ import Button from '../components/ui/Button';
 import Logo from '../components/icons/Logo';
 
 const SignUp = () => {
+  const [user, setUser] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -15,7 +16,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const router = useRouter();
-  const { user, signUp } = useUser();
+  const { signUp } = useUser();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -31,8 +32,13 @@ const SignUp = () => {
 
       await supabase
         .from('users')
-        .update({ first_name: firstName, last_name: lastName })
+        .update({
+          first_name: firstName,
+          last_name: lastName,
+          full_name: `${firstName} ${lastName}`
+        })
         .eq('id', user.id);
+      setUser(user);
       setLoading(false);
     } catch (e) {
       setMessage(e.message);
