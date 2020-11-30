@@ -3,9 +3,8 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { postData } from '../utils/helpers';
 import { useUser } from '../components/UserContext';
-import LoadingDots from '../components/LoadingDots';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import LoadingDots from '../components/ui/LoadingDots';
+import Button from '../components/ui/Button';
 
 function Card({ title, description, footer, children }) {
   return (

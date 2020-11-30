@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { postData } from '../utils/helpers';
 import { getStripe } from '../utils/initStripejs';
 import { useUser } from '../components/UserContext';
-import Button from './Button/Button';
+import Button from './ui/Button';
 
 export default function Pricing({ products }) {
   const [billingInterval, setBillingInterval] = useState('month');
