@@ -19,17 +19,7 @@ The all-in-one starter kit for high-performance SaaS applications. With a few cl
 
 ![Architecture diagram](./public/architecture_diagram.svg)
 
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) or [npx](https://github.com/zkat/npx#readme) to bootstrap the example:
-
-```bash
-npx create-next-app --example https://github.com/vercel/nextjs-subscription-payments my-saas-app
-# or
-yarn create next-app --example https://github.com/vercel/nextjs-subscription-payments my-saas-app
-```
-
-## Configuration
+## Setup
 
 ### 1. Create new Supabase project
 
@@ -45,80 +35,19 @@ You can use third-party login providers like GitHub or Google. Refer to the [doc
 
 ### 3. Get your Supabase credentials
 
-Create a copy of `.env.local.example`:
-
-```bash
-cp .env.local.example .env.local
-```
-
-In your [Supabase Dashboard](https://app.supabase.io/), go to the Project Settings (the cog icon), open the API tab, and find your API URL, the public `anon` key, and the secret `service_role` key and set them in your newly created `.env.local` file.
-
-### 4. Get your Stripe credentials
-
-In your [Stripe Dashboard](https://dashboard.stripe.com/apikeys), go to Developers > API keys, and copy the publishable key and the secret key to your `.env.local` file.
-
-The webhook secret differs for local testing vs. when deployed to Vercel. Follow the instructions below to get the corresponding webhook secret.
-
-## Test locally with the Stripe CLi
-
-### Install dependencies and run the Next.js client
-
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
-```
-
-### Use the Stripe CLI to test webhooks
-
-First [install the CLI](https://stripe.com/docs/stripe-cli) and [link your Stripe account](https://stripe.com/docs/stripe-cli#login-account).
-
-Next, start the webhook forwarding:
-
-```bash
-stripe listen --forward-to=localhost:3000/api/webhooks
-```
-
-The CLI will print a webhook secret (such as, `whsec_***`) to the console. Set `STRIPE_WEBHOOK_SECRET` to this value in your `.env.local` file.
+In your [Supabase Dashboard](https://app.supabase.io/), go to the Project Settings (the cog icon), open the API tab, and find your API URL, the public `anon` key, and the secret `service_role` key. You will be prompted for these when deploying with Vercel.
 
 ## Deploy with Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnextjs-subscription-payments&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,STRIPE_WEBHOOK_SECRET&envDescription=Add%20your%20API%20keys%20from%20the%20Supabase%20and%20Stripe%20Dashboards&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter%20Demo&demo-url=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2F&demo-image=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2Fdemo.png)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fthorwebdev%2Fnextjs-subscription-payments&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY&envDescription=Add%20your%20API%20keys%20from%20the%20Supabase%20Dashboard&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter%20Demo&demo-url=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2F&demo-image=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2Fdemo.png&integration-ids=oac_PRuwpvAMWiBLZbjkX7Z7Fipf)
+
+Once your project has been deployed, continue with the configuration steps below.
 
 ### Configure Supabase Auth
 
 After deploying, copy the deployment URL and navigate to your Supabase project settings (Authentication > Settings) and set your site url.
 
 ## Configure Stripe
-
-### Configure Stripe webhooks
-
-You need to set up a webhook that synchronizes relevant details from Stripe with your Supabase Database. This includes product and pricing data from the Stripe Dashboard, as well as customers' subscription details.
-
-Here's how to set up the webhook and configure your project to use it:
-
-1. Configure your webhook:
-
-   1. Go to the [Stripe dashboard.](https://dashboard.stripe.com/webhooks)
-
-   1. Set your endpoint URL: https://your-project.vercel.app/api/webhooks
-
-   1. Select the following events:
-
-   - `product.created`
-   - `product.updated`
-   - `price.created`
-   - `price.updated`
-   - `checkout.session.completed`
-   - `customer.subscription.created`
-   - `customer.subscription.updated`
-   - `customer.subscription.deleted`
-
-1. Once created, you can click to reveal your webhook signing secret. Copy the webhook secret (`whsec_***`) and add it to the environment variables in your [Vercel Dashboard](https://vercel.com/dashboard): Project > Settings > Environment Variables.
-
-**NOTE:** After adding an environment variable, you will need to rebuild your project for it to become available within your code. In your project Dashboard, navigate to the "Deployments" tab, select the most recent deployment, click the overflow menu button (next to the "Visit" button) and select "Redeploy".
 
 ### Create product and pricing information
 
