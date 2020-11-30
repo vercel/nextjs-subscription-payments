@@ -15,7 +15,17 @@ export const UserContextProvider = (props) => {
     setSession(session);
     setUser(session?.user ?? null);
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        if (event === 'SIGNED_IN') {
+          const user = session.user;
+          await supabase
+            .from('users')
+            .update({
+              full_name: user.user_metadata?.full_name ?? null,
+              avatar_url: user.user_metadata?.avatar_url ?? null
+            })
+            .eq('id', user.id);
+        }
         setSession(session);
         setUser(session?.user ?? null);
       }

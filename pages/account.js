@@ -103,7 +103,7 @@ export default function Account() {
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {userDetails ? (
-              `${userDetails.first_name} ${userDetails.last_name}`
+              `${userDetails?.full_name ?? ''}`
             ) : (
               <div className="h-8 mb-6">
                 <LoadingDots />
