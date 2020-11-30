@@ -8,8 +8,6 @@ drop publication if exists supabase_realtime;
 create table users (
   -- UUID from auth.users
   id uuid references auth.users not null primary key,
-  first_name text,
-  last_name text,
   full_name text,
   avatar_url text,
   -- The customer's billing address, stored in JSON format.

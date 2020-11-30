@@ -11,8 +11,7 @@ const SignUp = () => {
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const router = useRouter();
@@ -33,9 +32,7 @@ const SignUp = () => {
       await supabase
         .from('users')
         .update({
-          first_name: firstName,
-          last_name: lastName,
-          full_name: `${firstName} ${lastName}`
+          full_name: name
         })
         .eq('id', user.id);
       setUser(user);
@@ -64,8 +61,7 @@ const SignUp = () => {
         {message && (
           <div className="text-red border border-red p-3">{message}</div>
         )}
-        <Input placeholder="First Name" onChange={setFirstName} />
-        <Input placeholder="Last Name" onChange={setLastName} />
+        <Input placeholder="Name" onChange={setName} />
         <Input type="email" placeholder="Email" onChange={setEmail} required />
         <Input type="password" placeholder="Password" onChange={setPassword} />
         <div className="pt-2 w-full flex flex-col">
