@@ -42,6 +42,10 @@
   box-sizing: inherit;
 }
 
+*:focus {
+  @apply outline-none ring-2 ring-pink ring-opacity-50;
+}
+
 html {
   height: 100%;
   box-sizing: border-box;

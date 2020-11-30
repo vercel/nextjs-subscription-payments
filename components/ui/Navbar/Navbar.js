@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import s from './Navbar.module.css';
-import Logo from '../Logo';
-import { useUser } from '../../components/UserContext';
+import Logo from '../../icons/Logo';
+import { useUser } from '../../UserContext';
 
 const Navbar = () => {
   const { user, signOut } = useUser();
+
   return (
-    <div className={s.root}>
+    <nav className={s.root}>
+      <a href="#skip" className="sr-only focus:not-sr-only">
+        Skip to content
+      </a>
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 relative">
           <div className="flex flex-1 items-center">
@@ -15,7 +19,7 @@ const Navbar = () => {
                 <Logo />
               </a>
             </Link>
-            <nav className="space-x-4 ml-6 hidden lg:block">
+            <nav className="space-x-2 ml-6 hidden lg:block">
               <Link href="/">
                 <a className={s.link}>Pricing</a>
               </Link>
@@ -40,7 +44,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

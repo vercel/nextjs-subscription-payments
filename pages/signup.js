@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useCallback } from 'react';
-import { validate } from 'email-validator';
+import { useEffect, useState } from 'react';
 import { supabase } from '../utils/initSupabase';
 import { useUser } from '../components/UserContext';
-import Input from '../components/Input';
-import Button from '../components/Button';
-import Logo from '../components/Logo';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import Logo from '../components/icons/Logo';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -15,18 +14,11 @@ const SignUp = () => {
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [dirty, setDirty] = useState(false);
-  const [disabled, setDisabled] = useState(false);
   const router = useRouter();
   const { user, signUp } = useUser();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
-    if (!dirty && !disabled) {
-      setDirty(true);
-      handleValidation();
-    }
 
     try {
       setLoading(true);
@@ -43,34 +35,21 @@ const SignUp = () => {
         .eq('id', user.id);
       setLoading(false);
     } catch (e) {
-      console.log(e);
       setMessage(e.message);
       setLoading(false);
     }
   };
 
-  const handleValidation = useCallback(() => {
-    // Test for Alphanumeric password
-    const validPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(password);
-
-    // Unable to send form unless fields are valid.
-    if (dirty) {
-      setDisabled(!validate(email) || password.length < 7 || !validPassword);
+  useEffect(() => {
+    if (user) {
+      router.replace('/account');
     }
-  }, [email, password, dirty]);
-
-  useEffect(() => {
-    handleValidation();
-  }, [handleValidation]);
-
-  useEffect(() => {
-    if (user) router.replace('/account');
   }, [user]);
 
   return (
     <form
       onSubmit={handleSignup}
-      className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-16"
+      className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-64"
     >
       <div className="flex justify-center pb-12 ">
         <Logo width="64px" height="64px" />
@@ -81,14 +60,14 @@ const SignUp = () => {
         )}
         <Input placeholder="First Name" onChange={setFirstName} />
         <Input placeholder="Last Name" onChange={setLastName} />
-        <Input type="email" placeholder="Email" onChange={setEmail} />
+        <Input type="email" placeholder="Email" onChange={setEmail} required />
         <Input type="password" placeholder="Password" onChange={setPassword} />
         <div className="pt-2 w-full flex flex-col">
           <Button
             variant="slim"
             type="submit"
             loading={loading}
-            disabled={disabled}
+            disabled={loading}
           >
             Sign Up
           </Button>

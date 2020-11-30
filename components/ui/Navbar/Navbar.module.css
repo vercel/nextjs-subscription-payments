@@ -3,7 +3,7 @@
 }
 
 .link {
-  @apply inline-flex items-center text-primary leading-6 font-medium transition ease-in-out duration-75 cursor-pointer text-accents-6;
+  @apply inline-flex items-center text-primary leading-6 font-medium transition ease-in-out duration-75 cursor-pointer text-accents-6 rounded-md p-1;
 }
 
 .link:hover {
@@ -11,7 +11,7 @@
 }
 
 .link:focus {
-  @apply outline-none text-accents-8;
+  @apply outline-none text-accents-8 ring-2 ring-pink ring-opacity-50;
 }
 
 .logo {
