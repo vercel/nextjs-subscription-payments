@@ -1,6 +1,3 @@
--- turn off realtime subscriptions for this schema.
-drop publication if exists supabase_realtime;
-
 /** 
 * USERS
 * Note: This table contains user data. Users should only be able to view and update their own data.
@@ -139,3 +136,10 @@ create table subscriptions (
 );
 alter table subscriptions enable row level security;
 create policy "Can only view own subs data." on subscriptions for select using (auth.uid() = user_id);
+
+/**
+ * REALTIME SUBSCRIPTIONS
+ * Only allow realtime changes on the open tables.
+ */
+drop publication if exists supabase_realtime;
+create publication supabase_realtime for table products, pricing;
