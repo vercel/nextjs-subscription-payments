@@ -95,9 +95,7 @@ export default function Pricing({ products }) {
                   <h2 className="text-2xl leading-6 font-semibold text-white">
                     {product.name}
                   </h2>
-                  <p className="mt-4 text-accents-5">
-                    All the basics for starting a new business
-                  </p>
+                  <p className="mt-4 text-accents-5">{product.description}</p>
                   <p className="mt-8">
                     <span className="text-5xl font-extrabold white">
                       {priceString}
