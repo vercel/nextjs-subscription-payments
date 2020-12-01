@@ -21,7 +21,7 @@ To help resolve your issue as quickly as possible, read the template and provide
 
 ## File a feature request
 
-We welcome all feature requests, whether it's to add new functionality to an existing extension or to offer an idea for a brand new extension.
+We welcome all feature requests, whether it's to add new functionality or improve existing features.
 
 File your feature request through GitHub Issues using the [Feature Request template](https://github.com/thorwebdev/nextjs-subscription-payments/issues/new?template=2.Feature_request.md).
 
@@ -32,7 +32,6 @@ When making pull requests to the repository, make sure to follow these guideline
 - Before creating a pull request, file a GitHub Issue so that maintainers and the community can discuss the problem and potential solutions before you spend time on an implementation.
 - In your PR's description, link to any related issues or pull requests to give reviewers the full context of your change.
 - For commit messages, follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format.
-  - For example, if you update documentation for a specific extension, your commit message might be: `docs(extension-name) updated installation documentation`.
 
 ### Features
 
