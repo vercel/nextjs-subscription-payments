@@ -139,7 +139,7 @@ create policy "Can only view own subs data." on subscriptions for select using (
 
 /**
  * REALTIME SUBSCRIPTIONS
- * Only allow realtime changes on the open tables.
+ * Only allow realtime listening on public tables.
  */
 drop publication if exists supabase_realtime;
-create publication supabase_realtime for table products, pricing;
+create publication supabase_realtime for table products, prices;
