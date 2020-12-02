@@ -51,7 +51,7 @@ After deploying, copy the deployment URL and navigate to your Supabase project s
 
 ### Create product and pricing information
 
-For Stripe to automatically bill your users for recurring payments, you need to create your product and pricing information in the [Stripe Dashboard](https://dashboard.stripe.com/test/products). When you create or update your product and price information, the changes are automatically synced with your Supabase database, as long as the webhook is configured correctly (the webhook creation is part of deploying to vercel, the webhook endpoint is configured at the `/api/webhooks` path).
+For Stripe to automatically bill your users for recurring payments, you need to create your product and pricing information in the [Stripe Dashboard](https://dashboard.stripe.com/test/products). When you create or update your product and price information, the changes are automatically synced with your Supabase database, as long as the webhook is configured correctly (the webhook creation is part of deploying to Vercel, the webhook endpoint is configured at the `/api/webhooks` path).
 
 Stripe Checkout currently supports pricing plans that bill a predefined amount at a specific interval. More complex plans (e.g. different pricing tiers or seats) are not yet supported.
 
@@ -80,6 +80,52 @@ For example, you can create business models with different pricing tiers, e.g.:
 1. Add the products and prices that you want to allow customer to switch between.
 1. Set up the required business information and links.
 
-## That's it
+### That's it
 
 That's it, you're now ready to earn recurring revenue from your customers \o/
+
+## Develop locally
+
+If you've deployed the project with Vercel, it will have created a repository for you which you can clone to your local machine. If you haven't deployed with Vercel, you can use [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) or [npx](https://github.com/zkat/npx#readme) to bootstrap the example:
+
+```bash
+npx create-next-app --example https://github.com/thorwebdev/nextjs-subscription-payments my-saas-app
+# or
+yarn create next-app --example https://github.com/thorwebdev/nextjs-subscription-payments my-saas-app
+```
+
+### Setting up the env vars locally
+
+Create a copy of `.env.local.example`:
+
+```bash
+cp .env.local.example .env.local
+```
+
+In your [Supabase Dashboard](https://app.supabase.io/), go to the Project Settings (the cog icon), open the API tab, and find your API URL, the public `anon` key, and the secret `service_role` key and set them in your newly created `.env.local` file.
+
+In your [Stripe Dashboard](https://dashboard.stripe.com/apikeys), go to Developers > API keys, and copy the publishable key and the secret key to your `.env.local` file.
+
+The webhook secret differs for local testing vs. when deployed to Vercel. Follow the instructions below to get the corresponding webhook secret.
+
+### Install dependencies and run the Next.js client
+
+```bash
+npm install
+npm run dev
+# or
+yarn
+yarn dev
+```
+
+### Use the Stripe CLI to test webhooks
+
+First [install the CLI](https://stripe.com/docs/stripe-cli) and [link your Stripe account](https://stripe.com/docs/stripe-cli#login-account).
+
+Next, start the webhook forwarding:
+
+```bash
+stripe listen --forward-to=localhost:3000/api/webhooks
+```
+
+The CLI will print a webhook secret (such as, `whsec_***`) to the console. Set `STRIPE_WEBHOOK_SECRET` to this value in your `.env.local` file.
