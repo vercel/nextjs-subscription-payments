@@ -21,7 +21,7 @@ function Card({ title, description, footer, children }) {
   );
 }
 export default function Account() {
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { userLoaded, user, session, userDetails, subscription } = useUser();
 
@@ -30,12 +30,14 @@ export default function Account() {
   }, [user]);
 
   const redirectToCustomerPortal = async () => {
-    setCheckoutLoading(true);
-    const { url } = await postData({
+    setLoading(true);
+    const { url, error } = await postData({
       url: '/api/createPortalLink',
       token: session.access_token
     });
+    if (error) return alert(error.message);
     window.location.assign(url);
+    setLoading(false);
   };
 
   const subscriptionName = subscription && subscription.prices.products.name;
@@ -73,8 +75,8 @@ export default function Account() {
               </p>
               <Button
                 variant="slim"
-                loading={checkoutLoading}
-                disabled={checkoutLoading || !subscription}
+                loading={loading}
+                disabled={loading || !subscription}
                 onClick={redirectToCustomerPortal}
               >
                 Open customer portal

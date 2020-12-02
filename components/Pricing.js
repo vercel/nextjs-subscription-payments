@@ -22,14 +22,15 @@ export default function Pricing({ products }) {
       router.push('/account');
       return;
     }
-    const { sessionId } = await postData({
+    const { sessionId, error: apiError } = await postData({
       url: '/api/createCheckoutSession',
       data: { price },
       token: session.access_token
     });
+    if (apiError) return alert(apiError.message);
     const stripe = await getStripe();
-    const { error } = stripe.redirectToCheckout({ sessionId });
-    if (error) alert(error.message);
+    const { error: stripeError } = stripe.redirectToCheckout({ sessionId });
+    if (stripeError) alert(error.message);
     setLoading(false);
   };
 
