@@ -57,9 +57,11 @@ const SignIn = () => {
           <div className="flex flex-col space-y-4">
             {message && (
               <div
-                className={`text-${
-                  password.length ? 'pink' : 'green'
-                } border border-${password.length ? 'pink' : 'green'} p-3`}
+                className={`${
+                  password.length ? 'text-pink' : 'text-green'
+                } border ${
+                  password.length ? 'border-pink' : 'border-green'
+                } p-3`}
               >
                 {message}
               </div>
