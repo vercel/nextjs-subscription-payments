@@ -83,7 +83,7 @@ const SignIn = () => {
                 variant="slim"
                 type={!password.length ? 'submit' : 'button'}
                 loading={!password.length && loading}
-                disabled={!email.length || !!password.length}
+                disabled={!email.length}
                 onClick={handleSignin}
               >
                 Send magic link
@@ -113,18 +113,21 @@ const SignIn = () => {
             </div>
 
             <span className="pt-1 text-center text-sm">
-              <span
+              <a
+                href="#"
                 className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
                 onClick={() => {
                   if (showPasswordInput) setPassword('');
-                  setShowPasswordInput(!showPasswordInput);
+                  setShowPasswordInput(!showPasswordInput && !password.length);
                   setMessage('');
                 }}
               >
                 {`Or sign in with ${
-                  showPasswordInput ? 'magic link' : 'password'
+                  showPasswordInput || !!password.length
+                    ? 'magic link'
+                    : 'password'
                 }.`}
-              </span>
+              </a>
             </span>
 
             <span className="pt-1 text-center text-sm">
