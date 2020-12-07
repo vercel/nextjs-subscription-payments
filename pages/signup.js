@@ -71,7 +71,7 @@ const SignUp = () => {
             loading={loading}
             disabled={loading}
           >
-            Sign Up
+            Sign up
           </Button>
         </div>
 
@@ -80,7 +80,7 @@ const SignUp = () => {
           {` `}
           <Link href="/signin">
             <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-              Sign In
+              Sign in.
             </a>
           </Link>
         </span>

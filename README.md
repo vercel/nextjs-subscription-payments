@@ -65,7 +65,7 @@ For example, you can create business models with different pricing tiers, e.g.:
   - [...]: additional currency and interval combinations
 - Product 2: Freelancer
   - Price 1: 20 USD per month
-  - Price 2: 20 USD per year
+  - Price 2: 200 USD per year
   - Price 3: 16 GBP per month
   - Price 4: 160 GBP per year
   - [...]: additional currency and interval combinations

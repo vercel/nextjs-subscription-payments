@@ -17,7 +17,7 @@ const SignIn = () => {
   const { user, signIn } = useUser();
 
   const handleSignin = async (e) => {
-    e.preventDefault();
+    if (e.preventDefault) e.preventDefault();
 
     setLoading(true);
     setMessage('');
@@ -70,23 +70,36 @@ const SignIn = () => {
               onChange={setEmail}
               required
             />
+            <Button
+              variant="slim"
+              type={!password.length ? 'submit' : 'button'}
+              loading={!password.length && loading}
+              disabled={!email.length || !!password.length}
+              onClick={handleSignin}
+            >
+              Send magic link
+            </Button>
             <Input
               type="password"
               placeholder="Password"
               onChange={setPassword}
             />
-            <div className="pt-2 w-full flex flex-col">
-              <Button variant="slim" type="submit" loading={loading}>
-                {password.length ? 'Sign In' : 'Send Magic Link'}
-              </Button>
-            </div>
+            <Button
+              className="mt-1"
+              variant="slim"
+              type={password.length ? 'submit' : 'button'}
+              loading={!!password.length && loading}
+              disabled={!password.length}
+            >
+              Sign in
+            </Button>
 
             <span className="pt-1 text-center text-sm">
               <span className="text-accents-7">Don't have an account?</span>
               {` `}
               <Link href="/signup">
                 <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-                  Sign Up
+                  Sign up.
                 </a>
               </Link>
             </span>
