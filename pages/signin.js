@@ -70,12 +70,13 @@ const SignIn = () => {
             <Input
               type="email"
               placeholder="Email"
+              value={email}
               onChange={setEmail}
               required
             />
             <div
               className={`w-full flex flex-col ${
-                showPasswordInput ? 'hidden' : ''
+                showPasswordInput || password.length ? 'hidden' : ''
               }`}
             >
               <Button
@@ -91,12 +92,13 @@ const SignIn = () => {
 
             <div
               className={`flex flex-col space-y-4 ${
-                !showPasswordInput ? 'hidden' : ''
+                showPasswordInput || password.length ? '' : 'hidden'
               }`}
             >
               <Input
                 type="password"
                 placeholder="Password"
+                value={password}
                 onChange={setPassword}
               />
               <Button
@@ -113,7 +115,11 @@ const SignIn = () => {
             <span className="pt-1 text-center text-sm">
               <span
                 className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
-                onClick={() => setShowPasswordInput(!showPasswordInput)}
+                onClick={() => {
+                  if (showPasswordInput) setPassword('');
+                  setShowPasswordInput(!showPasswordInput);
+                  setMessage('');
+                }}
               >
                 {`Or sign in with ${
                   showPasswordInput ? 'magic link' : 'password'
