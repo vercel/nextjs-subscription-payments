@@ -11,6 +11,7 @@ import GitHub from '../components/icons/GitHub';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const router = useRouter();
@@ -72,29 +73,53 @@ const SignIn = () => {
               onChange={setEmail}
               required
             />
-            <Button
-              variant="slim"
-              type={!password.length ? 'submit' : 'button'}
-              loading={!password.length && loading}
-              disabled={!email.length || !!password.length}
-              onClick={handleSignin}
+            <div
+              className={`w-full flex flex-col ${
+                showPasswordInput ? 'hidden' : ''
+              }`}
             >
-              Send magic link
-            </Button>
-            <Input
-              type="password"
-              placeholder="Password"
-              onChange={setPassword}
-            />
-            <Button
-              className="mt-1"
-              variant="slim"
-              type={password.length ? 'submit' : 'button'}
-              loading={!!password.length && loading}
-              disabled={!password.length}
+              <Button
+                variant="slim"
+                type={!password.length ? 'submit' : 'button'}
+                loading={!password.length && loading}
+                disabled={!email.length || !!password.length}
+                onClick={handleSignin}
+              >
+                Send magic link
+              </Button>
+            </div>
+
+            <div
+              className={`flex flex-col space-y-4 ${
+                !showPasswordInput ? 'hidden' : ''
+              }`}
             >
-              Sign in
-            </Button>
+              <Input
+                type="password"
+                placeholder="Password"
+                onChange={setPassword}
+              />
+              <Button
+                className="mt-1"
+                variant="slim"
+                type={password.length ? 'submit' : 'button'}
+                loading={!!password.length && loading}
+                disabled={!password.length}
+              >
+                Sign in
+              </Button>
+            </div>
+
+            <span className="pt-1 text-center text-sm">
+              <span
+                className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
+                onClick={() => setShowPasswordInput(!showPasswordInput)}
+              >
+                {`Or sign in with ${
+                  showPasswordInput ? 'magic link' : 'password'
+                }.`}
+              </span>
+            </span>
 
             <span className="pt-1 text-center text-sm">
               <span className="text-accents-7">Don't have an account?</span>
