@@ -13,34 +13,35 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState({ type: '', content: '' });
   const router = useRouter();
   const { signUp } = useUser();
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    try {
-      setLoading(true);
-      setMessage('');
-      const { error, user } = await signUp({ email, password });
-
-      if (error) {
-        throw error;
+    setLoading(true);
+    setMessage({});
+    const { error, user } = await signUp({ email, password });
+    if (error) {
+      setMessage({ type: 'error', content: error.message });
+    } else {
+      if (user) {
+        await supabase
+          .from('users')
+          .update({
+            full_name: name
+          })
+          .eq('id', user.id);
+        setUser(user);
+      } else {
+        setMessage({
+          type: 'note',
+          content: 'Check your email for the confirmation link.'
+        });
       }
-
-      await supabase
-        .from('users')
-        .update({
-          full_name: name
-        })
-        .eq('id', user.id);
-      setUser(user);
-      setLoading(false);
-    } catch (e) {
-      setMessage(e.message);
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -58,8 +59,16 @@ const SignUp = () => {
         <Logo width="64px" height="64px" />
       </div>
       <div className="flex flex-col space-y-4">
-        {message && (
-          <div className="text-red border border-red p-3">{message}</div>
+        {message.content && (
+          <div
+            className={`${
+              message.type === 'error' ? 'text-pink' : 'text-green'
+            } border ${
+              message.type === 'error' ? 'border-pink' : 'border-green'
+            } p-3`}
+          >
+            {message.content}
+          </div>
         )}
         <Input placeholder="Name" onChange={setName} />
         <Input type="email" placeholder="Email" onChange={setEmail} required />

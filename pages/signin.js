@@ -13,7 +13,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState({ type: '', content: '' });
   const router = useRouter();
   const { user, signIn } = useUser();
 
@@ -21,14 +21,17 @@ const SignIn = () => {
     if (e.preventDefault) e.preventDefault();
 
     setLoading(true);
-    setMessage('');
+    setMessage({});
 
     const { error } = await signIn({ email, password });
     if (error) {
-      setMessage(error.message);
+      setMessage({ type: 'error', content: error.message });
     }
     if (!password) {
-      setMessage('Check your email for the magic link.');
+      setMessage({
+        type: 'note',
+        content: 'Check your email for the magic link.'
+      });
     }
     setLoading(false);
   };
@@ -37,7 +40,7 @@ const SignIn = () => {
     setLoading(true);
     const { error } = await signIn({ provider });
     if (error) {
-      setMessage(error.message);
+      setMessage({ type: 'error', content: error.message });
     }
     setLoading(false);
   };
@@ -56,15 +59,15 @@ const SignIn = () => {
             <Logo width="64px" height="64px" />
           </div>
           <div className="flex flex-col space-y-4">
-            {message && (
+            {message.content && (
               <div
                 className={`${
-                  password.length ? 'text-pink' : 'text-green'
+                  message.type === 'error' ? 'text-pink' : 'text-green'
                 } border ${
-                  password.length ? 'border-pink' : 'border-green'
+                  message.type === 'error' ? 'border-pink' : 'border-green'
                 } p-3`}
               >
-                {message}
+                {message.content}
               </div>
             )}
             <Input
@@ -119,7 +122,7 @@ const SignIn = () => {
                 onClick={() => {
                   if (showPasswordInput) setPassword('');
                   setShowPasswordInput(!showPasswordInput && !password.length);
-                  setMessage('');
+                  setMessage({});
                 }}
               >
                 {`Or sign in with ${
