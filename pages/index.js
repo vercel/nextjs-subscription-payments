@@ -18,7 +18,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      products
+      products: products ?? []
     },
     // Refetch and rebuild pricing page every minute.
     revalidate: 60
