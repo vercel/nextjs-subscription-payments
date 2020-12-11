@@ -18,7 +18,7 @@ const SignIn = () => {
   const { user, signIn } = useUser();
 
   const handleSignin = async (e) => {
-    if (e.preventDefault) e.preventDefault();
+    e.preventDefault();
 
     setLoading(true);
     setMessage({});
@@ -54,96 +54,96 @@ const SignIn = () => {
   if (!user)
     return (
       <div className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-64">
-        <form onSubmit={handleSignin}>
-          <div className="flex justify-center pb-12 ">
-            <Logo width="64px" height="64px" />
-          </div>
-          <div className="flex flex-col space-y-4">
-            {message.content && (
-              <div
-                className={`${
-                  message.type === 'error' ? 'text-pink' : 'text-green'
-                } border ${
-                  message.type === 'error' ? 'border-pink' : 'border-green'
-                } p-3`}
-              >
-                {message.content}
-              </div>
-            )}
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={setEmail}
-              required
-            />
+        <div className="flex justify-center pb-12 ">
+          <Logo width="64px" height="64px" />
+        </div>
+        <div className="flex flex-col space-y-4">
+          {message.content && (
             <div
-              className={`w-full flex flex-col ${
-                showPasswordInput || password.length ? 'hidden' : ''
-              }`}
+              className={`${
+                message.type === 'error' ? 'text-pink' : 'text-green'
+              } border ${
+                message.type === 'error' ? 'border-pink' : 'border-green'
+              } p-3`}
             >
+              {message.content}
+            </div>
+          )}
+
+          {!showPasswordInput && (
+            <form onSubmit={handleSignin} className="flex flex-col space-y-4">
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={setEmail}
+                required
+              />
               <Button
                 variant="slim"
-                type={!password.length ? 'submit' : 'button'}
-                loading={!password.length && loading}
+                type="submit"
+                loading={loading}
                 disabled={!email.length}
-                onClick={handleSignin}
               >
                 Send magic link
               </Button>
-            </div>
+            </form>
+          )}
 
-            <div
-              className={`flex flex-col space-y-4 ${
-                showPasswordInput || password.length ? '' : 'hidden'
-              }`}
-            >
+          {showPasswordInput && (
+            <form onSubmit={handleSignin} className="flex flex-col space-y-4">
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={setEmail}
+                required
+              />
               <Input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={setPassword}
+                required
               />
               <Button
                 className="mt-1"
                 variant="slim"
-                type={password.length ? 'submit' : 'button'}
-                loading={!!password.length && loading}
+                type="submit"
+                loading={loading}
                 disabled={!password.length}
               >
                 Sign in
               </Button>
-            </div>
+            </form>
+          )}
 
-            <span className="pt-1 text-center text-sm">
-              <a
-                href="#"
-                className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
-                onClick={() => {
-                  if (showPasswordInput) setPassword('');
-                  setShowPasswordInput(!showPasswordInput && !password.length);
-                  setMessage({});
-                }}
-              >
-                {`Or sign in with ${
-                  showPasswordInput || !!password.length
-                    ? 'magic link'
-                    : 'password'
-                }.`}
+          <span className="pt-1 text-center text-sm">
+            <a
+              href="#"
+              className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
+              onClick={() => {
+                if (showPasswordInput) setPassword('');
+                setShowPasswordInput(!showPasswordInput);
+                setMessage({});
+              }}
+            >
+              {`Or sign in with ${
+                showPasswordInput ? 'magic link' : 'password'
+              }.`}
+            </a>
+          </span>
+
+          <span className="pt-1 text-center text-sm">
+            <span className="text-accents-7">Don't have an account?</span>
+            {` `}
+            <Link href="/signup">
+              <a className="text-accent-9 font-bold hover:underline cursor-pointer">
+                Sign up.
               </a>
-            </span>
-
-            <span className="pt-1 text-center text-sm">
-              <span className="text-accents-7">Don't have an account?</span>
-              {` `}
-              <Link href="/signup">
-                <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-                  Sign up.
-                </a>
-              </Link>
-            </span>
-          </div>
-        </form>
+            </Link>
+          </span>
+        </div>
 
         <div className="flex items-center my-6">
           <div
