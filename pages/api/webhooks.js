@@ -2,14 +2,14 @@ import { stripe } from '../../utils/initStripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
-  manageSubscriptionStatusChange,
+  manageSubscriptionStatusChange
 } from '../../utils/useDatabase';
 
 // Stripe requires the raw body to construct the event.
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 };
 
 const buffer = (req) => {
@@ -37,14 +37,16 @@ const relevantEvents = new Set([
   'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
-  'customer.subscription.deleted',
+  'customer.subscription.deleted'
 ]);
 
 const webhookHandler = async (req, res) => {
   if (req.method === 'POST') {
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret =
+      process.env.STRIPE_WEBHOOK_SECRET_LIVE ??
+      process.env.STRIPE_WEBHOOK_SECRET;
     let event;
 
     try {
