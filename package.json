@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^1.11.0",
-    "@supabase/supabase-js": "^1.0.7",
+    "@supabase/supabase-js": "^1.1.2",
     "classnames": "^2.2.6",
     "next": "10.0.3",
     "react": "^17.0.1",
