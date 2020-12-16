@@ -19,39 +19,27 @@ The all-in-one starter kit for high-performance SaaS applications. With a few cl
 
 ![Architecture diagram](./public/architecture_diagram.svg)
 
-## Setup
+## Deploy with Vercel
 
-### 1. Create new Supabase project
+The Vercel deployment will guide you through creating a Supabase account and project as well as a Stripe test account and automatically creates the Stripe webhook endpoint for you. After installation of the Supabase and Stripe integrations, all relevant environment variables will be set up so that the project is usable immediately after deployment 🚀
 
-Sign up to Supabase - [https://app.supabase.io](https://app.supabase.io) and create a new project. Wait for your database to start.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fthorwebdev%2Fnextjs-subscription-payments&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter&demo-description=Demo%20project%20on%20Vercel&demo-url=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2F&demo-image=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2Fdemo.png&integration-ids=oac_pb1dqJT8Ry2D99Q0o9qXWIhJ,oac_jUduyjQgOyzev1fjrW83NYOv&external-id=nextjs-subscription-payments)
 
-### 2. Set up your database tables and auth policies
+[![Screenshot of Vercel deployment](./public/vercel-deploy.png)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fthorwebdev%2Fnextjs-subscription-payments&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter&demo-description=Demo%20project%20on%20Vercel&demo-url=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2F&demo-image=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2Fdemo.png&integration-ids=oac_pb1dqJT8Ry2D99Q0o9qXWIhJ,oac_jUduyjQgOyzev1fjrW83NYOv&external-id=nextjs-subscription-payments)
 
-In your Supabase dashboard, go to the SQL editor. There, the welcome tab has a "Quick Start" section. Select the "Stripe Subscriptions" quick start (it has the same content as the [`schema.sql` file](./schema.sql)) and hit the "RUN" button.
+Once the project has been deployed, continue with the configuration steps below.
+
+## Configure Supabase Auth
 
 #### [Optional] - Set up OAuth providers
 
 You can use third-party login providers like GitHub or Google. Refer to the [docs](https://supabase.io/docs/guides/auth#third-party-logins) to learn how to configure these.
 
-### 3. Get your Supabase credentials
-
-In your [Supabase Dashboard](https://app.supabase.io/), go to the Project Settings (the cog icon), open the API tab, and find your API URL, the public `anon` key, and the secret `service_role` key. You will be prompted for these when deploying with Vercel.
-
-## Deploy with Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fthorwebdev%2Fnextjs-subscription-payments&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY&envDescription=Add%20your%20API%20keys%20from%20the%20Supabase%20Dashboard&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter&demo-description=Demo%20project%20on%20Vercel&demo-url=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2F&demo-image=https%3A%2F%2Fnextjs-subscription-payments-starter.vercel.app%2Fdemo.png&integration-ids=oac_pb1dqJT8Ry2D99Q0o9qXWIhJ&external-id=nextjs-subscription-payments)
-
-Once your project has been deployed, continue with the configuration steps below. Note that this deployment step includes prompts for automatically creating a webhook endpoint for you.
-
-### Configure Supabase Auth
-
-After deploying, copy the deployment URL and navigate to your Supabase project settings (Authentication > Settings) and set your site url.
-
 ## Configure Stripe
 
 ### Create product and pricing information
 
-For Stripe to automatically bill your users for recurring payments, you need to create your product and pricing information in the [Stripe Dashboard](https://dashboard.stripe.com/test/products). When you create or update your product and price information, the changes are automatically synced with your Supabase database, as long as the webhook is configured correctly (the webhook creation is part of deploying to Vercel, the webhook endpoint is configured at the `/api/webhooks` path).
+For Stripe to automatically bill your users for recurring payments, you need to create your product and pricing information in the [Stripe Dashboard](https://dashboard.stripe.com/test/products). When you create or update your product and price information, the changes are automatically synced with your Supabase database.
 
 Stripe Checkout currently supports pricing plans that bill a predefined amount at a specific interval. More complex plans (e.g. different pricing tiers or seats) are not yet supported.
 
@@ -60,15 +48,9 @@ For example, you can create business models with different pricing tiers, e.g.:
 - Product 1: Hobby
   - Price 1: 10 USD per month
   - Price 2: 100 USD per year
-  - Price 3: 8 GBP per month
-  - Price 4: 80 GBP per year
-  - [...]: additional currency and interval combinations
 - Product 2: Freelancer
   - Price 1: 20 USD per month
   - Price 2: 200 USD per year
-  - Price 3: 16 GBP per month
-  - Price 4: 160 GBP per year
-  - [...]: additional currency and interval combinations
 
 ### Configure the Stripe customer portal
 
@@ -82,41 +64,34 @@ For example, you can create business models with different pricing tiers, e.g.:
 
 ### That's it
 
-That's it, you're now ready to earn recurring revenue from your customers \o/
+That's it, you're now ready to earn recurring revenue from your customers 🥳
+
+## Going live
+
+To run the project in live mode and process real payments with Stripe, you can add the [Stripe Go Live](https://vercel.com/integrations/stripe-live) integration to your project. This will set up your live API keys and webhook secret as environment variables for the production environment.
+
+Afterward you will need to rebuild your production deployment for the changes to take effect. Within your project Dashboard, navigate to the "Deployments" tab, select the most recent deployment, click the overflow menu button (next to the "Visit" button) and select "Redeploy".
 
 ## Develop locally
 
-If you've deployed the project with Vercel, it will have created a repository for you which you can clone to your local machine. If you haven't deployed with Vercel, you can use [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) or [npx](https://github.com/zkat/npx#readme) to bootstrap the example:
+Deploying with Vercel will have created a repository for you which you can clone to your local machine.
+
+Next, use the [Vercel CLI](https://vercel.com/download) to link your project:
 
 ```bash
-npx create-next-app --example https://github.com/thorwebdev/nextjs-subscription-payments my-saas-app
-# or
-yarn create next-app --example https://github.com/thorwebdev/nextjs-subscription-payments my-saas-app
+vercel login
+vercel link
 ```
 
 ### Setting up the env vars locally
 
-Create a copy of `.env.local.example`:
+Use the Vercel CLI to download the development env vars:
 
 ```bash
-cp .env.local.example .env.local
+vercel env pull .env.local
 ```
 
-In your [Supabase Dashboard](https://app.supabase.io/), go to the Project Settings (the cog icon), open the API tab, and find your API URL, the public `anon` key, and the secret `service_role` key and set them in your newly created `.env.local` file.
-
-In your [Stripe Dashboard](https://dashboard.stripe.com/apikeys), go to Developers > API keys, and copy the publishable key and the secret key to your `.env.local` file.
-
-The webhook secret differs for local testing vs. when deployed to Vercel. Follow the instructions below to get the corresponding webhook secret.
-
-### Install dependencies and run the Next.js client
-
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
-```
+This will create a new `.env.local` file in your project folder. For security purposes you will need to set the `SUPABASE_SERVICE_ROLE_KEY` manually from your [Supabase dashboard](https://app.supabase.io/) (Settings > API). Lastly, the webhook secret differs for local testing vs. when deployed to Vercel. Follow the instructions below to get the corresponding webhook secret.
 
 ### Use the Stripe CLI to test webhooks
 
@@ -129,3 +104,13 @@ stripe listen --forward-to=localhost:3000/api/webhooks
 ```
 
 The CLI will print a webhook secret (such as, `whsec_***`) to the console. Set `STRIPE_WEBHOOK_SECRET` to this value in your `.env.local` file.
+
+### Install dependencies and run the Next.js client
+
+```bash
+npm install
+npm run dev
+# or
+yarn
+yarn dev
+```
