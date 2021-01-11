@@ -93,7 +93,7 @@ const webhookHandler = async (req, res) => {
         }
       } catch (error) {
         console.log(error);
-        return res.status(400).send('Webhook handler failed. View logs.');
+        return res.json({ error: 'Webhook handler failed. View logs.' });
       }
     }
 
