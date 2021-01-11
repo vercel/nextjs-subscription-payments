@@ -73,6 +73,7 @@ const webhookHandler = async (req, res) => {
           case 'customer.subscription.deleted':
             await manageSubscriptionStatusChange(
               event.data.object.id,
+              event.data.object.customer,
               event.type === 'customer.subscription.created'
             );
             break;
@@ -80,7 +81,11 @@ const webhookHandler = async (req, res) => {
             const checkoutSession = event.data.object;
             if (checkoutSession.mode === 'subscription') {
               const subscriptionId = checkoutSession.subscription;
-              await manageSubscriptionStatusChange(subscriptionId, true);
+              await manageSubscriptionStatusChange(
+                subscriptionId,
+                checkoutSession.customer,
+                true
+              );
             }
             break;
           default:
@@ -88,7 +93,7 @@ const webhookHandler = async (req, res) => {
         }
       } catch (error) {
         console.log(error);
-        return res.status(400).send('Webhook handler failed. View logs.');
+        return res.json({ error: 'Webhook handler failed. View logs.' });
       }
     }
 
