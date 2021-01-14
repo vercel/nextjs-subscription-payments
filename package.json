@@ -10,22 +10,22 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^1.11.0",
-    "@supabase/supabase-js": "^1.1.2",
+    "@supabase/supabase-js": "^1.2.1",
     "classnames": "^2.2.6",
-    "next": "10.0.3",
+    "next": "10.0.5",
     "react": "^17.0.1",
-    "react-aria": "^3.1.1",
+    "react-aria": "^3.3.0",
     "react-dom": "^17.0.1",
     "react-merge-refs": "^1.1.0",
-    "stripe": "^8.126.0",
-    "swr": "0.3.9",
-    "tailwindcss": "^2.0.1"
+    "stripe": "^8.130.0",
+    "swr": "0.4.0",
+    "tailwindcss": "^2.0.2"
   },
   "devDependencies": {
-    "postcss": "^8.1.10",
+    "postcss": "^8.2.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^6.7.0",
-    "prettier": "^2.2.0"
+    "prettier": "^2.2.1"
   },
   "prettier": {
     "arrowParens": "always",
