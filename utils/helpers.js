@@ -1,6 +1,8 @@
 const getURL = () => {
   const url =
-    process?.env?.URL ?? process?.env?.VERCEL_URL ?? 'http://localhost:3000';
+    process?.env?.URL ?? process?.env?.VERCEL_URL === ''
+      ? 'http://localhost:3000'
+      : process?.env?.VERCEL_URL ?? 'http://localhost:3000';
   return url.includes('http') ? url : `https://${url}`;
 };
 
@@ -9,7 +11,7 @@ const postData = ({ url, token, data = {} }) =>
     method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/json', token }),
     credentials: 'same-origin',
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   }).then((res) => res.json());
 
 const toDateTime = (secs) => {
