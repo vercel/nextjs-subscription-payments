@@ -1,5 +1,5 @@
 import { useEffect, useState, createContext, useContext } from 'react';
-import { supabase } from '../utils/initSupabase';
+import { supabase } from './supabase-client';
 
 export const UserContext = createContext();
 
@@ -24,13 +24,9 @@ export const UserContextProvider = (props) => {
     return () => {
       authListener.unsubscribe();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Get the user details.
   const getUserDetails = () => supabase.from('users').select('*').single();
-
-  // Get the user's trialing or active subscription.
   const getSubscription = () =>
     supabase
       .from('subscriptions')

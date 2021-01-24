@@ -5,4 +5,12 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-export { supabaseAdmin };
+export const getUser = async (token) => {
+  const { data, error } = await supabaseAdmin.auth.api.getUser(token);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};

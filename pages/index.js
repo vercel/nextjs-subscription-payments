@@ -1,26 +1,17 @@
-import { supabase } from '../utils/initSupabase';
-import Pricing from '../components/Pricing';
+import Pricing from '@/components/Pricing';
+import { getActiveProductsWithPrices } from '@/utils/supabase-client';
 
 export default function PricingPage({ products }) {
   return <Pricing products={products} />;
 }
 
 export async function getStaticProps() {
-  // Load all active products and prices at build time.
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('*, prices(*)')
-    .eq('active', true)
-    .eq('prices.active', true)
-    .order('metadata->index')
-    .order('unit_amount', { foreignTable: 'prices' });
-  if (error) console.log(error.message);
+  const products = await getActiveProductsWithPrices();
 
   return {
     props: {
-      products: products ?? []
+      products
     },
-    // Refetch and rebuild pricing page every minute.
     revalidate: 60
   };
 }

@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 
-const stripe = new Stripe(
+export const stripe = new Stripe(
   process.env.STRIPE_SECRET_KEY_LIVE ?? process.env.STRIPE_SECRET_KEY,
   {
     // https://github.com/stripe/stripe-node#configuration
@@ -8,10 +8,8 @@ const stripe = new Stripe(
     // Register this as an official Stripe plugin.
     // https://stripe.com/docs/building-plugins#setappinfo
     appInfo: {
-      name: 'Vercel nextjs-saas-starter',
+      name: 'Next.js Subscription Starter',
       version: '0.1.0'
     }
   }
 );
-
-export { stripe };

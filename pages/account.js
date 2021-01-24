@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { postData } from '../utils/helpers';
-import { useUser } from '../components/UserContext';
-import LoadingDots from '../components/ui/LoadingDots';
-import Button from '../components/ui/Button';
+
+import LoadingDots from '@/components/ui/LoadingDots';
+import Button from '@/components/ui/Button';
+import { useUser } from '@/utils/useUser';
+import { postData } from '@/utils/helpers';
 
 function Card({ title, description, footer, children }) {
   return (
@@ -32,7 +33,7 @@ export default function Account() {
   const redirectToCustomerPortal = async () => {
     setLoading(true);
     const { url, error } = await postData({
-      url: '/api/createPortalLink',
+      url: '/api/create-portal-link',
       token: session.access_token
     });
     if (error) return alert(error.message);
