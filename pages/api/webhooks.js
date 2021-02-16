@@ -16,7 +16,7 @@ async function buffer(readable, encoding) {
   const chunks = [];
   for await (const chunk of readable) {
     chunks.push(
-      typeof chunk === "string" ? Buffer.from(chunk, encoding) : chunk,
+      typeof chunk === "string" ? Buffer.from(chunk, encoding) : chunk
     );
   }
   return Buffer.concat(chunks);
