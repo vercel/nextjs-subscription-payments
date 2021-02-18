@@ -111,7 +111,7 @@ const SignIn = () => {
                 variant="slim"
                 type="submit"
                 loading={loading}
-                disabled={!password.length}
+                disabled={!password.length || !email.length}
               >
                 Sign in
               </Button>
