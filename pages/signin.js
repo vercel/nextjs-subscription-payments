@@ -111,7 +111,7 @@ const SignIn = () => {
                 variant="slim"
                 type="submit"
                 loading={loading}
-                disabled={!password.length}
+                disabled={!password.length || !email.length}
               >
                 Sign in
               </Button>
@@ -150,7 +150,7 @@ const SignIn = () => {
             className="border-t border-accents-2 flex-grow mr-3"
             aria-hidden="true"
           ></div>
-          <div className="text-accents-4 italic">Or</div>
+          <div className="text-accents-4">Or</div>
           <div
             className="border-t border-accents-2 flex-grow ml-3"
             aria-hidden="true"
