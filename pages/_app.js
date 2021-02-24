@@ -1,9 +1,9 @@
-import '../assets/main.css';
-import '../assets/chrome-bug.css';
-
 import { useEffect } from 'react';
-import Layout from '../components/Layout';
-import { UserContextProvider } from '../components/UserContext';
+import '@/assets/main.css';
+import '@/assets/chrome-bug.css';
+
+import Layout from '@/components/Layout';
+import { UserContextProvider } from '@/utils/useUser';
 
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {

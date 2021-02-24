@@ -1,9 +1,9 @@
-import { stripe } from '../../utils/initStripe';
+import { stripe } from '@/utils/stripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
   manageSubscriptionStatusChange
-} from '../../utils/useDatabase';
+} from '@/utils/useDatabase';
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -28,7 +28,6 @@ const buffer = (req) => {
   });
 };
 
-// TODO: deleted events and tax rate events?
 const relevantEvents = new Set([
   'product.created',
   'product.updated',
@@ -52,7 +51,6 @@ const webhookHandler = async (req, res) => {
     try {
       event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
     } catch (err) {
-      // On error, log and return the error message.
       console.log(`❌ Error message: ${err.message}`);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
@@ -97,7 +95,6 @@ const webhookHandler = async (req, res) => {
       }
     }
 
-    // Return a response to acknowledge receipt of the event.
     res.json({ received: true });
   } else {
     res.setHeader('Allow', 'POST');

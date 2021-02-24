@@ -1,7 +1,7 @@
-import { stripe } from '../../utils/initStripe';
-import { supabaseAdmin } from '../../utils/initSupabaseAdmin';
-import { createOrRetrieveCustomer } from '../../utils/useDatabase';
-import { getURL } from '../../utils/helpers';
+import { stripe } from '@/utils/stripe';
+import { getUser } from '@/utils/supabase-admin';
+import { createOrRetrieveCustomer } from '@/utils/useDatabase';
+import { getURL } from '@/utils/helpers';
 
 const createCheckoutSession = async (req, res) => {
   if (req.method === 'POST') {
@@ -9,9 +9,7 @@ const createCheckoutSession = async (req, res) => {
     const { price, quantity = 1, metadata = {} } = req.body;
 
     try {
-      const { data: user, error } = await supabaseAdmin.auth.api.getUser(token);
-      if (error) throw error;
-
+      const user = await getUser(token);
       const customer = await createOrRetrieveCustomer({
         uuid: user.id,
         email: user.email
