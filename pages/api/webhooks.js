@@ -12,21 +12,15 @@ export const config = {
   }
 };
 
-const buffer = (req) => {
-  return new Promise((resolve, reject) => {
-    const body = [];
-    req
-      .on('data', (chunk) => {
-        body.push(chunk);
-      })
-      .on('end', () => {
-        resolve(Buffer.concat(body));
-      })
-      .on('error', (err) => {
-        reject(err);
-      });
-  });
-};
+async function buffer(readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(
+      typeof chunk === "string" ? Buffer.from(chunk) : chunk
+    );
+  }
+  return Buffer.concat(chunks);
+}
 
 const relevantEvents = new Set([
   'product.created',
