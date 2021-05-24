@@ -47,50 +47,58 @@ const SignUp = () => {
   }, [user]);
 
   return (
-    <form
-      onSubmit={handleSignup}
-      className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-64"
-    >
-      <div className="flex justify-center pb-12 ">
-        <Logo width="64px" height="64px" />
-      </div>
-      <div className="flex flex-col space-y-4">
-        {message.content && (
-          <div
-            className={`${
-              message.type === 'error' ? 'text-pink' : 'text-green'
-            } border ${
-              message.type === 'error' ? 'border-pink' : 'border-green'
-            } p-3`}
-          >
-            {message.content}
-          </div>
-        )}
-        <Input placeholder="Name" onChange={setName} />
-        <Input type="email" placeholder="Email" onChange={setEmail} required />
-        <Input type="password" placeholder="Password" onChange={setPassword} />
-        <div className="pt-2 w-full flex flex-col">
-          <Button
-            variant="slim"
-            type="submit"
-            loading={loading}
-            disabled={loading || !email.length || !password.length}
-          >
-            Sign up
-          </Button>
+    <div className="flex justify-center height-screen-helper">
+      <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
+        <div className="flex justify-center pb-12 ">
+          <Logo width="64px" height="64px" />
         </div>
+        <form onSubmit={handleSignup} className="flex flex-col space-y-4">
+          {message.content && (
+            <div
+              className={`${
+                message.type === 'error' ? 'text-pink' : 'text-green'
+              } border ${
+                message.type === 'error' ? 'border-pink' : 'border-green'
+              } p-3`}
+            >
+              {message.content}
+            </div>
+          )}
+          <Input placeholder="Name" onChange={setName} />
+          <Input
+            type="email"
+            placeholder="Email"
+            onChange={setEmail}
+            required
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            onChange={setPassword}
+          />
+          <div className="pt-2 w-full flex flex-col">
+            <Button
+              variant="slim"
+              type="submit"
+              loading={loading}
+              disabled={loading || !email.length || !password.length}
+            >
+              Sign up
+            </Button>
+          </div>
 
-        <span className="pt-1 text-center text-sm">
-          <span className="text-accents-7">Do you have an account?</span>
-          {` `}
-          <Link href="/signin">
-            <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-              Sign in.
-            </a>
-          </Link>
-        </span>
+          <span className="pt-1 text-center text-sm">
+            <span className="text-accents-7">Do you have an account?</span>
+            {` `}
+            <Link href="/signin">
+              <a className="text-accent-9 font-bold hover:underline cursor-pointer">
+                Sign in.
+              </a>
+            </Link>
+          </span>
+        </form>
       </div>
-    </form>
+    </div>
   );
 };
 
