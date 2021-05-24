@@ -54,119 +54,121 @@ const SignIn = () => {
 
   if (!user)
     return (
-      <div className="w-80 flex flex-col justify-between p-3 max-w-lg m-auto my-64">
-        <div className="flex justify-center pb-12 ">
-          <Logo width="64px" height="64px" />
-        </div>
-        <div className="flex flex-col space-y-4">
-          {message.content && (
-            <div
-              className={`${
-                message.type === 'error' ? 'text-pink' : 'text-green'
-              } border ${
-                message.type === 'error' ? 'border-pink' : 'border-green'
-              } p-3`}
-            >
-              {message.content}
-            </div>
-          )}
-
-          {!showPasswordInput && (
-            <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={setEmail}
-                required
-              />
-              <Button
-                variant="slim"
-                type="submit"
-                loading={loading}
-                disabled={!email.length}
+      <div className="flex justify-center height-screen-helper">
+        <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
+          <div className="flex justify-center pb-12 ">
+            <Logo width="64px" height="64px" />
+          </div>
+          <div className="flex flex-col space-y-4">
+            {message.content && (
+              <div
+                className={`${
+                  message.type === 'error' ? 'text-pink' : 'text-green'
+                } border ${
+                  message.type === 'error' ? 'border-pink' : 'border-green'
+                } p-3`}
               >
-                Send magic link
-              </Button>
-            </form>
-          )}
+                {message.content}
+              </div>
+            )}
 
-          {showPasswordInput && (
-            <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={setEmail}
-                required
-              />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={setPassword}
-                required
-              />
-              <Button
-                className="mt-1"
-                variant="slim"
-                type="submit"
-                loading={loading}
-                disabled={!password.length || !email.length}
+            {!showPasswordInput && (
+              <form onSubmit={handleSignin} className="flex flex-col space-y-4">
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={setEmail}
+                  required
+                />
+                <Button
+                  variant="slim"
+                  type="submit"
+                  loading={loading}
+                  disabled={!email.length}
+                >
+                  Send magic link
+                </Button>
+              </form>
+            )}
+
+            {showPasswordInput && (
+              <form onSubmit={handleSignin} className="flex flex-col space-y-4">
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={setEmail}
+                  required
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={setPassword}
+                  required
+                />
+                <Button
+                  className="mt-1"
+                  variant="slim"
+                  type="submit"
+                  loading={loading}
+                  disabled={!password.length || !email.length}
+                >
+                  Sign in
+                </Button>
+              </form>
+            )}
+
+            <span className="pt-1 text-center text-sm">
+              <a
+                href="#"
+                className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
+                onClick={() => {
+                  if (showPasswordInput) setPassword('');
+                  setShowPasswordInput(!showPasswordInput);
+                  setMessage({});
+                }}
               >
-                Sign in
-              </Button>
-            </form>
-          )}
-
-          <span className="pt-1 text-center text-sm">
-            <a
-              href="#"
-              className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
-              onClick={() => {
-                if (showPasswordInput) setPassword('');
-                setShowPasswordInput(!showPasswordInput);
-                setMessage({});
-              }}
-            >
-              {`Or sign in with ${
-                showPasswordInput ? 'magic link' : 'password'
-              }.`}
-            </a>
-          </span>
-
-          <span className="pt-1 text-center text-sm">
-            <span className="text-accents-7">Don't have an account?</span>
-            {` `}
-            <Link href="/signup">
-              <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-                Sign up.
+                {`Or sign in with ${
+                  showPasswordInput ? 'magic link' : 'password'
+                }.`}
               </a>
-            </Link>
-          </span>
-        </div>
+            </span>
 
-        <div className="flex items-center my-6">
-          <div
-            className="border-t border-accents-2 flex-grow mr-3"
-            aria-hidden="true"
-          ></div>
-          <div className="text-accents-4">Or</div>
-          <div
-            className="border-t border-accents-2 flex-grow ml-3"
-            aria-hidden="true"
-          ></div>
-        </div>
+            <span className="pt-1 text-center text-sm">
+              <span className="text-accents-7">Don't have an account?</span>
+              {` `}
+              <Link href="/signup">
+                <a className="text-accent-9 font-bold hover:underline cursor-pointer">
+                  Sign up.
+                </a>
+              </Link>
+            </span>
+          </div>
 
-        <Button
-          variant="slim"
-          type="submit"
-          disabled={loading}
-          onClick={() => handleOAuthSignIn('github')}
-        >
-          <GitHub />
-          <span className="ml-2">Continue with GitHub</span>
-        </Button>
+          <div className="flex items-center my-6">
+            <div
+              className="border-t border-accents-2 flex-grow mr-3"
+              aria-hidden="true"
+            ></div>
+            <div className="text-accents-4">Or</div>
+            <div
+              className="border-t border-accents-2 flex-grow ml-3"
+              aria-hidden="true"
+            ></div>
+          </div>
+
+          <Button
+            variant="slim"
+            type="submit"
+            disabled={loading}
+            onClick={() => handleOAuthSignIn('github')}
+          >
+            <GitHub />
+            <span className="ml-2">Continue with GitHub</span>
+          </Button>
+        </div>
       </div>
     );
 

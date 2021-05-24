@@ -34,6 +34,9 @@
 
   --font-sans: -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue',
     'Helvetica', sans-serif;
+
+  --header-height: 80px;
+  --vh100-offset: calc(100vh - var(--header-height));
 }
 
 *,
@@ -108,4 +111,8 @@ a {
   to {
     opacity: 1;
   }
+}
+
+.height-screen-helper {
+  height: var(--vh100-offset);
 }
