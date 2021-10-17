@@ -135,7 +135,7 @@ export default function Pricing({ products }) {
                     type="button"
                     disabled={session && !userLoaded}
                     loading={priceIdLoading === price.id}
-                    onClick={() => handleCheckout(price.id)}
+                    onClick={() => handleCheckout(price)}
                     className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900"
                   >
                     {product.name === subscription?.prices?.products.name
