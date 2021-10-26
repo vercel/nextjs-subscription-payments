@@ -1,24 +1,25 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 
-import Button from '@/components/ui/Button';
-import GitHub from '@/components/icons/GitHub';
-import Input from '@/components/ui/Input';
-import LoadingDots from '@/components/ui/LoadingDots';
-import Logo from '@/components/icons/Logo';
-import { useUser } from '@/utils/useUser';
+import Button from 'components/ui/Button';
+import GitHub from 'components/icons/GitHub';
+import Input from 'components/ui/Input';
+import LoadingDots from 'components/ui/LoadingDots';
+import Logo from 'components/icons/Logo';
+import { useUser } from 'utils/useUser';
+import { Provider } from '@supabase/supabase-js';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: '', content: '' });
+  const [message, setMessage] = useState<{ type?: string; content?: string }>({ type: '', content: '' });
   const router = useRouter();
   const { user, signIn } = useUser();
 
-  const handleSignin = async (e) => {
+  const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setLoading(true);
@@ -37,7 +38,7 @@ const SignIn = () => {
     setLoading(false);
   };
 
-  const handleOAuthSignIn = async (provider) => {
+  const handleOAuthSignIn = async (provider: Provider) => {
     setLoading(true);
     const { error } = await signIn({ provider });
     if (error) {
@@ -62,9 +63,7 @@ const SignIn = () => {
           <div className="flex flex-col space-y-4">
             {message.content && (
               <div
-                className={`${
-                  message.type === 'error' ? 'text-pink' : 'text-green'
-                } border ${
+                className={`${message.type === 'error' ? 'text-pink' : 'text-green'} border ${
                   message.type === 'error' ? 'border-pink' : 'border-green'
                 } p-3`}
               >
@@ -74,19 +73,8 @@ const SignIn = () => {
 
             {!showPasswordInput && (
               <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={setEmail}
-                  required
-                />
-                <Button
-                  variant="slim"
-                  type="submit"
-                  loading={loading}
-                  disabled={!email.length}
-                >
+                <Input type="email" placeholder="Email" value={email} onChange={setEmail} required />
+                <Button variant="slim" type="submit" loading={loading} disabled={!email.length}>
                   Send magic link
                 </Button>
               </form>
@@ -94,20 +82,8 @@ const SignIn = () => {
 
             {showPasswordInput && (
               <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={setEmail}
-                  required
-                />
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={setPassword}
-                  required
-                />
+                <Input type="email" placeholder="Email" value={email} onChange={setEmail} required />
+                <Input type="password" placeholder="Password" value={password} onChange={setPassword} required />
                 <Button
                   className="mt-1"
                   variant="slim"
@@ -130,9 +106,7 @@ const SignIn = () => {
                   setMessage({});
                 }}
               >
-                {`Or sign in with ${
-                  showPasswordInput ? 'magic link' : 'password'
-                }.`}
+                {`Or sign in with ${showPasswordInput ? 'magic link' : 'password'}.`}
               </a>
             </span>
 
@@ -140,31 +114,18 @@ const SignIn = () => {
               <span className="text-accents-7">Don't have an account?</span>
               {` `}
               <Link href="/signup">
-                <a className="text-accent-9 font-bold hover:underline cursor-pointer">
-                  Sign up.
-                </a>
+                <a className="text-accent-9 font-bold hover:underline cursor-pointer">Sign up.</a>
               </Link>
             </span>
           </div>
 
           <div className="flex items-center my-6">
-            <div
-              className="border-t border-accents-2 flex-grow mr-3"
-              aria-hidden="true"
-            ></div>
+            <div className="border-t border-accents-2 flex-grow mr-3" aria-hidden="true"></div>
             <div className="text-accents-4">Or</div>
-            <div
-              className="border-t border-accents-2 flex-grow ml-3"
-              aria-hidden="true"
-            ></div>
+            <div className="border-t border-accents-2 flex-grow ml-3" aria-hidden="true"></div>
           </div>
 
-          <Button
-            variant="slim"
-            type="submit"
-            disabled={loading}
-            onClick={() => handleOAuthSignIn('github')}
-          >
+          <Button variant="slim" type="submit" disabled={loading} onClick={() => handleOAuthSignIn('github')}>
             <GitHub />
             <span className="ml-2">Continue with GitHub</span>
           </Button>
