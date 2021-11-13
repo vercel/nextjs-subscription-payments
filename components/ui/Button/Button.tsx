@@ -5,7 +5,7 @@ import styles from './Button.module.css';
 
 import LoadingDots from 'components/ui/LoadingDots';
 
-interface Props extends ButtonHTMLAttributes<any> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'slim' | 'flat';
   active?: boolean;
   width?: number;

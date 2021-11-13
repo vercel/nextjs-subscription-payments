@@ -1,7 +1,12 @@
 import { stripe } from 'utils/stripe';
-import { upsertProductRecord, upsertPriceRecord, manageSubscriptionStatusChange } from 'utils/useDatabase';
+import {
+  upsertProductRecord,
+  upsertPriceRecord,
+  manageSubscriptionStatusChange
+} from 'utils/useDatabase';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
+import { Readable } from 'node:stream';
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -10,7 +15,7 @@ export const config = {
   }
 };
 
-async function buffer(readable: any) {
+async function buffer(readable: Readable) {
   const chunks = [];
   for await (const chunk of readable) {
     chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
@@ -33,7 +38,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_LIVE ?? process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret =
+      process.env.STRIPE_WEBHOOK_SECRET_LIVE ??
+      process.env.STRIPE_WEBHOOK_SECRET;
     let event: Stripe.Event;
 
     try {
@@ -66,10 +73,15 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             );
             break;
           case 'checkout.session.completed':
-            const checkoutSession = event.data.object as Stripe.Checkout.Session;
+            const checkoutSession = event.data
+              .object as Stripe.Checkout.Session;
             if (checkoutSession.mode === 'subscription') {
               const subscriptionId = checkoutSession.subscription;
-              await manageSubscriptionStatusChange(subscriptionId as string, checkoutSession.customer as string, true);
+              await manageSubscriptionStatusChange(
+                subscriptionId as string,
+                checkoutSession.customer as string,
+                true
+              );
             }
             break;
           default:
@@ -77,7 +89,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       } catch (error) {
         console.log(error);
-        return res.status(400).send('Webhook error: "Webhook handler failed. View logs."');
+        return res
+          .status(400)
+          .send('Webhook error: "Webhook handler failed. View logs."');
       }
     }
 
