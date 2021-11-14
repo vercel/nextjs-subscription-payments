@@ -2,18 +2,26 @@ import cn from 'classnames';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import Button from '@/components/ui/Button';
-import { postData } from '@/utils/helpers';
-import { getStripe } from '@/utils/stripe-client';
-import { useUser } from '@/utils/useUser';
+import Button from 'components/ui/Button';
+import { postData } from 'utils/helpers';
+import { getStripe } from 'utils/stripe-client';
+import { useUser } from 'utils/useUser';
+import { Product, Price, ProductWithPrice } from 'types';
 
-export default function Pricing({ products }) {
+interface Props {
+  products: ProductWithPrice[];
+}
+type BillingInterval = 'year' | 'month';
+
+export default function Pricing({ products }: Props) {
   const router = useRouter();
-  const [billingInterval, setBillingInterval] = useState('month');
-  const [priceIdLoading, setPriceIdLoading] = useState();
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>(
+    'month'
+  );
+  const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const { session, userLoaded, subscription } = useUser();
 
-  const handleCheckout = async (price) => {
+  const handleCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
     if (!session) {
       return router.push('/signin');
@@ -30,11 +38,11 @@ export default function Pricing({ products }) {
       });
 
       const stripe = await getStripe();
-      stripe.redirectToCheckout({ sessionId });
+      stripe?.redirectToCheckout({ sessionId });
     } catch (error) {
-      return alert(error.message);
+      return alert((error as Error)?.message);
     } finally {
-      setPriceIdLoading(false);
+      setPriceIdLoading(undefined);
     }
   };
 
@@ -97,14 +105,15 @@ export default function Pricing({ products }) {
         </div>
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
           {products.map((product) => {
-            const price = product.prices.find(
+            const price = product?.prices?.find(
               (price) => price.interval === billingInterval
             );
+            if (!price) return null;
             const priceString = new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: price.currency,
               minimumFractionDigits: 0
-            }).format(price.unit_amount / 100);
+            }).format((price?.unit_amount || 0) / 100);
             return (
               <div
                 key={product.id}
@@ -112,7 +121,8 @@ export default function Pricing({ products }) {
                   'rounded-lg shadow-sm divide-y divide-accents-2 bg-primary-2',
                   {
                     'border border-pink': subscription
-                      ? product.name === subscription?.prices?.products.name
+                      ? product.name ===
+                        subscription?.prices?.products?.[0]?.name
                       : product.name === 'Freelancer'
                   }
                 )}
@@ -135,10 +145,10 @@ export default function Pricing({ products }) {
                     type="button"
                     disabled={session && !userLoaded}
                     loading={priceIdLoading === price.id}
-                    onClick={() => handleCheckout(price.id)}
+                    onClick={() => handleCheckout(price)}
                     className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900"
                   >
-                    {product.name === subscription?.prices?.products.name
+                    {product.name === subscription?.prices?.products?.[0]?.name
                       ? 'Manage'
                       : 'Subscribe'}
                   </Button>

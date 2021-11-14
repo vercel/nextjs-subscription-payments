@@ -1,11 +1,19 @@
 import cn from 'classnames';
-import React, { forwardRef, useRef } from 'react';
+import React, { forwardRef, useRef, ButtonHTMLAttributes } from 'react';
 import mergeRefs from 'react-merge-refs';
-import s from './Button.module.css';
+import styles from './Button.module.css';
 
-import LoadingDots from '@/components/ui/LoadingDots';
+import LoadingDots from 'components/ui/LoadingDots';
 
-const Button = forwardRef((props, buttonRef) => {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'slim' | 'flat';
+  active?: boolean;
+  width?: number;
+  loading?: boolean;
+  Component?: React.ComponentType;
+}
+
+const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
   const {
     className,
     variant = 'flat',
@@ -20,15 +28,14 @@ const Button = forwardRef((props, buttonRef) => {
   } = props;
   const ref = useRef(null);
   const rootClassName = cn(
-    s.root,
+    styles.root,
     {
-      [s.slim]: variant === 'slim',
-      [s.loading]: loading,
-      [s.disabled]: disabled
+      [styles.slim]: variant === 'slim',
+      [styles.loading]: loading,
+      [styles.disabled]: disabled
     },
     className
   );
-
   return (
     <Component
       aria-pressed={active}
