@@ -1,7 +1,7 @@
 import { createClient, User } from '@supabase/supabase-js';
 import { Product, ProductWithPrice, UserDetails } from 'types';
 
-export const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL || '', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '');
+export const supabase = createClient('https://jxqgwmmjxrrknnegarmt.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzODI4ODI2OCwiZXhwIjoxOTUzODY0MjY4fQ.UwfQYhN5KAkIT6qCkVgds9hep1m7dcW7NJiVTCF3l4s');
 
 export const getActiveProductsWithPrices = async (): Promise<ProductWithPrice[]> => {
   const { data, error } = await supabase
