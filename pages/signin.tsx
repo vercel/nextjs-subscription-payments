@@ -63,8 +63,8 @@ const SignIn = () => {
           <div className="flex flex-col space-y-4">
             {message.content && (
               <div
-                className={`${message.type === 'error' ? 'text-pink' : 'text-green'} border ${
-                  message.type === 'error' ? 'border-pink' : 'border-green'
+                className={`${message.type === 'error' ? 'text-pink-500' : 'text-green-500'} border ${
+                  message.type === 'error' ? 'border-pink-500' : 'border-green-500'
                 } p-3`}
               >
                 {message.content}
@@ -99,7 +99,7 @@ const SignIn = () => {
             <span className="pt-1 text-center text-sm">
               <a
                 href="#"
-                className="text-accents-7 text-accent-9 hover:underline cursor-pointer"
+                className="text-gray-200 text-accent-9 hover:underline cursor-pointer"
                 onClick={() => {
                   if (showPasswordInput) setPassword('');
                   setShowPasswordInput(!showPasswordInput);
@@ -111,7 +111,7 @@ const SignIn = () => {
             </span>
 
             <span className="pt-1 text-center text-sm">
-              <span className="text-accents-7">Don't have an account?</span>
+              <span className="text-gray-200">Don't have an account?</span>
               {` `}
               <Link href="/signup">
                 <a className="text-accent-9 font-bold hover:underline cursor-pointer">Sign up.</a>
@@ -120,9 +120,9 @@ const SignIn = () => {
           </div>
 
           <div className="flex items-center my-6">
-            <div className="border-t border-accents-2 flex-grow mr-3" aria-hidden="true"></div>
-            <div className="text-accents-4">Or</div>
-            <div className="border-t border-accents-2 flex-grow ml-3" aria-hidden="true"></div>
+            <div className="border-t border-gray-600 flex-grow mr-3" aria-hidden="true"></div>
+            <div className="text-gray-400">Or</div>
+            <div className="border-t border-gray-600 flex-grow ml-3" aria-hidden="true"></div>
           </div>
 
           <Button variant="slim" type="submit" disabled={loading} onClick={() => handleOAuthSignIn('github')}>

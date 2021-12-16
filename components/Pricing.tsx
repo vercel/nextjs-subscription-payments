@@ -6,11 +6,12 @@ import Button from 'components/ui/Button';
 import { postData } from 'utils/helpers';
 import { getStripe } from 'utils/stripe-client';
 import { useUser } from 'utils/useUser';
-import { Product, Price, ProductWithPrice } from 'types';
+import { Price, ProductWithPrice } from 'types';
 
 interface Props {
   products: ProductWithPrice[];
 }
+
 type BillingInterval = 'year' | 'month';
 
 export default function Pricing({ products }: Props) {
@@ -54,7 +55,7 @@ export default function Pricing({ products }: Props) {
           <p className="text-6xl font-extrabold text-white sm:text-center sm:text-6xl">
             No subscription pricing plans found. Create them in your{' '}
             <a
-              className="text-pink underline"
+              className="text-pink-500 underline"
               href="https://dashboard.stripe.com/products"
               rel="noopener noreferrer"
               target="_blank"
@@ -74,19 +75,19 @@ export default function Pricing({ products }: Props) {
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
-          <p className="mt-5 text-xl text-accents-6 sm:text-center sm:text-2xl max-w-2xl m-auto">
+          <p className="mt-5 text-xl text-gray-200 sm:text-center sm:text-2xl max-w-2xl m-auto">
             Start building for free, then add a site plan to go live. Account
             plans unlock additional features.
           </p>
-          <div className="relative self-center mt-6 bg-primary-2 rounded-lg p-0.5 flex sm:mt-8 border border-accents-0">
+          <div className="relative self-center mt-6 bg-gray-900 rounded-lg p-0.5 flex sm:mt-8 border border-gray-800">
             <button
               onClick={() => setBillingInterval('month')}
               type="button"
               className={`${
                 billingInterval === 'month'
-                  ? 'relative w-1/2 bg-accents-1 border-accents-0 shadow-sm text-white'
-                  : 'ml-0.5 relative w-1/2 border border-transparent text-accents-4'
-              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
+                  ? 'relative w-1/2 bg-gray-700 border-gray-800 shadow-sm text-white'
+                  : 'ml-0.5 relative w-1/2 border border-transparent text-gray-400'
+              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
             >
               Monthly billing
             </button>
@@ -95,9 +96,9 @@ export default function Pricing({ products }: Props) {
               type="button"
               className={`${
                 billingInterval === 'year'
-                  ? 'relative w-1/2 bg-accents-1 border-accents-0 shadow-sm text-white'
-                  : 'ml-0.5 relative w-1/2 border border-transparent text-accents-4'
-              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
+                  ? 'relative w-1/2 bg-gray-700 border-gray-800 shadow-sm text-white'
+                  : 'ml-0.5 relative w-1/2 border border-transparent text-gray-400'
+              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
             >
               Yearly billing
             </button>
@@ -118,9 +119,9 @@ export default function Pricing({ products }: Props) {
               <div
                 key={product.id}
                 className={cn(
-                  'rounded-lg shadow-sm divide-y divide-accents-2 bg-primary-2',
+                  'rounded-lg shadow-sm divide-y divide-gray-600 bg-gray-900',
                   {
-                    'border border-pink': subscription
+                    'border border-pink-500': subscription
                       ? product.name ===
                         subscription?.prices?.products?.[0]?.name
                       : product.name === 'Freelancer'
@@ -131,12 +132,12 @@ export default function Pricing({ products }: Props) {
                   <h2 className="text-2xl leading-6 font-semibold text-white">
                     {product.name}
                   </h2>
-                  <p className="mt-4 text-accents-5">{product.description}</p>
+                  <p className="mt-4 text-gray-300">{product.description}</p>
                   <p className="mt-8">
                     <span className="text-5xl font-extrabold white">
                       {priceString}
                     </span>
-                    <span className="text-base font-medium text-accents-8">
+                    <span className="text-base font-medium text-gray-100">
                       /{billingInterval}
                     </span>
                   </p>
@@ -158,7 +159,7 @@ export default function Pricing({ products }: Props) {
           })}
         </div>
         <div>
-          <p className="mt-24 text-xs uppercase text-accents-3 text-center font-bold tracking-widest">
+          <p className="mt-24 text-xs uppercase text-gray-400 text-center font-bold tracking-[0.3em]">
             Brought to you by
           </p>
           <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
@@ -167,7 +168,7 @@ export default function Pricing({ products }: Props) {
                 <img
                   src="/nextjs.svg"
                   alt="Next.js Logo"
-                  className="h-12 text-primary"
+                  className="h-12 text-white"
                 />
               </a>
             </div>
@@ -176,7 +177,7 @@ export default function Pricing({ products }: Props) {
                 <img
                   src="/vercel.svg"
                   alt="Vercel.com Logo"
-                  className="h-6 text-primary"
+                  className="h-6 text-white"
                 />
               </a>
             </div>
@@ -185,7 +186,7 @@ export default function Pricing({ products }: Props) {
                 <img
                   src="/stripe.svg"
                   alt="stripe.com Logo"
-                  className="h-12 text-primary"
+                  className="h-12 text-white"
                 />
               </a>
             </div>
@@ -194,7 +195,7 @@ export default function Pricing({ products }: Props) {
                 <img
                   src="/supabase.svg"
                   alt="supabase.io Logo"
-                  className="h-10 text-primary"
+                  className="h-10 text-white"
                 />
               </a>
             </div>
@@ -203,7 +204,7 @@ export default function Pricing({ products }: Props) {
                 <img
                   src="/github.svg"
                   alt="github.com Logo"
-                  className="h-8 text-primary"
+                  className="h-8 text-white"
                 />
               </a>
             </div>
