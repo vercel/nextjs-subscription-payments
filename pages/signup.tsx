@@ -60,9 +60,9 @@ const SignUp = () => {
           {message.content && (
             <div
               className={`${
-                message.type === 'error' ? 'text-pink' : 'text-green'
+                message.type === 'error' ? 'text-pink-500' : 'text-green-500'
               } border ${
-                message.type === 'error' ? 'border-pink' : 'border-green'
+                message.type === 'error' ? 'border-pink-500' : 'border-green-500'
               } p-3`}
             >
               {message.content}
@@ -92,7 +92,7 @@ const SignUp = () => {
           </div>
 
           <span className="pt-1 text-center text-sm">
-            <span className="text-accents-7">Do you have an account?</span>
+            <span className="text-gray-200">Do you have an account?</span>
             {` `}
             <Link href="/signin">
               <a className="text-accent-9 font-bold hover:underline cursor-pointer">

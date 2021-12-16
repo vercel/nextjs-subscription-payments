@@ -1,6 +1,6 @@
+import 'styles/main.css';
+import 'styles/chrome-bug.css';
 import { useEffect } from 'react';
-import 'assets/main.css';
-import 'assets/chrome-bug.css';
 import React from 'react';
 
 import Layout from 'components/Layout';
@@ -13,7 +13,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <div className="bg-primary">
+    <div className="bg-black">
       <UserContextProvider>
         <Layout>
           <Component {...pageProps} />
