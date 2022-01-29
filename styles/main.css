@@ -22,10 +22,10 @@ html {
 html,
 body {
   font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue',
-  'Helvetica', sans-serif;
+    'Helvetica', sans-serif;
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
-  @apply text-white bg-gray-800 antialiased;
+  @apply text-white bg-zinc-800 antialiased;
 }
 
 body {

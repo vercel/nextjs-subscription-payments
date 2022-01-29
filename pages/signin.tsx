@@ -15,7 +15,10 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type?: string; content?: string }>({ type: '', content: '' });
+  const [message, setMessage] = useState<{ type?: string; content?: string }>({
+    type: '',
+    content: ''
+  });
   const router = useRouter();
   const { user, signIn } = useUser();
 
@@ -63,8 +66,12 @@ const SignIn = () => {
           <div className="flex flex-col space-y-4">
             {message.content && (
               <div
-                className={`${message.type === 'error' ? 'text-pink-500' : 'text-green-500'} border ${
-                  message.type === 'error' ? 'border-pink-500' : 'border-green-500'
+                className={`${
+                  message.type === 'error' ? 'text-pink-500' : 'text-green-500'
+                } border ${
+                  message.type === 'error'
+                    ? 'border-pink-500'
+                    : 'border-green-500'
                 } p-3`}
               >
                 {message.content}
@@ -73,8 +80,19 @@ const SignIn = () => {
 
             {!showPasswordInput && (
               <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-                <Input type="email" placeholder="Email" value={email} onChange={setEmail} required />
-                <Button variant="slim" type="submit" loading={loading} disabled={!email.length}>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={setEmail}
+                  required
+                />
+                <Button
+                  variant="slim"
+                  type="submit"
+                  loading={loading}
+                  disabled={!email.length}
+                >
                   Send magic link
                 </Button>
               </form>
@@ -82,8 +100,20 @@ const SignIn = () => {
 
             {showPasswordInput && (
               <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-                <Input type="email" placeholder="Email" value={email} onChange={setEmail} required />
-                <Input type="password" placeholder="Password" value={password} onChange={setPassword} required />
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={setEmail}
+                  required
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={setPassword}
+                  required
+                />
                 <Button
                   className="mt-1"
                   variant="slim"
@@ -99,33 +129,48 @@ const SignIn = () => {
             <span className="pt-1 text-center text-sm">
               <a
                 href="#"
-                className="text-gray-200 text-accent-9 hover:underline cursor-pointer"
+                className="text-zinc-200 text-accent-9 hover:underline cursor-pointer"
                 onClick={() => {
                   if (showPasswordInput) setPassword('');
                   setShowPasswordInput(!showPasswordInput);
                   setMessage({});
                 }}
               >
-                {`Or sign in with ${showPasswordInput ? 'magic link' : 'password'}.`}
+                {`Or sign in with ${
+                  showPasswordInput ? 'magic link' : 'password'
+                }.`}
               </a>
             </span>
 
             <span className="pt-1 text-center text-sm">
-              <span className="text-gray-200">Don't have an account?</span>
+              <span className="text-zinc-200">Don't have an account?</span>
               {` `}
               <Link href="/signup">
-                <a className="text-accent-9 font-bold hover:underline cursor-pointer">Sign up.</a>
+                <a className="text-accent-9 font-bold hover:underline cursor-pointer">
+                  Sign up.
+                </a>
               </Link>
             </span>
           </div>
 
           <div className="flex items-center my-6">
-            <div className="border-t border-gray-600 flex-grow mr-3" aria-hidden="true"></div>
-            <div className="text-gray-400">Or</div>
-            <div className="border-t border-gray-600 flex-grow ml-3" aria-hidden="true"></div>
+            <div
+              className="border-t border-zinc-600 flex-grow mr-3"
+              aria-hidden="true"
+            ></div>
+            <div className="text-zinc-400">Or</div>
+            <div
+              className="border-t border-zinc-600 flex-grow ml-3"
+              aria-hidden="true"
+            ></div>
           </div>
 
-          <Button variant="slim" type="submit" disabled={loading} onClick={() => handleOAuthSignIn('github')}>
+          <Button
+            variant="slim"
+            type="submit"
+            disabled={loading}
+            onClick={() => handleOAuthSignIn('github')}
+          >
             <GitHub />
             <span className="ml-2">Continue with GitHub</span>
           </Button>
