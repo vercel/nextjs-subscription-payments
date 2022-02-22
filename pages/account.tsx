@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState, useEffect, ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 
 import LoadingDots from 'components/ui/LoadingDots';
 import Button from 'components/ui/Button';
 import { useUser } from 'utils/useUser';
 import { postData } from 'utils/helpers';
+
+import { withAuthRequired, User } from '@supabase/supabase-auth-helpers/nextjs';
 
 interface Props {
   title: string;
@@ -29,14 +30,17 @@ function Card({ title, description, footer, children }: Props) {
   );
 }
 
-export default function Account() {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const { isLoading, user, accessToken, subscription, userDetails } = useUser();
+export const getServerSideProps = withAuthRequired({ redirectTo: '/signin' });
 
-  useEffect(() => {
-    if (!isLoading && !user) router.replace('/signin');
-  }, [isLoading, user]);
+export default function Account({
+  user,
+  accessToken
+}: {
+  user: User;
+  accessToken: string;
+}) {
+  const [loading, setLoading] = useState(false);
+  const { isLoading, subscription, userDetails } = useUser();
 
   const redirectToCustomerPortal = async () => {
     setLoading(true);

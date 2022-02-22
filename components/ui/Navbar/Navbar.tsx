@@ -4,9 +4,11 @@ import s from './Navbar.module.css';
 import Logo from 'components/icons/Logo';
 import { useUser } from 'utils/useUser';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { useRouter } from 'next/router';
 
 const Navbar = () => {
   const { user } = useUser();
+  const router = useRouter();
 
   return (
     <nav className={s.root}>
@@ -36,7 +38,10 @@ const Navbar = () => {
               <Link href="#">
                 <a
                   className={s.link}
-                  onClick={() => supabaseClient.auth.signOut()}
+                  onClick={async () => {
+                    supabaseClient.auth.signOut();
+                    router.push('/signin');
+                  }}
                 >
                   Sign out
                 </a>
