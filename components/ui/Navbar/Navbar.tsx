@@ -3,9 +3,10 @@ import s from './Navbar.module.css';
 
 import Logo from 'components/icons/Logo';
 import { useUser } from 'utils/useUser';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
 const Navbar = () => {
-  const { user, signOut } = useUser();
+  const { user } = useUser();
 
   return (
     <nav className={s.root}>
@@ -33,7 +34,10 @@ const Navbar = () => {
           <div className="flex flex-1 justify-end space-x-8">
             {user ? (
               <Link href="#">
-                <a className={s.link} onClick={() => signOut()}>
+                <a
+                  className={s.link}
+                  onClick={() => supabaseClient.auth.signOut()}
+                >
                   Sign out
                 </a>
               </Link>

@@ -32,18 +32,18 @@ function Card({ title, description, footer, children }: Props) {
 export default function Account() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { userLoaded, user, session, userDetails, subscription } = useUser();
+  const { isLoading, user, accessToken, subscription, userDetails } = useUser();
 
   useEffect(() => {
-    if (!user) router.replace('/signin');
-  }, [user]);
+    if (!isLoading && !user) router.replace('/signin');
+  }, [isLoading, user]);
 
   const redirectToCustomerPortal = async () => {
     setLoading(true);
     try {
       const { url, error } = await postData({
         url: '/api/create-portal-link',
-        token: session.access_token
+        token: accessToken!
       });
       window.location.assign(url);
     } catch (error) {
@@ -52,8 +52,6 @@ export default function Account() {
     setLoading(false);
   };
 
-  const subscriptionName =
-    subscription && subscription?.prices?.products?.[0]?.name;
   const subscriptionPrice =
     subscription &&
     new Intl.NumberFormat('en-US', {
@@ -78,8 +76,9 @@ export default function Account() {
         <Card
           title="Your Plan"
           description={
-            subscriptionName &&
-            `You are currently on the ${subscriptionName} plan.`
+            subscription
+              ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
+              : ''
           }
           footer={
             <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
@@ -98,11 +97,11 @@ export default function Account() {
           }
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
-            {!userLoaded ? (
+            {isLoading ? (
               <div className="h-12 mb-6">
                 <LoadingDots />
               </div>
-            ) : subscriptionPrice ? (
+            ) : subscription ? (
               `${subscriptionPrice}/${subscription?.prices?.interval}`
             ) : (
               <Link href="/">
@@ -118,7 +117,10 @@ export default function Account() {
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {userDetails ? (
-              `${userDetails?.full_name ?? ''}`
+              `${
+                userDetails.full_name ??
+                `${userDetails.first_name} ${userDetails.last_name}`
+              }`
             ) : (
               <div className="h-8 mb-6">
                 <LoadingDots />

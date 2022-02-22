@@ -4,8 +4,10 @@ import { useEffect } from 'react';
 import React from 'react';
 
 import Layout from 'components/Layout';
-import { UserContextProvider } from 'utils/useUser';
+import { UserProvider } from '@supabase/supabase-auth-helpers/react';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { AppProps } from 'next/app';
+import { MyUserContextProvider } from 'utils/useUser';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -14,11 +16,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <div className="bg-black">
-      <UserContextProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </UserContextProvider>
+      <UserProvider supabaseClient={supabaseClient}>
+        <MyUserContextProvider supabaseClient={supabaseClient}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </MyUserContextProvider>
+      </UserProvider>
     </div>
   );
 }
