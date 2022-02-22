@@ -32,13 +32,7 @@ function Card({ title, description, footer, children }: Props) {
 
 export const getServerSideProps = withAuthRequired({ redirectTo: '/signin' });
 
-export default function Account({
-  user,
-  accessToken
-}: {
-  user: User;
-  accessToken: string;
-}) {
+export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription, userDetails } = useUser();
 
@@ -46,8 +40,7 @@ export default function Account({
     setLoading(true);
     try {
       const { url, error } = await postData({
-        url: '/api/create-portal-link',
-        token: accessToken!
+        url: '/api/create-portal-link'
       });
       window.location.assign(url);
     } catch (error) {

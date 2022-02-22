@@ -19,7 +19,7 @@ export default function Pricing({ products }: Props) {
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
-  const { user, isLoading, accessToken, subscription } = useUser();
+  const { user, isLoading, subscription } = useUser();
 
   const handleCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
@@ -33,8 +33,7 @@ export default function Pricing({ products }: Props) {
     try {
       const { sessionId } = await postData({
         url: '/api/create-checkout-session',
-        data: { price },
-        token: accessToken!
+        data: { price }
       });
 
       const stripe = await getStripe();

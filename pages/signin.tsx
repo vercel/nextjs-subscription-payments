@@ -10,6 +10,7 @@ import Input from 'components/ui/Input';
 import LoadingDots from 'components/ui/LoadingDots';
 import Logo from 'components/icons/Logo';
 import { Provider } from '@supabase/supabase-js';
+import { getURL } from '@/utils/helpers';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +30,10 @@ const SignIn = () => {
     setLoading(true);
     setMessage({});
 
-    const { error } = await supabaseClient.auth.signIn({ email, password });
+    const { error } = await supabaseClient.auth.signIn(
+      { email, password },
+      { redirectTo: getURL() }
+    );
     if (error) {
       setMessage({ type: 'error', content: error.message });
     }
