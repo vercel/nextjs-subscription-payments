@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, FormEvent } from 'react';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
 import Button from 'components/ui/Button';
 import GitHub from 'components/icons/GitHub';
 import Input from 'components/ui/Input';
 import LoadingDots from 'components/ui/LoadingDots';
 import Logo from 'components/icons/Logo';
-import { useUser } from 'utils/useUser';
 import { Provider } from '@supabase/supabase-js';
+import { getURL } from '@/utils/helpers';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +22,7 @@ const SignIn = () => {
     content: ''
   });
   const router = useRouter();
-  const { user, signIn } = useUser();
+  const { user } = useUser();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,7 +30,10 @@ const SignIn = () => {
     setLoading(true);
     setMessage({});
 
-    const { error } = await signIn({ email, password });
+    const { error } = await supabaseClient.auth.signIn(
+      { email, password },
+      { redirectTo: getURL() }
+    );
     if (error) {
       setMessage({ type: 'error', content: error.message });
     }
@@ -43,7 +48,7 @@ const SignIn = () => {
 
   const handleOAuthSignIn = async (provider: Provider) => {
     setLoading(true);
-    const { error } = await signIn({ provider });
+    const { error } = await supabaseClient.auth.signIn({ provider });
     if (error) {
       setMessage({ type: 'error', content: error.message });
     }

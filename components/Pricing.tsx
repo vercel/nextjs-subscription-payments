@@ -19,11 +19,11 @@ export default function Pricing({ products }: Props) {
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
-  const { session, userLoaded, subscription } = useUser();
+  const { user, isLoading, subscription } = useUser();
 
   const handleCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
-    if (!session) {
+    if (!user) {
       return router.push('/signin');
     }
     if (subscription) {
@@ -33,8 +33,7 @@ export default function Pricing({ products }: Props) {
     try {
       const { sessionId } = await postData({
         url: '/api/create-checkout-session',
-        data: { price },
-        token: session.access_token
+        data: { price }
       });
 
       const stripe = await getStripe();
@@ -121,8 +120,7 @@ export default function Pricing({ products }: Props) {
                   'rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
                   {
                     'border border-pink-500': subscription
-                      ? product.name ===
-                        subscription?.prices?.products?.[0]?.name
+                      ? product.name === subscription?.prices?.products?.name
                       : product.name === 'Freelancer'
                   }
                 )}
@@ -143,12 +141,12 @@ export default function Pricing({ products }: Props) {
                   <Button
                     variant="slim"
                     type="button"
-                    disabled={session && !userLoaded}
+                    disabled={isLoading}
                     loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
                     className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-zinc-900"
                   >
-                    {product.name === subscription?.prices?.products?.[0]?.name
+                    {product.name === subscription?.prices?.products?.name
                       ? 'Manage'
                       : 'Subscribe'}
                   </Button>

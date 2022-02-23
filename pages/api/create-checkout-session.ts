@@ -1,16 +1,21 @@
 import { stripe } from 'utils/stripe';
-import { getUser } from 'utils/supabase-admin';
-import { createOrRetrieveCustomer } from 'utils/useDatabase';
+import {
+  getUser,
+  withAuthRequired
+} from '@supabase/supabase-auth-helpers/nextjs';
+import { createOrRetrieveCustomer } from 'utils/supabase-admin';
 import { getURL } from 'utils/helpers';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const createCheckoutSession = async (req: NextApiRequest, res: NextApiResponse) => {
+const createCheckoutSession = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   if (req.method === 'POST') {
-    const token = req.headers.token as string;
     const { price, quantity = 1, metadata = {} } = req.body;
 
     try {
-      const user = await getUser(token);
+      const { user } = await getUser({ req, res });
 
       const customer = await createOrRetrieveCustomer({
         uuid: user?.id || '',
@@ -40,7 +45,9 @@ const createCheckoutSession = async (req: NextApiRequest, res: NextApiResponse) 
       return res.status(200).json({ sessionId: session.id });
     } catch (err: any) {
       console.log(err);
-      res.status(500).json({ error: { statusCode: 500, message: err.message } });
+      res
+        .status(500)
+        .json({ error: { statusCode: 500, message: err.message } });
     }
   } else {
     res.setHeader('Allow', 'POST');
@@ -48,4 +55,4 @@ const createCheckoutSession = async (req: NextApiRequest, res: NextApiResponse) 
   }
 };
 
-export default createCheckoutSession;
+export default withAuthRequired(createCheckoutSession);

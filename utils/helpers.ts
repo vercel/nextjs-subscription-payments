@@ -10,18 +10,24 @@ export const getURL = () => {
   return url.includes('http') ? url : `https://${url}`;
 };
 
-export const postData = async ({ url, token, data }: { url: string; data?: { price: Price }; token: string }) => {
-  console.log('posting,', url, token, data);
+export const postData = async ({
+  url,
+  data
+}: {
+  url: string;
+  data?: { price: Price };
+}) => {
+  console.log('posting,', url, data);
 
   const res: Response = await fetch(url, {
     method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json', token }),
+    headers: new Headers({ 'Content-Type': 'application/json' }),
     credentials: 'same-origin',
     body: JSON.stringify(data)
   });
 
   if (!res.ok) {
-    console.log('Error in postData', { url, token, data, res });
+    console.log('Error in postData', { url, data, res });
 
     throw Error(res.statusText);
   }

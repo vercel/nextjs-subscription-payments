@@ -1,62 +1,35 @@
 import { useEffect, useState, createContext, useContext } from 'react';
-import { supabase } from './supabase-client';
-import { Session, User, Provider } from '@supabase/supabase-js';
+import {
+  useUser as useSupaUser,
+  User
+} from '@supabase/supabase-auth-helpers/react';
 import { UserDetails } from 'types';
 import { Subscription } from 'types';
+import { SupabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
 type UserContextType = {
-  session: Session;
-  user: User;
-  userDetails: UserDetails;
-  userLoaded: boolean;
-  subscription: Subscription;
-  signIn: (
-    options: SignInOptions
-  ) => Promise<{
-    session: Session | null;
-    user: User | null;
-    provider?: Provider;
-    url?: string | null;
-    error: Error | null;
-    data: Session | null;
-  }>;
-  signUp: (
-    options: SignUpOptions
-  ) => Promise<{
-    user: User | null;
-    session: Session | null;
-    error: Error | null;
-    data: Session | User | null;
-  }>;
-  signOut: () => void;
+  accessToken: string | null;
+  user: User | null;
+  userDetails: UserDetails | null;
+  isLoading: boolean;
+  subscription: Subscription | null;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
   undefined
 );
 
-export const UserContextProvider = (props: any) => {
-  const [userLoaded, setUserLoaded] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+export interface Props {
+  supabaseClient: SupabaseClient;
+  [propName: string]: any;
+}
+
+export const MyUserContextProvider = (props: Props) => {
+  const { supabaseClient: supabase } = props;
+  const { user, accessToken, isLoading: isLoadingUser } = useSupaUser();
+  const [isLoadingData, setIsloadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
-
-  useEffect(() => {
-    const session = supabase.auth.session();
-    setSession(session);
-    setUser(session?.user ?? null);
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => {
-      authListener?.unsubscribe();
-    };
-  }, []);
 
   const getUserDetails = () =>
     supabase.from<UserDetails>('users').select('*').single();
@@ -68,38 +41,34 @@ export const UserContextProvider = (props: any) => {
       .single();
 
   useEffect(() => {
-    if (user) {
+    if (user && !isLoadingData && !userDetails && !subscription) {
+      setIsloadingData(true);
       Promise.allSettled([getUserDetails(), getSubscription()]).then(
         (results) => {
           const userDetailsPromise = results[0];
           const subscriptionPromise = results[1];
 
-          console.log('subscription', subscriptionPromise);
           if (userDetailsPromise.status === 'fulfilled')
             setUserDetails(userDetailsPromise.value.data);
 
           if (subscriptionPromise.status === 'fulfilled')
             setSubscription(subscriptionPromise.value.data);
 
-          setUserLoaded(true);
+          setIsloadingData(false);
         }
       );
-    }
-  }, [user]);
-
-  const value = {
-    session,
-    user,
-    userDetails,
-    userLoaded,
-    subscription,
-    signIn: (options: SignInOptions) => supabase.auth.signIn(options),
-    signUp: (options: SignUpOptions) => supabase.auth.signUp(options),
-    signOut: () => {
+    } else if (!user && !isLoadingUser && !isLoadingData) {
       setUserDetails(null);
       setSubscription(null);
-      return supabase.auth.signOut();
     }
+  }, [user, isLoadingUser]);
+
+  const value = {
+    accessToken,
+    user,
+    userDetails,
+    isLoading: isLoadingUser || isLoadingData,
+    subscription
   };
 
   return <UserContext.Provider value={value} {...props} />;
@@ -108,18 +77,7 @@ export const UserContextProvider = (props: any) => {
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error(`useUser must be used within a UserContextProvider.`);
+    throw new Error(`useUser must be used within a MyUserContextProvider.`);
   }
   return context;
-};
-
-type SignInOptions = {
-  email?: string;
-  password?: string;
-  provider?: Provider;
-};
-
-type SignUpOptions = {
-  email: string;
-  password: string;
 };
