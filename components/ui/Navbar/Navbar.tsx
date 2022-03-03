@@ -35,16 +35,8 @@ const Navbar = () => {
 
           <div className="flex flex-1 justify-end space-x-8">
             {user ? (
-              <Link href="#">
-                <a
-                  className={s.link}
-                  onClick={async () => {
-                    supabaseClient.auth.signOut();
-                    router.push('/signin');
-                  }}
-                >
-                  Sign out
-                </a>
+              <Link href="/api/auth/logout">
+                <a className={s.link}>Sign out</a>
               </Link>
             ) : (
               <Link href="/signin">
