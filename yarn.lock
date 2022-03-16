@@ -138,10 +138,10 @@
   dependencies:
     cross-fetch "^3.1.0"
 
-"@supabase/supabase-auth-helpers@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@supabase/supabase-auth-helpers/-/supabase-auth-helpers-1.2.1.tgz#974fae06c5d19c22d5dedd9743cef6194cbde3a8"
-  integrity sha512-WZF1tMRmHM3ZEYaPM3Alaa5im73XV6Y+S23yTsm0s6HW15p1dNkPpB3H1cUNy9NOCMLfzc4TC6/MSpP0+vk6Ow==
+"@supabase/supabase-auth-helpers@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@supabase/supabase-auth-helpers/-/supabase-auth-helpers-1.2.3.tgz#7493e84fb2f744441ba81d3ae25efe4a7e6291ee"
+  integrity sha512-v87K5Q98UYx5RU9wB7xJD4/eKbeamclhmUIJNElcIv6xd6ZNBF7+8rJZVwnn+XgVdQdmzo0y0IO7UcFtZ5iwmw==
   dependencies:
     "@supabase/supabase-js" "^1.30.0"
     "@supabase/ui" "^0.36.3"
