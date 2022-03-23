@@ -16,6 +16,7 @@ const Input = (props: Props) => {
       onChange(e.target.value);
     }
     return null;
+    };
   };
 
   return (
