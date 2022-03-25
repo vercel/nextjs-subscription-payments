@@ -6,6 +6,7 @@ import {
 import { UserDetails } from 'types';
 import { Subscription } from 'types';
 import { SupabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { PostgrestError } from '@supabase/postgrest-js';
 
 type UserContextType = {
   accessToken: string | null;
@@ -13,6 +14,10 @@ type UserContextType = {
   userDetails: UserDetails | null;
   isLoading: boolean;
   subscription: Subscription | null;
+  updateUserFullname: (
+    userId: string,
+    newFullName: string
+  ) => Promise<PostgrestError | null>;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -33,12 +38,26 @@ export const MyUserContextProvider = (props: Props) => {
 
   const getUserDetails = () =>
     supabase.from<UserDetails>('users').select('*').single();
+
   const getSubscription = () =>
     supabase
       .from<Subscription>('subscriptions')
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
       .single();
+
+  const updateUserFullname = async (userId: string, newFullName: string) => {
+    const { data, error } = await supabase
+      .from<UserDetails>('users')
+      .update({ full_name: newFullName })
+      .match({ id: userId });
+
+    if (data) {
+      setUserDetails(data[0]);
+    }
+
+    return error;
+  };
 
   useEffect(() => {
     if (user && !isLoadingData && !userDetails && !subscription) {
@@ -68,7 +87,8 @@ export const MyUserContextProvider = (props: Props) => {
     user,
     userDetails,
     isLoading: isLoadingUser || isLoadingData,
-    subscription
+    subscription,
+    updateUserFullname
   };
 
   return <UserContext.Provider value={value} {...props} />;
