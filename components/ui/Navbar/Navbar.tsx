@@ -3,12 +3,9 @@ import s from './Navbar.module.css';
 
 import Logo from 'components/icons/Logo';
 import { useUser } from 'utils/useUser';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { useRouter } from 'next/router';
 
 const Navbar = () => {
   const { user } = useUser();
-  const router = useRouter();
 
   return (
     <nav className={s.root}>

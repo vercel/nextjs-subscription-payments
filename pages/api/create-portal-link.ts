@@ -1,8 +1,5 @@
 import { stripe } from 'utils/stripe';
-import {
-  getUser,
-  withAuthRequired
-} from '@supabase/supabase-auth-helpers/nextjs';
+import { getUser, withApiAuth } from '@supabase/auth-helpers-nextjs';
 import { createOrRetrieveCustomer } from 'utils/supabase-admin';
 import { getURL } from 'utils/helpers';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -36,4 +33,4 @@ const createPortalLink = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withAuthRequired(createPortalLink);
+export default withApiAuth(createPortalLink);

@@ -1,11 +1,8 @@
 import { useEffect, useState, createContext, useContext } from 'react';
-import {
-  useUser as useSupaUser,
-  User
-} from '@supabase/supabase-auth-helpers/react';
+import { useUser as useSupaUser, User } from '@supabase/auth-helpers-react';
 import { UserDetails } from 'types';
 import { Subscription } from 'types';
-import { SupabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 type UserContextType = {
   accessToken: string | null;
