@@ -48,5 +48,12 @@ a {
 }
 
 .height-screen-helper {
-  height: calc(100vh - 80px);
+  height: 100%;
+  position: relative;
+}
+
+@media screen and (min-height: 500px) {
+  .height-screen-helper {
+    height: calc(100vh - 80px);
+  }
 }
