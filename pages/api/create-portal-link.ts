@@ -1,13 +1,18 @@
 import { stripe } from 'utils/stripe';
-import { getUser, withApiAuth } from '@supabase/auth-helpers-nextjs';
+import { withApiAuth } from '@supabase/auth-helpers-nextjs';
 import { createOrRetrieveCustomer } from 'utils/supabase-admin';
 import { getURL } from 'utils/helpers';
-import { NextApiRequest, NextApiResponse } from 'next';
 
-const createPortalLink = async (req: NextApiRequest, res: NextApiResponse) => {
+export default withApiAuth(async function createCheckoutSession(
+  req,
+  res,
+  supabaseServerClient
+) {
   if (req.method === 'POST') {
     try {
-      const { user } = await getUser({ req, res });
+      const {
+        data: { user }
+      } = await supabaseServerClient.auth.getUser();
       if (!user) throw Error('Could not get user');
       const customer = await createOrRetrieveCustomer({
         uuid: user.id || '',
@@ -31,6 +36,4 @@ const createPortalLink = async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Allow', 'POST');
     res.status(405).end('Method Not Allowed');
   }
-};
-
-export default withApiAuth(createPortalLink);
+});
