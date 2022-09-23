@@ -3,8 +3,9 @@ import {
   User
 } from '@supabase/auth-helpers-nextjs';
 import { ProductWithPrice, UserDetails } from 'types';
+import type { Database } from 'types_db';
 
-export const supabase = createBrowserSupabaseClient();
+export const supabase = createBrowserSupabaseClient<Database>();
 
 export const getActiveProductsWithPrices = async (): Promise<
   ProductWithPrice[]
@@ -22,12 +23,12 @@ export const getActiveProductsWithPrices = async (): Promise<
     throw error;
   }
 
-  return data || [];
+  return (data as any) || [];
 };
 
 export const updateUserName = async (user: User, name: string) => {
   await supabase
-    .from<UserDetails>('users')
+    .from('users')
     .update({
       full_name: name
     })

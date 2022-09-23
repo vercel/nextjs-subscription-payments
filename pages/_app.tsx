@@ -8,9 +8,12 @@ import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { AppProps } from 'next/app';
 import { MyUserContextProvider } from 'utils/useUser';
+import type { Database } from 'types_db';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+  const [supabaseClient] = useState(() =>
+    createBrowserSupabaseClient<Database>()
+  );
   useEffect(() => {
     document.body.classList?.remove('loading');
   }, []);
@@ -18,7 +21,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="bg-black">
       <SessionContextProvider supabaseClient={supabaseClient}>
-        <MyUserContextProvider supabaseClient={supabaseClient}>
+        <MyUserContextProvider>
           <Layout>
             <Component {...pageProps} />
           </Layout>

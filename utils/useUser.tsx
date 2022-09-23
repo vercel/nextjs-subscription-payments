@@ -1,11 +1,11 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import {
   useUser as useSupaUser,
-  useSessionContext
+  useSessionContext,
+  User
 } from '@supabase/auth-helpers-react';
 import { UserDetails } from 'types';
 import { Subscription } from 'types';
-import { SupabaseClient, User } from '@supabase/supabase-js';
 
 type UserContextType = {
   accessToken: string | null;
@@ -20,24 +20,25 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export interface Props {
-  supabaseClient: SupabaseClient;
   [propName: string]: any;
 }
 
 export const MyUserContextProvider = (props: Props) => {
-  const { supabaseClient: supabase } = props;
-  const { session, isLoading: isLoadingUser } = useSessionContext();
+  const {
+    session,
+    isLoading: isLoadingUser,
+    supabaseClient: supabase
+  } = useSessionContext();
   const user = useSupaUser();
   const accessToken = session?.access_token ?? null;
   const [isLoadingData, setIsloadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
 
-  const getUserDetails = () =>
-    supabase.from<UserDetails>('users').select('*').single();
+  const getUserDetails = () => supabase.from('users').select('*').single();
   const getSubscription = () =>
     supabase
-      .from<Subscription>('subscriptions')
+      .from('subscriptions')
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
       .single();

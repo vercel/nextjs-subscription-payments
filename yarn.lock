@@ -119,24 +119,24 @@
   resolved "https://registry.npmjs.org/@stripe/stripe-js/-/stripe-js-1.22.0.tgz"
   integrity sha512-fm8TR8r4LwbXgBIYdPmeMjJJkxxFC66tvoliNnmXOpUgZSgQKoNPW3ON0ZphZIiif1oqWNhAaSrr7tOvGu+AFg==
 
-"@supabase/auth-helpers-nextjs@^0.4.0-next.1":
-  version "0.4.0-next.1"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.4.0-next.1.tgz#fb30b0f06a146f7415e9c2410e49d9f4fcc88638"
-  integrity sha512-h0neXfCCl9cGNgRYlka8EL58mWZg0E5ZiSo2uTq1VJvOjBLBgd74IdM805VhI3GrO/sEvuHNboJVouSAA+aWIQ==
+"@supabase/auth-helpers-nextjs@^0.4.0-next.3":
+  version "0.4.0-next.3"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.4.0-next.3.tgz#4a532d9eb5dbc3c6fe47d7a2b139843379e3e6a5"
+  integrity sha512-WfYHNTPK3SNfotaYXNxrrn39nmKrbyt0yzp+sAr+VA1PEpNQKutilIqvGSFDq+6laaYUVtMSLsoAcuTPI62WYQ==
   dependencies:
-    "@supabase/auth-helpers-shared" "0.2.0-next.0"
+    "@supabase/auth-helpers-shared" "0.2.0-next.2"
 
-"@supabase/auth-helpers-react@^0.3.0-next.0":
-  version "0.3.0-next.0"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-react/-/auth-helpers-react-0.3.0-next.0.tgz#12cf5280c033fa4093fe98ea1a96e36a291000c9"
-  integrity sha512-zxHVyNmF8LmcHnRr7nC61JkFUUFB3K7EDKqGLqkzxGX4z0wzCZ1hSFrVhfW+E9D78FknWGzS3kpfP+ogQKnqAA==
+"@supabase/auth-helpers-react@^0.3.0-next.2":
+  version "0.3.0-next.2"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-react/-/auth-helpers-react-0.3.0-next.2.tgz#94b149a91571523742d418dc3ceb6065a5ccffcd"
+  integrity sha512-V3VaeMjLQFz+uK9KmBWC8/YIcI+CJf+zgAxd8/+/kstyCs2CYMH/hEIE5O8ciTBnfWvlzznttQTasoRxqecCNA==
   dependencies:
-    "@supabase/auth-helpers-shared" "0.2.0-next.0"
+    "@supabase/auth-helpers-shared" "0.2.0-next.2"
 
-"@supabase/auth-helpers-shared@0.2.0-next.0":
-  version "0.2.0-next.0"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.2.0-next.0.tgz#4304ae617ff14017b6c28ece0c221b418e5985a9"
-  integrity sha512-kFCaIVtubgp+9sRcWZmfIjyzSRgiCYIB1tEPvbl9DoYJW6zp6jpRe0528jx464o+FhNcLw+12WQUxygzhg8hKw==
+"@supabase/auth-helpers-shared@0.2.0-next.2":
+  version "0.2.0-next.2"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.2.0-next.2.tgz#e4f7a06c342e47ef563c1ee67307cd451c1b6da9"
+  integrity sha512-e+u5EuMgQoLVP4cHXdv22V4L7seSKObZVCtkkBT+eqOuHVuJlc/VDM7PYoJVX57gZoUl1Gi1TuZ+ZO70CYgG6A==
   dependencies:
     cookie "^0.5.0"
 
