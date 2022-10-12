@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, FormEvent } from 'react';
-import { useUser } from '@supabase/auth-helpers-react';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import Button from 'components/ui/Button';
 import GitHub from 'components/icons/GitHub';
@@ -22,7 +21,8 @@ const SignIn = () => {
     content: ''
   });
   const router = useRouter();
-  const { user } = useUser();
+  const user = useUser();
+  const supabaseClient = useSupabaseClient();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,10 +30,20 @@ const SignIn = () => {
     setLoading(true);
     setMessage({});
 
-    const { error } = await supabaseClient.auth.signIn(
-      { email, password },
-      { redirectTo: getURL() }
-    );
+    let error;
+    if (!password) {
+      const res = await supabaseClient.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: getURL() }
+      });
+      error = res.error;
+    } else {
+      const res = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+      error = res.error;
+    }
     if (error) {
       setMessage({ type: 'error', content: error.message });
     }
@@ -48,7 +58,10 @@ const SignIn = () => {
 
   const handleOAuthSignIn = async (provider: Provider) => {
     setLoading(true);
-    const { error } = await supabaseClient.auth.signIn({ provider });
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: getURL() }
+    });
     if (error) {
       setMessage({ type: 'error', content: error.message });
     }

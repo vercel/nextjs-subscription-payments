@@ -108,6 +108,14 @@ The [Stripe CLI](https://stripe.com/docs/stripe-cli#install) `fixtures` command 
 1. Add the products and prices that you want
 1. Set up the required business information and links
 
+### Generate types from your Supabase database
+
+You can use the [Supabase CLI](https://supabase.com/docs/reference/cli/usage#supabase-gen-types-typescript) to generate types from your Database by running
+
+```bash
+supabase gen types typescript --db-url "postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres" > types_db.ts
+```
+
 ### That's it
 
 That's it. Now you're ready to earn recurring revenue from your customers 🥳

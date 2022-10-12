@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, FormEvent } from 'react';
-import { useUser, User } from '@supabase/auth-helpers-react';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { User } from '@supabase/supabase-js';
+import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import Button from 'components/ui/Button';
 import Input from 'components/ui/Input';
@@ -10,6 +10,7 @@ import Logo from 'components/icons/Logo';
 import { updateUserName } from 'utils/supabase-client';
 
 const SignUp = () => {
+  const supabaseClient = useSupabaseClient();
   const [newUser, setNewUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,14 +21,17 @@ const SignUp = () => {
     content: ''
   });
   const router = useRouter();
-  const { user } = useUser();
+  const user = useUser();
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setLoading(true);
     setMessage({});
-    const { error, user: createdUser } = await supabaseClient.auth.signUp({
+    const {
+      error,
+      data: { user: createdUser }
+    } = await supabaseClient.auth.signUp({
       email,
       password
     });

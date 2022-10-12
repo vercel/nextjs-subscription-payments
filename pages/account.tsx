@@ -6,7 +6,8 @@ import Button from 'components/ui/Button';
 import { useUser } from 'utils/useUser';
 import { postData } from 'utils/helpers';
 
-import { withPageAuth, User } from '@supabase/auth-helpers-nextjs';
+import { User } from '@supabase/supabase-js';
+import { withPageAuth } from '@supabase/auth-helpers-nextjs';
 
 interface Props {
   title: string;
