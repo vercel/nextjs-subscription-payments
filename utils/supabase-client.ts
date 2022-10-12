@@ -2,7 +2,7 @@ import {
   createBrowserSupabaseClient,
   User
 } from '@supabase/auth-helpers-nextjs';
-import { ProductWithPrice, UserDetails } from 'types';
+import { ProductWithPrice } from 'types';
 import type { Database } from 'types_db';
 
 export const supabase = createBrowserSupabaseClient<Database>();
@@ -22,7 +22,7 @@ export const getActiveProductsWithPrices = async (): Promise<
     console.log(error.message);
     throw error;
   }
-
+  // TODO: improve the typing here.
   return (data as any) || [];
 };
 

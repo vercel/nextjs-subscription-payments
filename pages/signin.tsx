@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, FormEvent } from 'react';
-import { useUser, useSessionContext } from '@supabase/auth-helpers-react';
+import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import Button from 'components/ui/Button';
 import GitHub from 'components/icons/GitHub';
@@ -22,7 +22,7 @@ const SignIn = () => {
   });
   const router = useRouter();
   const user = useUser();
-  const { supabaseClient } = useSessionContext();
+  const supabaseClient = useSupabaseClient();
 
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

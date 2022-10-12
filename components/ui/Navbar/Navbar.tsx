@@ -4,11 +4,11 @@ import s from './Navbar.module.css';
 import Logo from 'components/icons/Logo';
 import { useRouter } from 'next/router';
 import { useUser } from 'utils/useUser';
-import { useSessionContext } from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 const Navbar = () => {
   const router = useRouter();
-  const { supabaseClient } = useSessionContext();
+  const supabaseClient = useSupabaseClient();
   const { user } = useUser();
 
   return (

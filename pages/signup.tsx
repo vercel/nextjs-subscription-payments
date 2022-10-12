@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, FormEvent } from 'react';
 import { User } from '@supabase/supabase-js';
-import { useUser, useSessionContext } from '@supabase/auth-helpers-react';
+import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import Button from 'components/ui/Button';
 import Input from 'components/ui/Input';
@@ -10,7 +10,7 @@ import Logo from 'components/icons/Logo';
 import { updateUserName } from 'utils/supabase-client';
 
 const SignUp = () => {
-  const { supabaseClient } = useSessionContext();
+  const supabaseClient = useSupabaseClient();
   const [newUser, setNewUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
