@@ -2,6 +2,7 @@ import 'styles/main.css';
 import 'styles/chrome-bug.css';
 import { useEffect, useState } from 'react';
 import React from 'react';
+import { MantineProvider } from '@mantine/core';
 
 import Layout from 'components/Layout';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
@@ -22,9 +23,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <div className="bg-black">
       <SessionContextProvider supabaseClient={supabaseClient}>
         <MyUserContextProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{
+              /** Put your mantine theme override here */
+              colorScheme: 'light',
+            }}
+          >
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </MantineProvider>
         </MyUserContextProvider>
       </SessionContextProvider>
     </div>
