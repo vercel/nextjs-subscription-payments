@@ -1,12 +1,11 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import {
   useUser as useSupaUser,
+  useSessionContext,
   User
-} from '@supabase/supabase-auth-helpers/react';
+} from '@supabase/auth-helpers-react';
 import { UserDetails } from 'types';
 import { Subscription } from 'types';
-import { SupabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { PostgrestError } from '@supabase/postgrest-js';
 
 type UserContextType = {
   accessToken: string | null;
@@ -14,10 +13,6 @@ type UserContextType = {
   userDetails: UserDetails | null;
   isLoading: boolean;
   subscription: Subscription | null;
-  updateUserFullname: (
-    userId: string,
-    newFullName: string
-  ) => Promise<PostgrestError | null>;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -25,39 +20,28 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export interface Props {
-  supabaseClient: SupabaseClient;
   [propName: string]: any;
 }
 
 export const MyUserContextProvider = (props: Props) => {
-  const { supabaseClient: supabase } = props;
-  const { user, accessToken, isLoading: isLoadingUser } = useSupaUser();
+  const {
+    session,
+    isLoading: isLoadingUser,
+    supabaseClient: supabase
+  } = useSessionContext();
+  const user = useSupaUser();
+  const accessToken = session?.access_token ?? null;
   const [isLoadingData, setIsloadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
 
-  const getUserDetails = () =>
-    supabase.from<UserDetails>('users').select('*').single();
-
+  const getUserDetails = () => supabase.from('users').select('*').single();
   const getSubscription = () =>
     supabase
-      .from<Subscription>('subscriptions')
+      .from('subscriptions')
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
       .single();
-
-  const updateUserFullname = async (userId: string, newFullName: string) => {
-    const { data, error } = await supabase
-      .from<UserDetails>('users')
-      .update({ full_name: newFullName })
-      .match({ id: userId });
-
-    if (data) {
-      setUserDetails(data[0]);
-    }
-
-    return error;
-  };
 
   useEffect(() => {
     if (user && !isLoadingData && !userDetails && !subscription) {
@@ -87,8 +71,7 @@ export const MyUserContextProvider = (props: Props) => {
     user,
     userDetails,
     isLoading: isLoadingUser || isLoadingData,
-    subscription,
-    updateUserFullname
+    subscription
   };
 
   return <UserContext.Provider value={value} {...props} />;

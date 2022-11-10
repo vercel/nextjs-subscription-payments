@@ -2,13 +2,14 @@ import Link from 'next/link';
 import s from './Navbar.module.css';
 
 import Logo from 'components/icons/Logo';
-import { useUser } from 'utils/useUser';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { useRouter } from 'next/router';
+import { useUser } from 'utils/useUser';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 const Navbar = () => {
-  const { user } = useUser();
   const router = useRouter();
+  const supabaseClient = useSupabaseClient();
+  const { user } = useUser();
 
   return (
     <nav className={s.root}>
@@ -35,9 +36,15 @@ const Navbar = () => {
 
           <div className="flex flex-1 justify-end space-x-8">
             {user ? (
-              <Link href="/api/auth/logout">
-                <a className={s.link}>Sign out</a>
-              </Link>
+              <span
+                className={s.link}
+                onClick={async () => {
+                  await supabaseClient.auth.signOut();
+                  router.push('/signin');
+                }}
+              >
+                Sign out
+              </span>
             ) : (
               <Link href="/signin">
                 <a className={s.link}>Sign in</a>
