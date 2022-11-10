@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useEffect } from 'react';
 
 import LoadingDots from 'components/ui/LoadingDots';
 import Button from 'components/ui/Button';
@@ -8,6 +8,8 @@ import { postData } from 'utils/helpers';
 
 import { User } from '@supabase/supabase-js';
 import { withPageAuth } from '@supabase/auth-helpers-nextjs';
+import Input from '@/components/ui/Input';
+import { updateUserName } from '@/utils/supabase-client';
 
 interface Props {
   title: string;
@@ -36,6 +38,42 @@ export const getServerSideProps = withPageAuth({ redirectTo: '/signin' });
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription, userDetails } = useUser();
+  const [fullName, setFullName] = useState('');
+  const [submittingFullName, setSubmittingFullName] = useState(false);
+  const [fullNameUpdateResult, setFullNameUpdateResult] = useState<{
+    type: string;
+    content: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (isLoading && userDetails && userDetails.full_name) {
+      setFullName(userDetails.full_name);
+    }
+  }, [isLoading, userDetails, setFullName]);
+
+  async function handleClickUserFullName() {
+    if (userDetails) {
+      setSubmittingFullName(true);
+      const { error } = await updateUserName(userDetails, fullName);
+      if (error) {
+        setFullNameUpdateResult({
+          type: 'error',
+          content: 'Something went wrong!'
+        });
+      } else {
+        setFullNameUpdateResult({
+          type: 'note',
+          content: 'Name updated with success!'
+        });
+      }
+      setSubmittingFullName(false);
+    }
+  }
+
+  function handleFullNameChange(fullNameChanged: string) {
+    setFullName(fullNameChanged);
+    setFullNameUpdateResult(null);
+  }
 
   const redirectToCustomerPortal = async () => {
     setLoading(true);
@@ -114,16 +152,34 @@ export default function Account({ user }: { user: User }) {
           footer={<p>Please use 64 characters at maximum.</p>}
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
-            {userDetails ? (
-              `${
-                userDetails.full_name ??
-                `${userDetails.first_name} ${userDetails.last_name}`
-              }`
-            ) : (
-              <div className="h-8 mb-6">
-                <LoadingDots />
-              </div>
-            )}
+            <div className="flex items-center space-x-4">
+              <Input
+                placeholder="Name"
+                value={fullName}
+                onChange={handleFullNameChange}
+              />
+              <Button
+                variant="slim"
+                type="submit"
+                onClick={handleClickUserFullName}
+                loading={submittingFullName}
+                disabled={submittingFullName}
+              >
+                Update name
+              </Button>
+
+              {fullNameUpdateResult && (
+                <span
+                  className={`text-sm ${
+                    fullNameUpdateResult.type === 'note'
+                      ? 'text-green-500'
+                      : 'text-pink-500'
+                  }`}
+                >
+                  {fullNameUpdateResult.content}
+                </span>
+              )}
+            </div>
           </div>
         </Card>
         <Card
