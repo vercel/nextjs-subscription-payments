@@ -37,9 +37,15 @@ The initial build will fail due to missing Stripe environment variables. After c
 
 ## Configure Supabase Auth
 
+#### Setup redirect wildcards for deploy previews
+
+For auth redirects (magic link, OAuth providers) to work correctly in deploy previews, navigate to the [auth settings](https://app.supabase.com/project/_/auth/settings) and add the following wildcard URL to "Redirect URLs": `https://**vercel.app/*/*`.
+
+You can read more about redirect wildcard patterns in the [docs](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
+
 #### [Optional] - Set up OAuth providers
 
-You can use third-party login providers like GitHub or Google. Refer to the [docs](https://supabase.io/docs/guides/auth#third-party-logins) to learn how to configure these.
+You can use third-party login providers like GitHub or Google. Refer to the [docs](https://supabase.io/docs/guides/auth#third-party-logins) to learn how to configure these. Once configured you can add them to the `provider` array of the `Auth` component on the [`signin.tsx`](./pages/signin.tsx) page.
 
 ## Configure Stripe
 

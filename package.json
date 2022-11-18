@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "1.22.0",
-    "@supabase/auth-helpers-nextjs": "^0.4.0",
+    "@supabase/auth-helpers-nextjs": "^0.4.1",
     "@supabase/auth-helpers-react": "^0.3.0",
     "@supabase/auth-ui-react": "^0.2.1",
     "@supabase/supabase-js": "^2.0.0",
