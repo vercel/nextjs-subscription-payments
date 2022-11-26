@@ -114,15 +114,25 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@stitches/core@^1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@stitches/core/-/core-1.2.8.tgz#dce3b8fdc764fbc6dbea30c83b73bfb52cf96173"
+  integrity sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==
+
+"@stitches/react@^1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@stitches/react/-/react-1.2.8.tgz#954f8008be8d9c65c4e58efa0937f32388ce3a38"
+  integrity sha512-9g9dWI4gsSVe8bNLlb+lMkBYsnIKCZTmvqvDG+Avnn69XfmHZKiaMrx7cgTaddq7aTPPmXiTsbFcUy0xgI4+wA==
+
 "@stripe/stripe-js@1.22.0":
   version "1.22.0"
   resolved "https://registry.npmjs.org/@stripe/stripe-js/-/stripe-js-1.22.0.tgz"
   integrity sha512-fm8TR8r4LwbXgBIYdPmeMjJJkxxFC66tvoliNnmXOpUgZSgQKoNPW3ON0ZphZIiif1oqWNhAaSrr7tOvGu+AFg==
 
-"@supabase/auth-helpers-nextjs@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.4.0.tgz#b9b8528c7d6a6b3f7374428fc40fcafb41fd41f0"
-  integrity sha512-qECcdWfz/gK0vh7ZQ/JOZfEC2heCKZsR0mrogxAuWtwkNJy4sMdoSfxwp41g9ee56ubw+jJcCGAXfuoe5YRoBA==
+"@supabase/auth-helpers-nextjs@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.4.1.tgz#6d93520119232563283cece5d383d13866e21c73"
+  integrity sha512-qrtMYlLoxm/Xf2U1l+OeDlckEzQHbRusIRcj5JKOj+gV/r62/VkDpB92cgjt3bbVtPDka5szXF4tBku6ZZkMeQ==
   dependencies:
     "@supabase/auth-helpers-shared" "0.2.0"
 
@@ -137,6 +147,18 @@
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.2.0.tgz#9d740ddbb2a3bb7c4d8a4a30842646aa0afc64aa"
   integrity sha512-GaWzuP3RjLSdSlFajbgwQkZO24A14DSEIJG5sUva/sUYWkriEWROjf8Vbwg4YsSxqeU6fP3lloFeync9BwgyYA==
+
+"@supabase/auth-ui-react@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-ui-react/-/auth-ui-react-0.2.1.tgz#d78f565683f7812df1aff5b470987a225d7e6462"
+  integrity sha512-Ch39R/aQekjH/C4v4/VxtYn4tWVBrRvXco9Wffw1vfWiyudod64PG/TSmQE1+xJjw0USJSWWx0R3WqEVGqa7gw==
+  dependencies:
+    "@stitches/core" "^1.2.8"
+    "@stitches/react" "^1.2.8"
+    lodash "^4.17.20"
+    prop-types "^15.7.2"
+  optionalDependencies:
+    fsevents "^2.3.2"
 
 "@supabase/functions-js@^2.0.0":
   version "2.0.0"
@@ -563,7 +585,7 @@ fraction.js@^4.1.2:
   resolved "https://registry.npmjs.org/fraction.js/-/fraction.js-4.1.2.tgz"
   integrity sha512-o2RiJQ6DZaR/5+Si0qJUIy637QMRudSi9kU/FFzx9EZazrIdnBgpU+3sEWCxAVhH2RtxW2Oz+T4p2o8uOPVcgA==
 
-fsevents@~2.3.2:
+fsevents@^2.3.2, fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
@@ -687,7 +709,12 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-loose-envify@^1.1.0:
+lodash@^4.17.20:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
+loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -895,6 +922,15 @@ prettier@2.5.1:
   resolved "https://registry.npmjs.org/prettier/-/prettier-2.5.1.tgz"
   integrity sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==
 
+prop-types@^15.7.2:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 qs@^6.6.0:
   version "6.10.3"
   resolved "https://registry.npmjs.org/qs/-/qs-6.10.3.tgz"
@@ -920,6 +956,11 @@ react-dom@17.0.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.2"
+
+react-is@^16.13.1:
+  version "16.13.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
+  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
 react-merge-refs@1.1.0:
   version "1.1.0"
