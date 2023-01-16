@@ -73,15 +73,11 @@ To securely interact with Stripe, we need to add a few environment variables in 
 
 You can find the first two keys on the [API keys tab](https://dashboard.stripe.com/test/apikeys) in Stripe. The `STRIPE_WEBHOOK_SECRET_LIVE` is the `Signing secret` copied in the previous webhook configuration step.
 
-### Redeploy and Test
+### Redeploy
 
 We need to redeploy the application so that the latest environment variables are present.
 
 Redeploy your application by going to the deployments tab, finding your deployment, and clicking "redeploy."
-
-Finally, click the `Send test webhook` button and send a `product.created` event. If everything works, you should see a test product in your Supabase database.
-
-After verifying that the configuration is working, delete the test products created via the webhook in Supabase.
 
 ### Create product and pricing information
 
