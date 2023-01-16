@@ -20,7 +20,6 @@ export const getActiveProductsWithPrices = async (): Promise<
 
   if (error) {
     console.log(error.message);
-    throw error;
   }
   // TODO: improve the typing here.
   return (data as any) || [];
