@@ -59,6 +59,8 @@ First, click the "Add endpoint" button on the [test Endpoints page](https://dash
 
 Then, set the endpoint URL to `https://your-deployment-url.vercel.app/api/webhooks`.
 
+After, click the `Select events` under the `Select events to listen to` heading.
+
 Next, click the `receive all events` link in the `Events to send` section.
 
 Finally, copy the `Signing secret` as we'll need that in the next step.
