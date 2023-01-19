@@ -39,7 +39,7 @@ The initial build will fail due to missing Stripe environment variables. After c
 
 #### Setup redirect wildcards for deploy previews
 
-For auth redirects (magic link, OAuth providers) to work correctly in deploy previews, navigate to the [auth settings](https://app.supabase.com/project/_/auth/settings) and add the following wildcard URL to "Redirect URLs": `https://**vercel.app/*/*`.
+For auth redirects (magic links, OAuth providers) to work correctly in deploy previews, navigate to the auth settings (i.e. `https://app.supabase.com/project/:project-id/auth/url-configuration`) and add the following wildcard URL to "Redirect URLs": `https://**vercel.app/*/*`.
 
 You can read more about redirect wildcard patterns in the [docs](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
 
