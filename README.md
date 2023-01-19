@@ -49,25 +49,21 @@ You can use third-party login providers like GitHub or Google. Refer to the [doc
 
 ## Configure Stripe
 
-To start developing your SaaS application, we'll need to configure Stripe to handle test payments. For the following steps, make sure you have the "viewing test data" toggle switched to "on."
+To start developing your SaaS application, we'll need to configure Stripe to handle test payments. For the following steps, make sure you have the ["Test Mode" toggle](https://stripe.com/docs/testing) switched on.
 
 ### Configure webhook
 
-We need to configure the webhook pictured in the architecture diagram above. This webhook is the piece that connects Stripe to your Vercel serverless functions.
+We need to configure the webhook pictured in the architecture diagram above. This webhook is the piece that connects Stripe to your Vercel Serverless Functions.
 
-First, click the "Add endpoint" button on the [test Endpoints page](https://dashboard.stripe.com/test/webhooks).
-
-Then, set the endpoint URL to `https://your-deployment-url.vercel.app/api/webhooks`.
-
-After, click the `Select events` under the `Select events to listen to` heading.
-
-Next, click the `receive all events` link in the `Events to send` section.
-
-Finally, copy the `Signing secret` as we'll need that in the next step.
+1. Click the "Add Endpoint" button on the [test Endpoints page](https://dashboard.stripe.com/test/webhooks).
+1. Set the endpoint URL to `https://your-deployment-url.vercel.app/api/webhooks`.
+1. Click the `Select events` under the `Select events to listen to` heading.
+1. Click the `receive all events` link in the `Events to send` section.
+1. Copy the `Signing secret` as we'll need that in the next step.
 
 ### Set environment variables
 
-To securely interact with Stripe, we need to add a few environment variables in the Vercel dashboard.
+To securely interact with Stripe, we need to add a few [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables) in the Vercel dashboard.
 
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - `STRIPE_SECRET_KEY`
