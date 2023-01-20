@@ -7,7 +7,8 @@ import { useUser } from 'utils/useUser';
 import { postData } from 'utils/helpers';
 
 import { User } from '@supabase/supabase-js';
-import { withPageAuth } from '@supabase/auth-helpers-nextjs';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { GetServerSidePropsContext } from 'next';
 
 interface Props {
   title: string;
@@ -31,7 +32,23 @@ function Card({ title, description, footer, children }: Props) {
   );
 }
 
-export const getServerSideProps = withPageAuth({ redirectTo: '/signin' });
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx)
+  // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    }
+  }
+}
 
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
