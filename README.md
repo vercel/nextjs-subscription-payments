@@ -57,9 +57,9 @@ We need to configure the webhook pictured in the architecture diagram above. Thi
 
 1. Click the "Add Endpoint" button on the [test Endpoints page](https://dashboard.stripe.com/test/webhooks).
 1. Set the endpoint URL to `https://your-deployment-url.vercel.app/api/webhooks`.
-1. Click the `Select events` under the `Select events to listen to` heading.
-1. Click the `receive all events` link in the `Events to send` section.
-1. Copy the `Signing secret` as we'll need that in the next step.
+1. Click `Select events` under the `Select events to listen to` heading.
+1. Click `Select all events` in the `Select events to send` section.
+1. Copy `Signing secret` as we'll need that in the next step.
 
 ### Set environment variables
 
