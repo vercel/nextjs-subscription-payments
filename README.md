@@ -112,8 +112,24 @@ The [Stripe CLI](https://stripe.com/docs/stripe-cli#install) `fixtures` command 
 
 You can use the [Supabase CLI](https://supabase.com/docs/reference/cli/usage#supabase-gen-types-typescript) to generate types from your Database by running
 
+1. To install supabase cli
+
 ```bash
-supabase gen types typescript --db-url "postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres" > types_db.ts
+npm install supabase --save-dev
+yarn add supabase --dev
+```
+
+2. Connect to supabase
+
+```bash
+npx supabase login
+```
+
+3. Enter your access token. You can generate an access token from https://app.supabase.com/account/tokens
+4. Generate types
+
+```bash
+npx supabase gen types typescript --project-id [YOUR-PROJECT-REF] --schema public > types_db.ts
 ```
 
 ### That's it
