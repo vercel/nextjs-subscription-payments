@@ -1,11 +1,12 @@
-import cn from 'classnames';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import cn from 'classnames';
 
-import Button from 'components/ui/Button';
-import { postData } from 'utils/helpers';
-import { getStripe } from 'utils/stripe-client';
-import { useUser } from 'utils/useUser';
+import Button from '@/components/ui/Button';
+import { postData } from '@/utils/helpers';
+import { getStripe } from '@/utils/stripe-client';
+import { useUser } from '@/utils/useUser';
+
 import { Price, ProductWithPrice } from 'types';
 
 interface Props {

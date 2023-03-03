@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
-import LoadingDots from 'components/ui/LoadingDots';
-import Logo from 'components/icons/Logo';
+import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
+
+import LoadingDots from '@/components/ui/LoadingDots';
+import Logo from '@/components/icons/Logo';
 import { getURL } from '@/utils/helpers';
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react';
 
 const SignIn = () => {
   const router = useRouter();
