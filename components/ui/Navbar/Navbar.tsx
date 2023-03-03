@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import s from './Navbar.module.css';
-
-import Logo from 'components/icons/Logo';
 import { useRouter } from 'next/router';
-import { useUser } from 'utils/useUser';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+
+import Logo from '@/components/icons/Logo';
+import { useUser } from '@/utils/useUser';
+
+import s from './Navbar.module.css';
 
 const Navbar = () => {
   const router = useRouter();
@@ -19,17 +20,15 @@ const Navbar = () => {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 relative">
           <div className="flex flex-1 items-center">
-            <Link href="/">
-              <a className={s.logo} aria-label="Logo">
-                <Logo />
-              </a>
+            <Link href="/" className={s.logo} aria-label="Logo">
+              <Logo />
             </Link>
             <nav className="space-x-2 ml-6 hidden lg:block">
-              <Link href="/">
-                <a className={s.link}>Pricing</a>
+              <Link href="/" className={s.link}>
+                Pricing
               </Link>
-              <Link href="/account">
-                <a className={s.link}>Account</a>
+              <Link href="/account" className={s.link}>
+                Account
               </Link>
             </nav>
           </div>
@@ -46,8 +45,8 @@ const Navbar = () => {
                 Sign out
               </span>
             ) : (
-              <Link href="/signin">
-                <a className={s.link}>Sign in</a>
+              <Link href="/signin" className={s.link}>
+                Sign in
               </Link>
             )}
           </div>

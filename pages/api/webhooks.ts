@@ -1,12 +1,13 @@
-import { stripe } from 'utils/stripe';
+import { NextApiRequest, NextApiResponse } from 'next';
+import Stripe from 'stripe';
+import { Readable } from 'node:stream';
+
+import { stripe } from '@/utils/stripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
   manageSubscriptionStatusChange
-} from 'utils/supabase-admin';
-import { NextApiRequest, NextApiResponse } from 'next';
-import Stripe from 'stripe';
-import { Readable } from 'node:stream';
+} from '@/utils/supabase-admin';
 
 // Stripe requires the raw body to construct the event.
 export const config = {

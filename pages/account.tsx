@@ -1,13 +1,15 @@
-import Link from 'next/link';
 import { useState, ReactNode } from 'react';
+import Link from 'next/link';
+import { GetServerSidePropsContext } from 'next';
+import {
+  createServerSupabaseClient,
+  User
+} from '@supabase/auth-helpers-nextjs';
 
-import LoadingDots from 'components/ui/LoadingDots';
-import Button from 'components/ui/Button';
-import { useUser } from 'utils/useUser';
-import { postData } from 'utils/helpers';
-
-import { User } from '@supabase/supabase-js';
-import { withPageAuth } from '@supabase/auth-helpers-nextjs';
+import LoadingDots from '@/components/ui/LoadingDots';
+import Button from '@/components/ui/Button';
+import { useUser } from '@/utils/useUser';
+import { postData } from '@/utils/helpers';
 
 interface Props {
   title: string;
@@ -31,7 +33,27 @@ function Card({ title, description, footer, children }: Props) {
   );
 }
 
-export const getServerSideProps = withPageAuth({ redirectTo: '/signin' });
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const supabase = createServerSupabaseClient(ctx);
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false
+      }
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user
+    }
+  };
+};
 
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
@@ -102,9 +124,7 @@ export default function Account({ user }: { user: User }) {
             ) : subscription ? (
               `${subscriptionPrice}/${subscription?.prices?.interval}`
             ) : (
-              <Link href="/">
-                <a>Choose your plan</a>
-              </Link>
+              <Link href="/">Choose your plan</Link>
             )}
           </div>
         </Card>

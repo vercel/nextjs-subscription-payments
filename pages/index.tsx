@@ -1,7 +1,8 @@
-import Pricing from 'components/Pricing';
-import { getActiveProductsWithPrices } from 'utils/supabase-client';
-import { Product } from 'types';
 import { GetStaticPropsResult } from 'next';
+
+import Pricing from '@/components/Pricing';
+import { getActiveProductsWithPrices } from '@/utils/supabase-client';
+import { Product } from 'types';
 
 interface Props {
   products: Product[];
