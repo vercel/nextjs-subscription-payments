@@ -2,6 +2,7 @@ import {
   createBrowserSupabaseClient,
   User
 } from '@supabase/auth-helpers-nextjs';
+
 import { ProductWithPrice } from 'types';
 import type { Database } from 'types_db';
 

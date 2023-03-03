@@ -102,7 +102,7 @@ create policy "Allow public read-only access." on prices for select using (true)
 * SUBSCRIPTIONS
 * Note: subscriptions are created and managed in Stripe and synced to our DB via Stripe webhooks.
 */
-create type subscription_status as enum ('trialing', 'active', 'canceled', 'incomplete', 'incomplete_expired', 'past_due', 'unpaid');
+create type subscription_status as enum ('trialing', 'active', 'canceled', 'incomplete', 'incomplete_expired', 'past_due', 'unpaid', 'paused');
 create table subscriptions (
   -- Subscription ID from Stripe, e.g. sub_1234.
   id text primary key,

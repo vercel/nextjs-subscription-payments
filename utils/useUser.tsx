@@ -4,8 +4,8 @@ import {
   useSessionContext,
   User
 } from '@supabase/auth-helpers-react';
-import { UserDetails } from 'types';
-import { Subscription } from 'types';
+
+import { UserDetails, Subscription } from 'types';
 
 type UserContextType = {
   accessToken: string | null;
@@ -52,10 +52,10 @@ export const MyUserContextProvider = (props: Props) => {
           const subscriptionPromise = results[1];
 
           if (userDetailsPromise.status === 'fulfilled')
-            setUserDetails(userDetailsPromise.value.data);
+            setUserDetails(userDetailsPromise.value.data as UserDetails);
 
           if (subscriptionPromise.status === 'fulfilled')
-            setSubscription(subscriptionPromise.value.data);
+            setSubscription(subscriptionPromise.value.data as Subscription);
 
           setIsloadingData(false);
         }
