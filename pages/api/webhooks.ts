@@ -1,3 +1,4 @@
+import Stripe from 'stripe';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import {
@@ -5,30 +6,6 @@ import {
   upsertPriceRecord,
   manageSubscriptionStatusChange
 } from '@/utils/supabase-admin';
-
-// esm.sh is used to compile stripe-node to be compatible with ES modules.
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_API_KEY as string, {
-  // This is needed to use the Fetch API rather than relying on the Node http
-  // package.
-  apiVersion: '2022-11-15',
-  httpClient: Stripe.createFetchHttpClient()
-});
-// This is needed in order to use the Web Crypto API in Deno.
-const cryptoProvider = Stripe.createSubtleCryptoProvider();
-
-console.log('Hello from Stripe Webhook!');
-
-const webhookSecret =
-  process.env.STRIPE_WEBHOOK_SECRET_LIVE ?? process.env.STRIPE_WEBHOOK_SECRET;
-
-// Stripe requires the raw body to construct the event.
-export const config = {
-  api: {
-    bodyParser: false
-  }
-};
 
 const relevantEvents = new Set([
   'product.created',
@@ -92,35 +69,64 @@ const processEvent = async (event: Stripe.Event, response: NextApiResponse) => {
 };
 
 const webhookHandler = async (
-  request: NextApiRequest,
-  response: NextApiResponse
-) => {
-  if (request.method === 'POST') {
-    const signature = request.headers['Stripe-Signature'] || '';
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> => {
+  const webhookSecret: string =
+    process.env.STRIPE_WEBHOOK_SECRET_LIVE ?? process.env.STRIPE_WEBHOOK_SECRET;
 
-    const body = await request.body;
-    let receivedEvent: Stripe.Event;
+  const stripe = new Stripe(webhookSecret, {
+    apiVersion: null
+  });
+
+  if (req.method === 'POST') {
+    const sig = req.headers['stripe-signature'];
+
+    let event: Stripe.Event;
+
     try {
-      receivedEvent = await stripe.webhooks.constructEventAsync(
-        body,
-        signature,
-        webhookSecret as string,
-        undefined,
-        cryptoProvider
-      );
-    } catch (err: any) {
+      const body = await buffer(req);
+      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    } catch (err) {
+      // On error, log and return the error message
       console.log(`❌ Error message: ${err.message}`);
-      //return res.status(400).send(`Webhook Error: ${err.message}`);
-      return new Response(err.message, { status: 400 });
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return;
     }
 
-    console.log(receivedEvent);
-    await processEvent(receivedEvent, response);
-    return new Response(JSON.stringify({ received: true }), { status: 200 });
+    // Successfully constructed event
+    console.log('✅ Success:', event.id);
+
+    await processEvent(event, res);
+
+    // Return a response to acknowledge receipt of the event
+    res.json({ received: true });
   } else {
-    response.setHeader('Allow', 'POST');
-    response.status(405).end('Method Not Allowed');
+    res.setHeader('Allow', 'POST');
+    res.status(405).end('Method Not Allowed');
   }
+};
+
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
+
+const buffer = (req: NextApiRequest) => {
+  return new Promise<Buffer>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+
+    req.on('data', (chunk: Buffer) => {
+      chunks.push(chunk);
+    });
+
+    req.on('end', () => {
+      resolve(Buffer.concat(chunks));
+    });
+
+    req.on('error', reject);
+  });
 };
 
 export default webhookHandler;
