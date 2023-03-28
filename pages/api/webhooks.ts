@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { buffer } from 'micro';
+import getRawBody from 'raw-body';
 import { stripe } from '@/utils/stripe';
 
 import {
@@ -87,7 +87,7 @@ const webhookHandler = async (
     let event: Stripe.Event;
 
     try {
-      const body = await buffer(req);
+      const body = await getRawBody(req);
       const sig = req.headers['stripe-signature'] as string;
       event = stripe.webhooks.constructEvent(
         body,
