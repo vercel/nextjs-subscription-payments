@@ -71,7 +71,7 @@ redirect_uri = "http://localhost:54321/auth/v1/callback"
 # or any other third-party OIDC providers.
 url = ""
 [auth.external.github]
-enabled = true
+enabled = false
 client_id = ""
 secret = ""
 # Overrides the default auth redirectUrl.

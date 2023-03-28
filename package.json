@@ -16,11 +16,12 @@
     "@supabase/auth-ui-shared": "^0.1.2",
     "@supabase/supabase-js": "^2.10.0",
     "classnames": "^2.3.2",
+    "micro": "^10.0.1",
     "next": "^13.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-merge-refs": "^2.0.1",
-    "stripe": "^11.13.0",
+    "stripe": "^11.16.0",
     "swr": "^2.0.4",
     "tailwindcss": "^3.2.7"
   },
