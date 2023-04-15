@@ -1,0 +1,71 @@
+.
+├── .env.local.example
+├── .git
+│   ├── FETCH_HEAD
+│   ├── HEAD
+│   ├── branches
+│   ├── config
+│   ├── description
+│   ├── hooks
+│   ├── index
+│   ├── info
+│   ├── logs
+│   ├── objects
+│   ├── packed-refs
+│   └── refs
+├── .gitignore
+├── LICENSE
+├── README.md
+├── components
+│   ├── Layout.tsx
+│   ├── Pricing.tsx
+│   ├── icons
+│   └── ui
+├── fixtures
+│   └── stripe-fixtures.json
+├── folder-schema.txt
+├── folder.schema.txt
+├── next-env.d.ts
+├── next.config.js
+├── package.json
+├── pages
+│   ├── _app.tsx
+│   ├── _document.tsx
+│   ├── account.tsx
+│   ├── api
+│   ├── index.tsx
+│   └── signin.tsx
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── public
+│   ├── architecture_diagram.svg
+│   ├── demo.png
+│   ├── favicon.ico
+│   ├── github.svg
+│   ├── nextjs.svg
+│   ├── og.png
+│   ├── stripe.svg
+│   ├── supabase.svg
+│   ├── vercel-deploy.png
+│   └── vercel.svg
+├── schema.sql
+├── styles
+│   ├── chrome-bug.css
+│   └── main.css
+├── supabase
+│   ├── .gitignore
+│   ├── config.toml
+│   └── seed.sql
+├── tailwind.config.js
+├── tsconfig.json
+├── types.ts
+├── types_db.ts
+└── utils
+    ├── helpers.ts
+    ├── stripe-client.ts
+    ├── stripe.ts
+    ├── supabase-admin.ts
+    ├── supabase-client.ts
+    └── useUser.tsx
+
+18 directories, 51 files

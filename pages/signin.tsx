@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
+import { supabase } from '../utils/supabase-client';
+
 
 import LoadingDots from '@/components/ui/LoadingDots';
 import Logo from '@/components/icons/Logo';
@@ -12,6 +14,22 @@ const SignIn = () => {
   const router = useRouter();
   const user = useUser();
   const supabaseClient = useSupabaseClient();
+
+    async function signInWithGoogle() {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+      })
+    }
+
+    async function signout() {
+      const { error } = await supabase.auth.signOut();
+    }
 
   useEffect(() => {
     if (user) {
@@ -29,7 +47,7 @@ const SignIn = () => {
           <div className="flex flex-col space-y-4">
             <Auth
               supabaseClient={supabaseClient}
-              providers={['github']}
+              providers={['github', 'google']}
               redirectTo={getURL()}
               magicLink={true}
               appearance={{
@@ -45,6 +63,12 @@ const SignIn = () => {
               }}
               theme="dark"
             />
+            <button
+              onClick={signInWithGoogle}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Sign in with Google
+            </button>
           </div>
         </div>
       </div>

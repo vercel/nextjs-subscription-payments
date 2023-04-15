@@ -1,0 +1,27 @@
+.
+├── .env.local.example
+├── .git
+├── .gitignore
+├── LICENSE
+├── README.md
+├── components
+├── fixtures
+├── folder-schema.txt
+├── folder.schema.txt
+├── next-env.d.ts
+├── next.config.js
+├── package.json
+├── pages
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── public
+├── schema.sql
+├── styles
+├── supabase
+├── tailwind.config.js
+├── tsconfig.json
+├── types.ts
+├── types_db.ts
+└── utils
+
+9 directories, 16 files
