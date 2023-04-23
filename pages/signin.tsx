@@ -7,6 +7,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared';
 import LoadingDots from '@/components/ui/LoadingDots';
 import Logo from '@/components/icons/Logo';
 import { getURL } from '@/utils/helpers';
+import DefaultLayout from '@/components/Layout';
 
 const SignIn = () => {
   const router = useRouter();
@@ -56,5 +57,7 @@ const SignIn = () => {
     </div>
   );
 };
+
+SignIn.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
 
 export default SignIn;

@@ -44,7 +44,6 @@ export default function Layout({ children, meta: pageMeta }: Props) {
       </Head>
       <Navbar />
       <main>{children}</main>
-      <Footer />
     </>
   );
 }

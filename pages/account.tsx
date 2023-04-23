@@ -10,6 +10,7 @@ import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
 import { postData } from '@/utils/helpers';
+import DefaultLayout from '@/components/Layout';
 
 interface Props {
   title: string;
@@ -159,3 +160,5 @@ export default function Account({ user }: { user: User }) {
     </section>
   );
 }
+
+Account.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
