@@ -1,13 +1,12 @@
 import { ReactNode, useState } from 'react';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import {
   createServerSupabaseClient,
   User
 } from '@supabase/auth-helpers-nextjs';
 
-import Dashboard from '@/scenes/Dashboard';
+import Dashboard from '@/scenes/dashboard';
 import { useUser } from '@/utils/useUser';
-import Sidebar from '../../scenes/global/Sidebar';
 import DashboardLayout from '@/components/DashboardLayout';
 
 interface Props {
@@ -41,13 +40,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 export default function DashboardPage({ user }: { user: User }) {
   const { isLoading, subscription, userDetails } = useUser();
-  const [isSidebar, setIsSidebar] = useState(true);
-  return (
-    <div className="dashboard-main">
-      <Sidebar isSidebar={isSidebar} />
-      <Dashboard />
-    </div>
-  );
+
+  return <Dashboard />;
 }
 
-DashboardPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+DashboardPage.getLayout = (page: ReactNode) => (
+  <DashboardLayout>{page}</DashboardLayout>
+);

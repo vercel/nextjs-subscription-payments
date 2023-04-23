@@ -31,7 +31,9 @@ body {
 
 html.dashboard,
 html.dashboard body,
+html.dashboard #__next,
 html.dashboard #root,
+html.dashboard main,
 html.dashboard .app,
 html.dashboard .content {
   height: 100%;
