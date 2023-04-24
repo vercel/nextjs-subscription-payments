@@ -29,7 +29,7 @@ export default function Layout({ children, meta: pageMeta }: Props) {
       <Topbar />
       <main className="dashboard-main">
         <Sidebar />
-        {children}
+        <div className="dashboard-content">{children}</div>
       </main>
     </>
   );

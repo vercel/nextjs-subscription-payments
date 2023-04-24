@@ -61,6 +61,16 @@ main,
   flex-direction: column;
   flex: 1;
 }
+.dashboard-content .align-items-center {
+  align-items: center;
+}
+.dashboard-form {
+  background: #2e3c59;
+  border-radius: 15px;
+  padding: 50px;
+  max-width: 640px;
+  align-self: center;
+}
 
 body {
   position: relative;
@@ -70,6 +80,10 @@ body {
 
 a {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.logo {
+  @apply cursor-pointer rounded-full transform duration-100 ease-in-out mr-2 inline-flex;
 }
 
 .animated {

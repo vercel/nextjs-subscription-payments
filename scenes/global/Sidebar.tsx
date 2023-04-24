@@ -17,6 +17,7 @@ import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import { sidebarClasses, menuClasses } from './utility-classes';
+import Logo from '@/components/icons/Logo';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -67,6 +68,8 @@ const MySidebar = () => {
                 borderRadius: '5px',
                 color: disabled ? '#f5d9ff' : '#d359ff',
                 backgroundColor: active ? '#2e3c59' : undefined,
+                marginTop: '1px',
+                marginBottom: '1px',
                 '&:hover': {
                   background: '#2e3c59'
                 }
@@ -85,15 +88,19 @@ const MySidebar = () => {
           {!isCollapsed && (
             <Box
               display="flex"
-              justifyContent="space-between"
+              justifyContent="justify-start"
               alignItems="center"
+              gap={'10px'}
             >
-              <Typography variant="h3" color={colors.grey[100]}>
-                ADMINIS
-              </Typography>
               <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                 <MenuOutlinedIcon />
               </IconButton>
+              <Link href="/" className="logo" aria-label="Logo">
+                <Logo />
+              </Link>
+              <Typography variant="h3" color={colors.grey[100]}>
+                ADMINIS
+              </Typography>
             </Box>
           )}
         </MenuItem>

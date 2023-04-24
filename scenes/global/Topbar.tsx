@@ -1,5 +1,6 @@
-import { Box, IconButton, useTheme } from '@mui/material';
+import Link from 'next/link';
 import { useContext } from 'react';
+import { Box, IconButton, useTheme } from '@mui/material';
 import { ColorModeContext, tokens } from '../../theme';
 import InputBase from '@mui/material/InputBase';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
@@ -8,6 +9,8 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SearchIcon from '@mui/icons-material/Search';
+import Logo from '@/components/icons/Logo';
+import s from './topbar.module.css';
 
 const Topbar = () => {
   const theme = useTheme();
@@ -15,16 +18,26 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
 
   return (
-    <Box display="flex" justifyContent="space-between" p={2}>
-      <Box width={'100%'}></Box>
-      <Box width={'100%'}>
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      p={2}
+    >
+      <Box width={'100%'} minWidth={'500px'}>
+        <Link href="/" className="logo" aria-label="Logo">
+          <Logo />
+        </Link>
+      </Box>
+      <Box display="flex" width={'100%'} className="justify-center">
         {/* SEARCH BAR */}
         <Box
+          display="flex"
+          height="auto"
           sx={{
-            display: 'flex',
             background: colors.primary[400],
             borderRadius: '3px',
-            width: '400px'
+            width: '500px'
           }}
         >
           <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
