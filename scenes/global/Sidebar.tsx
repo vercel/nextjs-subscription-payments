@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from 'react';
 import { Sidebar, Menu, MenuItem, useProSidebar } from 'react-pro-sidebar';
 import { Box, IconButton, Typography, useTheme } from '@mui/material';

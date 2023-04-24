@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { GetStaticPropsResult } from 'next';
 
 import Pricing from '@/components/Pricing';

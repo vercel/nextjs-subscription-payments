@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ReactNode, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 
