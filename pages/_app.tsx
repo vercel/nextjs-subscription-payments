@@ -16,7 +16,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     createBrowserSupabaseClient<Database>()
   );
   useEffect(() => {
-    document.body.classList?.remove('loading');
+    document.body.classList?.remove('loading'); 
   }, []);
 
   return (

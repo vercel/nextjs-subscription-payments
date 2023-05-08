@@ -5,6 +5,7 @@
 create table users (
   -- UUID from auth.users
   id uuid references auth.users not null primary key,
+  email text,
   full_name text,
   avatar_url text,
   -- The customer's billing address, stored in JSON format.
@@ -22,8 +23,8 @@ create policy "Can update own user data." on users for update using (auth.uid() 
 create function public.handle_new_user() 
 returns trigger as $$
 begin
-  insert into public.users (id, full_name, avatar_url)
-  values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
+  insert into public.users (id, email, full_name, avatar_url)
+  values (new.id, new.raw_user_meta_data->>'email', new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
   return new;
 end;
 $$ language plpgsql security definer;
@@ -70,11 +71,11 @@ create policy "Allow public read-only access." on products for select using (tru
 * Note: prices are created and managed in Stripe and synced to our DB via Stripe webhooks.
 */
 create type pricing_type as enum ('one_time', 'recurring');
-create type pricing_plan_interval as enum ('day', 'week', 'month', 'year');
+create type pricing_plan_interval as enum ('day', 'week', 'month', 'year', 'one_time');
 create table prices (
   -- Price ID from Stripe, e.g. price_1234.
   id text primary key,
-  -- The ID of the prduct that this price belongs to.
+  -- The ID of the product that this price belongs to.
   product_id text references products, 
   -- Whether the price can be used for new purchases.
   active boolean,
@@ -86,7 +87,7 @@ create table prices (
   currency text check (char_length(currency) = 3),
   -- One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
   type pricing_type,
-  -- The frequency at which a subscription is billed. One of `day`, `week`, `month` or `year`.
+  -- The frequency at which a subscription is billed. One of `day`, `week`, `month`, `year`, or 'one_time`.
   interval pricing_plan_interval,
   -- The number of intervals (specified in the `interval` attribute) between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months.
   interval_count integer,

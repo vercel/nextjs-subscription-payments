@@ -1,8 +1,13 @@
+import { type } from 'os';
 import Stripe from 'stripe';
 export interface PageMeta {
   title: string;
   description: string;
   cardImage: string;
+  url: string;
+  robots?: string;
+  favicon?: string;
+  type?: string;
 }
 
 export interface Customer {
