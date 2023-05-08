@@ -1,7 +1,8 @@
-'use-client';
-import { useRouter } from 'next/router';
+'use client';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useSupabase } from '@/app/supabase-provider';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 
@@ -12,7 +13,7 @@ import { getURL } from '@/utils/helpers';
 const SignIn = () => {
   const router = useRouter();
   const user = useUser();
-  const supabaseClient = useSupabaseClient();
+  const { supabase } = useSupabase();
 
   useEffect(() => {
     if (user) {
@@ -29,7 +30,7 @@ const SignIn = () => {
           </div>
           <div className="flex flex-col space-y-4">
             <Auth
-              supabaseClient={supabaseClient}
+              supabaseClient={supabase}
               providers={['github']}
               redirectTo={getURL()}
               magicLink={true}

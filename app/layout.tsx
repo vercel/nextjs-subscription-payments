@@ -1,7 +1,12 @@
 import Navbar from '@/components/ui/Navbar';
 import Footer from '@/components/ui/Footer';
+import SupabaseProvider from './supabase-provider';
+import { MyUserContextProvider } from '@/utils/useUser';
 
 import { PageMeta } from '../types';
+
+import 'styles/main.css';
+import 'styles/chrome-bug.css';
 
 const meta: PageMeta = {
   title: 'Next.js Subscription Starter',
@@ -47,11 +52,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="loading">
-        <Navbar />
-        <main id="skip">{children}</main>
-        <Footer />
+      <body className="bg-black loading">
+        <SupabaseProvider>
+          <MyUserContextProvider>
+            <Navbar />
+            <main id="skip">
+              {children}
+            </main>
+            <Footer />
+          </MyUserContextProvider>
+        </SupabaseProvider>
       </body>
     </html>
   );
-}
+} 

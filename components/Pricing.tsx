@@ -1,5 +1,7 @@
+'use client';
+
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 
 import Button from '@/components/ui/Button';
@@ -49,7 +51,7 @@ export default function Pricing({ products }: Props) {
   if (!products.length)
     return (
       <section className="bg-black">
-        <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center"></div>
           <p className="text-6xl font-extrabold text-white sm:text-center sm:text-6xl">
             No subscription pricing plans found. Create them in your{' '}
@@ -69,12 +71,12 @@ export default function Pricing({ products }: Props) {
 
   return (
     <section className="bg-black">
-      <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
-          <p className="mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl max-w-2xl m-auto">
+          <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
             Start building for free, then add a site plan to go live. Account
             plans unlock additional features.
           </p>
@@ -127,7 +129,7 @@ export default function Pricing({ products }: Props) {
                 )}
               >
                 <div className="p-6">
-                  <h2 className="text-2xl leading-6 font-semibold text-white">
+                  <h2 className="text-2xl font-semibold leading-6 text-white">
                     {product.name}
                   </h2>
                   <p className="mt-4 text-zinc-300">{product.description}</p>
@@ -145,7 +147,7 @@ export default function Pricing({ products }: Props) {
                     disabled={isLoading}
                     loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
-                    className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-zinc-900"
+                    className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                   >
                     {product.name === subscription?.prices?.products?.name
                       ? 'Manage'

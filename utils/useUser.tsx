@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState, createContext, useContext } from 'react';
 import {
   useUser as useSupaUser,

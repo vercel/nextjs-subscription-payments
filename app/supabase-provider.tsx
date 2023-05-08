@@ -1,10 +1,14 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import {
+  SupabaseClient,
+  createBrowserSupabaseClient,
+  User
+} from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 
-import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { ProductWithPrice } from '@/types';
 import type { Database } from '@/types_db';
 
 type SupabaseContext = {
@@ -40,6 +44,8 @@ export default function SupabaseProvider({
   );
 }
 
+export const supabase = createBrowserSupabaseClient<Database>();
+
 export const useSupabase = () => {
   const context = useContext(Context);
 
@@ -48,4 +54,31 @@ export const useSupabase = () => {
   }
 
   return context;
+};
+
+export const getActiveProductsWithPrices = async (): Promise<
+  ProductWithPrice[]
+> => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, prices(*)')
+    .eq('active', true)
+    .eq('prices.active', true)
+    .order('metadata->index')
+    .order('unit_amount', { foreignTable: 'prices' });
+
+  if (error) {
+    console.log(error.message);
+  }
+  // TODO: improve the typing here.
+  return (data as any) || [];
+};
+
+export const updateUserName = async (user: User, name: string) => {
+  await supabase
+    .from('users')
+    .update({
+      full_name: name
+    })
+    .eq('id', user.id);
 };

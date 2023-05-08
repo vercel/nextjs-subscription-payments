@@ -1,4 +1,4 @@
-'use-client';
+'use client';
 import { useState, ReactNode } from 'react';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
