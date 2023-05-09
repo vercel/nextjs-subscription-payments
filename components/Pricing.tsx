@@ -42,10 +42,6 @@ export default function Pricing({
     if (!user) {
       return router.push('/signin');
     }
-    if (subscription) {
-      return router.push('/account');
-    }
-
     try {
       const { sessionId } = await postData({
         url: '/api/create-checkout-session',
@@ -140,7 +136,7 @@ export default function Pricing({
                       <Button
                         variant="slim"
                         type="button"
-                        disabled={!session}
+                        disabled={false}
                         loading={priceIdLoading === price.id}
                         onClick={() => handleCheckout(price)}
                         className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"

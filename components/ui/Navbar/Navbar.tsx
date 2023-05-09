@@ -9,10 +9,8 @@ import s from './Navbar.module.css';
 export default async function Navbar() {
   const supabase = createServerSupabaseClient();
   const {
-    data: { session }
-  } = await supabase.auth.getSession();
-
-  const user = session?.user;
+    data: { user }
+  } = await supabase.auth.getUser();
 
   return (
     <nav className={s.root}>

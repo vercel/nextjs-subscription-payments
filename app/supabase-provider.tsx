@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
 
-import type { SupabaseClient } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "@/types_db";
+import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import type { Database } from '@/types_db';
 
 type SupabaseContext = {
   supabase: SupabaseClient<Database>;
@@ -14,7 +14,7 @@ type SupabaseContext = {
 const Context = createContext<SupabaseContext | undefined>(undefined);
 
 export default function SupabaseProvider({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -23,7 +23,7 @@ export default function SupabaseProvider({
 
   useEffect(() => {
     const {
-      data: { subscription },
+      data: { subscription }
     } = supabase.auth.onAuthStateChange(() => {
       router.refresh();
     });
@@ -44,8 +44,10 @@ export const useSupabase = () => {
   let context = useContext(Context);
 
   if (context === undefined) {
-    throw new Error("useSupabase must be used inside SupabaseProvider");
+    throw new Error('useSupabase must be used inside SupabaseProvider');
   }
 
   return context;
 };
+
+

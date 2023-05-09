@@ -1,30 +1,19 @@
 import { ReactNode } from 'react';
-import { createServerSupabaseClient } from '@/utils/supabase-server';
+import {
+  createServerSupabaseClient,
+  getUserData
+} from '@/utils/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import LoadingDots from '@/components/ui/LoadingDots';
 import ManageSubscriptionButton from './ManageSubscriptionButton';
 
 export default async function Account() {
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
+  const { session, user, userDetails, subscription } = await getUserData();
+  
   if (!session) {
     redirect('/signin');
   }
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-  const { data: userDetails } = await supabase
-    .from('users')
-    .select('*')
-    .single();
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('*, prices(*, products(*))')
-    .in('status', ['trialing', 'active'])
-    .single();
 
   const subscriptionPrice =
     subscription &&
@@ -76,7 +65,7 @@ export default async function Account() {
             {userDetails ? (
               `${
                 userDetails.full_name ??
-                `${userDetails.first_name} ${userDetails.last_name}`
+                `Name not set. Please update your profile.`
               }`
             ) : (
               <div className="h-8 mb-6">

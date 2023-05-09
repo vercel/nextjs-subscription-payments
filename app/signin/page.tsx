@@ -1,20 +1,17 @@
-import { createServerSupabaseClient } from '@/utils/supabase-server';
+import {
+  getUserData
+} from '@/utils/supabase-server';
 import AuthUI from './AuthUI';
 
 import { redirect } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
 
 export default async function SignIn() {
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
+  const { session, user } = await getUserData();
 
   if (session) {
     redirect('/account');
   }
-
-  const user = session?.user;
 
   if (!user)
     return (

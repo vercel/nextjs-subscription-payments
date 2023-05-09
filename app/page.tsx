@@ -1,15 +1,10 @@
 import Pricing from '@/components/Pricing';
-import { createServerSupabaseClient } from '@/utils/supabase-server';
+import { createServerSupabaseClient, getUserData } from '@/utils/supabase-server';
 import { ProductWithPrice } from 'types';
 
 export default async function PricingPage() {
   const supabase = createServerSupabaseClient();
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+  const { session, user } = await getUserData();
 
   const getActiveProductsWithPrices = async (): Promise<ProductWithPrice[]> => {
     const { data, error } = await supabase
