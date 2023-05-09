@@ -4,9 +4,14 @@ import { ProductWithPrice } from 'types';
 
 export default async function PricingPage() {
   const supabase = createServerSupabaseClient();
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
   const getActiveProductsWithPrices = async (): Promise<ProductWithPrice[]> => {
-
     const { data, error } = await supabase
       .from('products')
       .select('*, prices(*)')
@@ -21,8 +26,22 @@ export default async function PricingPage() {
     // TODO: improve the typing here.
     return (data as any) || [];
   };
-
   const products = await getActiveProductsWithPrices();
 
-  return <Pricing products={products} />;
+  const getSubscription = () =>
+    supabase
+      .from('subscriptions')
+      .select('*, prices(*, products(*))')
+      .in('status', ['trialing', 'active'])
+      .single();
+  const subscription = await getSubscription();
+
+  return (
+    <Pricing
+      session={session}
+      user={user}
+      products={products}
+      subscription={subscription}
+    />
+  );
 }

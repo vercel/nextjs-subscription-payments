@@ -1,7 +1,6 @@
 import Navbar from '@/components/ui/Navbar';
 import Footer from '@/components/ui/Footer';
 import SupabaseProvider from './supabase-provider';
-import { MyUserContextProvider } from '@/utils/useUser';
 
 import { PageMeta } from '../types';
 
@@ -54,17 +53,15 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-black loading">
         <SupabaseProvider>
-          <MyUserContextProvider>
-            {/* @ts-expect-error */}
-            <Navbar />
-            <main
-              id="skip"
-              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
-            >
-              {children}
-            </main>
-            <Footer />
-          </MyUserContextProvider>
+          {/* @ts-expect-error */}
+          <Navbar />
+          <main
+            id="skip"
+            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+          >
+            {children}
+          </main>
+          <Footer />
         </SupabaseProvider>
       </body>
     </html>

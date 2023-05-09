@@ -134,7 +134,7 @@ npx supabase gen types typescript --project-id [YOUR-PROJECT-REF] --schema publi
 
 ### That's it
 
-That's it. Now you're ready to earn recurring revenue from your customers 🥳
+That's it. Now you're ready to earn recurring revenue from your customers 🥳 
 
 ## Going live
 

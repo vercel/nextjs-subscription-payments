@@ -9,16 +9,22 @@ import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
 
 import { Price, ProductWithPrice } from 'types';
-import { useSupabase } from '@/app/supabase-provider';
 
 interface Props {
+  session: any;
+  user: any;
   products: ProductWithPrice[];
+  subscription: any;
 }
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
 
-export default function Pricing({ products }: Props) {
-  const productTiers = null;
+export default function Pricing({
+  session,
+  user,
+  products,
+  subscription
+}: Props) {
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -30,11 +36,6 @@ export default function Pricing({ products }: Props) {
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
-  const { user, userDetails, isLoading, subscription } = useSupabase();
-  console.log('user ' + user);
-  console.log('userDetails ' + userDetails);
-  console.log('isLoading ' + isLoading);
-  console.log('subscription ' + subscription);
 
   const handleCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
@@ -94,10 +95,15 @@ export default function Pricing({ products }: Props) {
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
             </p>
-
-            <h2 className="mt-10 text-2xl font-semibold leading-10 text-center text-white">
-              {products[0].name}
-            </h2>
+            <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
+              <div className="divide-y rounded-lg shadow-sm divide-zinc-600 bg-zinc-900">
+                <div className="p-6">
+                  <h2 className="text-2xl font-semibold leading-6 text-white">
+                    {products[0].name}
+                  </h2>
+                </div>
+              </div>
+            </div>
             <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
               {products[0].prices?.map((price) => {
                 const priceString = new Intl.NumberFormat('en-US', {
@@ -108,7 +114,7 @@ export default function Pricing({ products }: Props) {
 
                 return (
                   <div
-                    key={products[0].id}
+                    key={price.interval}
                     className={cn(
                       'rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
                       {
@@ -134,7 +140,7 @@ export default function Pricing({ products }: Props) {
                       <Button
                         variant="slim"
                         type="button"
-                        disabled={isLoading}
+                        disabled={!session}
                         loading={priceIdLoading === price.id}
                         onClick={() => handleCheckout(price)}
                         className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
@@ -167,39 +173,45 @@ export default function Pricing({ products }: Props) {
             plans unlock additional features.
           </p>
           <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
-            <button
-              onClick={() => setBillingInterval('month')}
-              type="button"
-              className={`${
-                billingInterval === 'month'
-                  ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                  : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
-              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
-            >
-              Monthly billing
-            </button>
-            <button
-              onClick={() => setBillingInterval('year')}
-              type="button"
-              className={`${
-                billingInterval === 'year'
-                  ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                  : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
-              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
-            >
-              Yearly billing
-            </button>
-            <button
-              onClick={() => setBillingInterval('lifetime')}
-              type="button"
-              className={`${
-                billingInterval === 'lifetime'
-                  ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                  : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
-              } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
-            >
-              One time payment
-            </button>
+            {intervals.includes('month') && (
+              <button
+                onClick={() => setBillingInterval('month')}
+                type="button"
+                className={`${
+                  billingInterval === 'month'
+                    ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
+                    : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
+                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
+              >
+                Monthly billing
+              </button>
+            )}
+            {intervals.includes('year') && (
+              <button
+                onClick={() => setBillingInterval('year')}
+                type="button"
+                className={`${
+                  billingInterval === 'year'
+                    ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
+                    : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
+                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
+              >
+                Yearly billing
+              </button>
+            )}
+            {intervals.includes('lifetime') && (
+              <button
+                onClick={() => setBillingInterval('lifetime')}
+                type="button"
+                className={`${
+                  billingInterval === 'lifetime'
+                    ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
+                    : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
+                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
+              >
+                One-time billing
+              </button>
+            )}
           </div>
         </div>
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
@@ -241,7 +253,7 @@ export default function Pricing({ products }: Props) {
                   <Button
                     variant="slim"
                     type="button"
-                    disabled={isLoading}
+                    disabled={!session}
                     loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
                     className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"

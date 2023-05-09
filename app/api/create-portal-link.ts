@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next';
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createServerSupabaseClient } from '@/utils/supabase-server';
 
 import { stripe } from '@/utils/stripe';
 import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
@@ -8,10 +8,11 @@ import { getURL } from '@/utils/helpers';
 const CreatePortalLink: NextApiHandler = async (req, res) => {
   if (req.method === 'POST') {
     try {
-      const supabase = createServerSupabaseClient({ req, res });
+      const supabase = createServerSupabaseClient();
       const {
         data: { user }
       } = await supabase.auth.getUser();
+      console.log(user);
 
       if (!user) throw Error('Could not get user');
       const customer = await createOrRetrieveCustomer({

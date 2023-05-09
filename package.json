@@ -6,31 +6,31 @@
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter"
+    "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
+    "generate-types": "npx supabase gen types typescript --project-id YOUR_PROJECT_ID --schema public > types_db.ts"
   },
   "dependencies": {
     "@stripe/stripe-js": "^1.52.1",
     "@supabase/auth-helpers-nextjs": "^0.6.1",
-    "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/auth-ui-react": "^0.3.6",
-    "@supabase/auth-ui-shared": "^0.1.4",
+    "@supabase/auth-ui-shared": "^0.1.6",
     "@supabase/supabase-js": "^2.21.0",
     "classnames": "^2.3.2",
     "next": "^13.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-merge-refs": "^2.0.1",
+    "react-merge-refs": "^2.0.2",
     "stripe": "^12.4.0",
-    "swr": "^2.1.5",
     "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
-    "@types/node": "^20.1.0",
+    "@types/node": "^20.1.1",
     "@types/react": "^18.2.6",
     "autoprefixer": "^10.4.14",
     "cross-env": "^7.0.3",
     "postcss": "^8.4.23",
     "prettier": "^2.8.8",
+    "supabase": "^1.57.3",
     "typescript": "^5.0.4"
   },
   "prettier": {

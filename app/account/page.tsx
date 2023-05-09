@@ -1,22 +1,21 @@
 import { ReactNode } from 'react';
 import { createServerSupabaseClient } from '@/utils/supabase-server';
 import { redirect } from 'next/navigation';
-import { postData } from '@/utils/helpers';
-import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import LoadingDots from '@/components/ui/LoadingDots';
+import ManageSubscriptionButton from './ManageSubscriptionButton';
 
 export default async function Account() {
   const supabase = createServerSupabaseClient();
   const {
     data: { session }
   } = await supabase.auth.getSession();
-
   if (!session) {
     redirect('/signin');
   }
-
-  const user = session?.user;
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
   const { data: userDetails } = await supabase
     .from('users')
     .select('*')
@@ -36,18 +35,6 @@ export default async function Account() {
     }).format((subscription?.prices?.unit_amount || 0) / 100);
 
   console.log(subscription);
-
-  const redirectToCustomerPortal = async () => {
-    'use server';
-    try {
-      const { url, error } = await postData({
-        url: '/api/create-portal-link'
-      });
-      window.location.assign(url);
-    } catch (error) {
-      if (error) return alert((error as Error).message);
-    }
-  }; //experimental server action
 
   return (
     <section className="mb-32 bg-black">
@@ -69,20 +56,7 @@ export default async function Account() {
               ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
               : 'You are not currently subscribed to any plan.'
           }
-          footer={
-            <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">
-                Manage your subscription on Stripe.
-              </p>
-              <Button
-                variant="slim"
-                disabled={!subscription}
-                onClick={redirectToCustomerPortal}
-              >
-                Open customer portal
-              </Button>
-            </div>
-          }
+          footer={<ManageSubscriptionButton session={session} />}
         >
           <div className="mt-8 mb-4 text-xl font-semibold">
             {subscription ? (
