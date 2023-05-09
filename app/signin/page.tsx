@@ -1,25 +1,20 @@
-'use client';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useSupabase } from '@/app/supabase-provider';
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
+import { createServerSupabaseClient } from '@/utils/supabase-server';
+import AuthUI from './AuthUI';
 
-import LoadingDots from '@/components/ui/LoadingDots';
+import { redirect } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
-import { getURL } from '@/utils/helpers';
 
-const SignIn = () => {
-  const router = useRouter();
-  const user = useUser();
-  const { supabase } = useSupabase();
+export default async function SignIn() {
+  const supabase = createServerSupabaseClient();
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
 
-  useEffect(() => {
-    if (user) {
-      router.replace('/account');
-    }
-  }, [user]);
+  if (session) {
+    redirect('/account');
+  }
+
+  const user = session?.user;
 
   if (!user)
     return (
@@ -28,35 +23,8 @@ const SignIn = () => {
           <div className="flex justify-center pb-12 ">
             <Logo width="64px" height="64px" />
           </div>
-          <div className="flex flex-col space-y-4">
-            <Auth
-              supabaseClient={supabase}
-              providers={['github']}
-              redirectTo={getURL()}
-              magicLink={true}
-              appearance={{
-                theme: ThemeSupa,
-                variables: {
-                  default: {
-                    colors: {
-                      brand: '#404040',
-                      brandAccent: '#52525b'
-                    }
-                  }
-                }
-              }}
-              theme="dark"
-            />
-          </div>
+          <AuthUI />
         </div>
       </div>
     );
-
-  return (
-    <div className="m-6">
-      <LoadingDots />
-    </div>
-  );
-};
-
-export default SignIn;
+}

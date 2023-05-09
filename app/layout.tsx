@@ -55,8 +55,12 @@ export default function RootLayout({
       <body className="bg-black loading">
         <SupabaseProvider>
           <MyUserContextProvider>
+            {/* @ts-expect-error */}
             <Navbar />
-            <main id="skip">
+            <main
+              id="skip"
+              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+            >
               {children}
             </main>
             <Footer />
@@ -65,4 +69,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-} 
+}

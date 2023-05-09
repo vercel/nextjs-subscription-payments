@@ -1,17 +1,18 @@
-'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { createServerSupabaseClient } from '@/utils/supabase-server';
 
 import Logo from '@/components/icons/Logo';
-import { useUser } from '@/utils/useUser';
+import SignOutButton from './SignOutButton';
 
 import s from './Navbar.module.css';
 
-const Navbar = () => {
-  const router = useRouter();
-  const supabaseClient = useSupabaseClient();
-  const { user } = useUser();
+export default async function Navbar() {
+  const supabase = createServerSupabaseClient();
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  const user = session?.user;
 
   return (
     <nav className={s.root}>
@@ -28,23 +29,16 @@ const Navbar = () => {
               <Link href="/" className={s.link}>
                 Pricing
               </Link>
-              <Link href="/account" className={s.link}>
-                Account
-              </Link>
+              {user && (
+                <Link href="/account" className={s.link}>
+                  Account
+                </Link>
+              )}
             </nav>
           </div>
-
           <div className="flex justify-end flex-1 space-x-8">
             {user ? (
-              <span
-                className={s.link}
-                onClick={async () => {
-                  await supabaseClient.auth.signOut();
-                  router.push('/signin');
-                }}
-              >
-                Sign out
-              </span>
+              <SignOutButton />
             ) : (
               <Link href="/signin" className={s.link}>
                 Sign in
@@ -55,6 +49,4 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}
