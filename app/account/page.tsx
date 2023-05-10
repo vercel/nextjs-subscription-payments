@@ -1,16 +1,13 @@
 import { ReactNode } from 'react';
-import {
-  createServerSupabaseClient,
-  getUserData
-} from '@/utils/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import LoadingDots from '@/components/ui/LoadingDots';
+import { getUserData } from '@/app/(utils)/supabase-server';
 import ManageSubscriptionButton from './ManageSubscriptionButton';
+import LoadingDots from '@/components/ui/LoadingDots';
 
 export default async function Account() {
   const { session, user, userDetails, subscription } = await getUserData();
-  
+
   if (!session) {
     redirect('/signin');
   }

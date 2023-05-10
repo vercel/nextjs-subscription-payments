@@ -2,8 +2,8 @@
 
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { supabase } from '@/utils/supabase-client';
-import { getURL } from '@/utils/helpers';
+import { supabase } from '@/app/(utils)/supabase-client';
+import { getURL } from '@/app/(utils)/helpers';
 
 export default function AuthUI() {
   return (

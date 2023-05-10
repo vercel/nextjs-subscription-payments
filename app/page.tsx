@@ -1,5 +1,5 @@
 import Pricing from '@/components/Pricing';
-import { createServerSupabaseClient, getUserData } from '@/utils/supabase-server';
+import { createServerSupabaseClient, getUserData } from '@/app/(utils)/supabase-server';
 import { ProductWithPrice } from 'types';
 
 export default async function PricingPage() {

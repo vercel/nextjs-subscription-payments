@@ -1,5 +1,7 @@
 import { headers, cookies } from 'next/headers';
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs';
+
+import { Subscription, UserDetails } from '@/types';
 import { Database } from '@/types_db';
 
 export const createServerSupabaseClient = () =>
@@ -30,9 +32,8 @@ export async function getUserData() {
     return {
       session,
       user,
-      userDetails,
-      subscription,
-      isLoading: false
+      userDetails: userDetails as unknown as UserDetails,
+      subscription: subscription as Subscription
     };
   } catch (error) {
     console.error('Error:', error);

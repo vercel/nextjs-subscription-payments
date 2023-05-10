@@ -1,6 +1,6 @@
 import {
   getUserData
-} from '@/utils/supabase-server';
+} from '@/app/(utils)/supabase-server';
 import AuthUI from './AuthUI';
 
 import { redirect } from 'next/navigation';
