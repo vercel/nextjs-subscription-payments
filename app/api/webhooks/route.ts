@@ -1,21 +1,18 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { Readable } from 'node:stream';
-
-import { stripe } from '@/app/(utils)/stripe';
+import { stripe } from '@/utils/stripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
   manageSubscriptionStatusChange
-} from '@/app/(utils)/supabase-admin';
+} from '@/utils/supabase-admin';
 
-// Stripe requires the raw body to construct the event.
-export const config = {
-  api: {
-    bodyParser: false
-  }
-};
-
+function requestToReadable(req: Request): Readable {
+  const readable = new Readable();
+  readable.push(req.body);
+  readable.push(null);
+  return readable;
+}
 async function buffer(readable: Readable) {
   const chunks = [];
   for await (const chunk of readable) {
@@ -35,10 +32,10 @@ const relevantEvents = new Set([
   'customer.subscription.deleted'
 ]);
 
-const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+export async function POST(req: Request, res: Response) {
   if (req.method === 'POST') {
-    const buf = await buffer(req);
-    const sig = req.headers['stripe-signature'];
+    const buf = await buffer(requestToReadable(req));
+    const sig = req.headers.get('stripe-signature');
     const webhookSecret =
       process.env.STRIPE_WEBHOOK_SECRET_LIVE ??
       process.env.STRIPE_WEBHOOK_SECRET;
@@ -49,7 +46,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
     } catch (err: any) {
       console.log(`❌ Error message: ${err.message}`);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
+      return new Response(`Webhook Error: ${err.message}`, { status: 400 });
     }
 
     if (relevantEvents.has(event.type)) {
@@ -90,17 +87,16 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       } catch (error) {
         console.log(error);
-        return res
-          .status(400)
-          .send('Webhook error: "Webhook handler failed. View logs."');
+        return new Response('Webhook handler failed. View logs.', {
+          status: 400
+        });
       }
     }
-
-    res.json({ received: true });
+    return new Response(JSON.stringify({ received: true }));
   } else {
-    res.setHeader('Allow', 'POST');
-    res.status(405).end('Method Not Allowed');
+    return new Response('Method Not Allowed', {
+      headers: { Allow: 'POST' },
+      status: 405
+    });
   }
-};
-
-export default webhookHandler;
+}

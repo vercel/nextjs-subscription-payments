@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { createServerSupabaseClient } from '@/app/(utils)/supabase-server';
+import { createServerSupabaseClient } from '@/app/supabase-server';
 
 import Logo from '@/components/icons/Logo';
 import SignOutButton from './SignOutButton';

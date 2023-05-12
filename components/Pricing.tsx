@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 
 import Button from '@/components/ui/Button';
-import { postData } from '@/app/(utils)/helpers';
-import { getStripe } from '@/app/(utils)/stripe-client';
+import { postData } from '@/utils/helpers';
+import { getStripe } from '@/utils/stripe-client';
 
 import { Price, ProductWithPrice } from 'types';
 
@@ -91,16 +91,14 @@ export default function Pricing({
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
             </p>
-            <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
-              <div className="divide-y rounded-lg shadow-sm divide-zinc-600 bg-zinc-900">
-                <div className="p-6">
-                  <h2 className="text-2xl font-semibold leading-6 text-white">
-                    {products[0].name}
-                  </h2>
+            <div className="relative flex self-center mt-12 border rounded-lg bg-zinc-900 border-zinc-800">
+              <div className="border border-pink-500 border-opacity-50 divide-y rounded-lg shadow-sm bg-zinc-900 divide-zinc-600">
+                <div className="p-6 py-2 m-1 text-2xl font-medium text-white rounded-md shadow-sm border-zinc-800 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8">
+                  {products[0].name}
                 </div>
               </div>
             </div>
-            <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
+            <div className="mt-6 space-y-4 sm:mt-12 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
               {products[0].prices?.map((price) => {
                 const priceString =
                   price.unit_amount &&
@@ -124,10 +122,7 @@ export default function Pricing({
                     )}
                   >
                     <div className="p-6">
-                      <p className="mt-4 text-zinc-300">
-                        {products[0].description}
-                      </p>
-                      <p className="mt-8">
+                      <p>
                         <span className="text-5xl font-extrabold white">
                           {priceString}
                         </span>
@@ -135,13 +130,14 @@ export default function Pricing({
                           /{price.interval}
                         </span>
                       </p>
+                      <p className="mt-4 text-zinc-300">{price.description}</p>
                       <Button
                         variant="slim"
                         type="button"
-                        disabled={false}
+                        disabled={false}  
                         loading={priceIdLoading === price.id}
                         onClick={() => handleCheckout(price)}
-                        className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
+                        className="block w-full py-2 mt-12 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900 "
                       >
                         {products[0].name ===
                         subscription?.prices?.products?.name

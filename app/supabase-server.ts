@@ -10,38 +10,44 @@ export const createServerSupabaseClient = () =>
     cookies
   });
 
-export async function getUserData() {
+export async function getSession() {
   const supabase = createServerSupabaseClient();
   try {
     const {
       data: { session }
     } = await supabase.auth.getSession();
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+    return session;
+  } catch (error) {
+    console.error('Error:', error);
+    return null;
+  }
+}
+
+export async function getUserDetails() {
+  const supabase = createServerSupabaseClient();
+  try {
     const { data: userDetails } = await supabase
       .from('users')
       .select('*')
       .single();
+    return userDetails as unknown as UserDetails;
+  } catch (error) {
+    console.error('Error:', error);
+    return null;
+  }
+}
+
+export async function getSubscription() {
+  const supabase = createServerSupabaseClient();
+  try {
     const { data: subscription } = await supabase
       .from('subscriptions')
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
       .single();
-
-    return {
-      session,
-      user,
-      userDetails: userDetails as unknown as UserDetails,
-      subscription: subscription as Subscription
-    };
+    return subscription as Subscription;
   } catch (error) {
     console.error('Error:', error);
-    return {
-      session: null,
-      user: null,
-      userDetails: null,
-      subscription: null
-    };
+    return null;
   }
 }

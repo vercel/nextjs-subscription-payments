@@ -1,18 +1,21 @@
-import { NextApiHandler } from 'next';
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { cookies, headers } from 'next/headers';
+import { createRouteHandlerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { stripe } from '@/utils/stripe';
+import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
+import { getURL } from '@/utils/helpers';
+import { Database } from '@/types_db';
 
-import { stripe } from '@/app/(utils)/stripe';
-import { createOrRetrieveCustomer } from '@/app/(utils)/supabase-admin';
-import { getURL } from '@/app/(utils)/helpers';
-
-const CreateCheckoutSession: NextApiHandler = async (req, res) => {
+export async function POST(req: Request) {
   if (req.method === 'POST') {
     // 1. Destructure the price and quantity from the POST body
-    const { price, quantity = 1, metadata = {} } = req.body;
+    const { price, quantity = 1, metadata = {} } = await req.json();
 
     try {
       // 2. Get the user from Supabase auth
-      const supabase = createServerSupabaseClient({ req, res });
+      const supabase = createRouteHandlerSupabaseClient<Database>({
+        headers,
+        cookies
+      });
       const {
         data: { user }
       } = await supabase.auth.getUser();
@@ -75,24 +78,25 @@ const CreateCheckoutSession: NextApiHandler = async (req, res) => {
       }
 
       if (session) {
-        return res.status(200).json({ sessionId: session.id });
+        return new Response(JSON.stringify({ sessionId: session.id }), {
+          status: 200
+        });
       } else {
-        return res
-          .status(500)
-          .json({
+        return new Response(
+          JSON.stringify({
             error: { statusCode: 500, message: 'Session is not defined' }
-          });
+          }),
+          { status: 500 }
+        );
       }
     } catch (err: any) {
       console.log(err);
-      res
-        .status(500)
-        .json({ error: { statusCode: 500, message: err.message } });
+      return new Response(JSON.stringify(err), { status: 500 });
     }
   } else {
-    res.setHeader('Allow', 'POST');
-    res.status(405).end('Method Not Allowed');
+    return new Response('Method Not Allowed', {
+      headers: { Allow: 'POST' },
+      status: 405
+    });
   }
-};
-
-export default CreateCheckoutSession;
+}

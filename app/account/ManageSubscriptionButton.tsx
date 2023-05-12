@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import { postData } from '@/app/(utils)/helpers';
+import { postData } from '@/utils/helpers';
 
 import { Session } from '@supabase/supabase-js';
 
@@ -12,7 +12,7 @@ interface Props {
 export default function ManageSubscriptionButton({ session }: Props) {
   const redirectToCustomerPortal = async () => {
     try {
-      const { url, error } = await postData({
+      const { url } = await postData({
         url: '/api/create-portal-link'
       });
       window.location.assign(url);
