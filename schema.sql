@@ -99,6 +99,20 @@ create table prices (
 alter table prices enable row level security;
 create policy "Allow public read-only access." on prices for select using (true);
 
+create or replace function public.set_price_interval()
+returns trigger as $$
+begin
+  if new.interval is null then
+    new.interval := 'lifetime'::pricing_plan_interval;
+  end if;
+  return new;
+end;
+$$ language plpgsql security definer;
+create trigger on_price_insert_or_update
+  before insert or update on prices
+  for each row execute procedure public.set_price_interval();
+  
+
 /**
 * SUBSCRIPTIONS
 * Note: subscriptions are created and managed in Stripe and synced to our DB via Stripe webhooks.
