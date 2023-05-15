@@ -42,16 +42,14 @@ export async function POST(req: Request) {
               quantity
             }
           ],
-          automatic_tax: {
-            enabled: true
-          },
           mode: 'subscription',
           allow_promotion_codes: true,
           subscription_data: {
+            trial_from_plan: true,
             metadata
           },
           success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/dashboard`
+          cancel_url: `${getURL()}/`
         });
       } else if (price.type === 'one_time') {
         session = await stripe.checkout.sessions.create({
@@ -67,13 +65,10 @@ export async function POST(req: Request) {
               quantity
             }
           ],
-          automatic_tax: {
-            enabled: true
-          },
           mode: 'payment',
           allow_promotion_codes: true,
           success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/dashboard`
+          cancel_url: `${getURL()}/`
         });
       }
 

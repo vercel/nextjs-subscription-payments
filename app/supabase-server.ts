@@ -3,6 +3,7 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 
 import { Subscription, UserDetails } from '@/types';
 import { Database } from '@/types_db';
+import { ProductWithPrice } from 'types';
 
 export const createServerSupabaseClient = () =>
   createServerComponentSupabaseClient<Database>({
@@ -51,3 +52,22 @@ export async function getSubscription() {
     return null;
   }
 }
+
+export const getActiveProductsWithPrices = async (): Promise<
+  ProductWithPrice[]
+> => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, prices(*)')
+    .eq('active', true)
+    .eq('prices.active', true)
+    .order('metadata->index')
+    .order('unit_amount', { foreignTable: 'prices' });
+
+  if (error) {
+    console.log(error.message);
+  }
+  // TODO: improve the typing here.
+  return (data as any) || [];
+};

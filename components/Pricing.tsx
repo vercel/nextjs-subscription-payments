@@ -111,15 +111,7 @@ export default function Pricing({
                 return (
                   <div
                     key={price.interval}
-                    className={cn(
-                      'rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
-                      {
-                        'border border-pink-500': subscription
-                          ? products[0].name ===
-                            subscription?.prices?.products?.name
-                          : products[0].name === 'Freelancer'
-                      }
-                    )}
+                    className="divide-y rounded-lg shadow-sm divide-zinc-600 bg-zinc-900"
                   >
                     <div className="p-6">
                       <p>
@@ -134,7 +126,7 @@ export default function Pricing({
                       <Button
                         variant="slim"
                         type="button"
-                        disabled={false}  
+                        disabled={false}
                         loading={priceIdLoading === price.id}
                         onClick={() => handleCheckout(price)}
                         className="block w-full py-2 mt-12 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900 "
