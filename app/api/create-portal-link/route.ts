@@ -1,5 +1,5 @@
 import { cookies, headers } from 'next/headers';
-import { createRouteHandlerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { stripe } from '@/utils/stripe';
 import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
 import { getURL } from '@/utils/helpers';
@@ -8,7 +8,7 @@ import { Database } from '@/types_db';
 export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
-      const supabase = createRouteHandlerSupabaseClient<Database>({
+      const supabase = createRouteHandlerClient<Database>({
         headers,
         cookies
       });

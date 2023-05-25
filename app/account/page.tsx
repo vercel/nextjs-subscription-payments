@@ -1,15 +1,17 @@
 import { ReactNode } from 'react';
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache'
 import Link from 'next/link';
 import {
-  createServerSupabaseClient,
   getSession,
   getUserDetails,
   getSubscription
 } from '@/app/supabase-server';
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import ManageSubscriptionButton from './ManageSubscriptionButton';
 import Button from '@/components/ui/Button';
-import { revalidatePath } from 'next/cache';
+import { Database } from '@/types_db';
 
 export default async function Account() {
   const session = await getSession();
@@ -28,6 +30,32 @@ export default async function Account() {
       currency: subscription?.prices?.currency,
       minimumFractionDigits: 0
     }).format((subscription?.prices?.unit_amount || 0) / 100);
+
+  const updateName = async (formData: FormData) => {
+    'use server'
+
+    const newName = formData.get('name')
+    const supabase = createServerActionClient<Database>({ cookies })
+    const session = await getSession();
+    const user = session?.user;
+    const { error } = await supabase.from('users').update({ full_name: newName }).eq('id', user?.id)
+    if (error) {
+      console.log(error)
+    }
+    revalidatePath('/account')
+  }
+
+  const updateEmail = async (formData: FormData) => {
+    'use server'
+
+    const newEmail = formData.get('email')
+    const supabase = createServerActionClient<Database>({ cookies })
+    const { error } = await supabase.auth.updateUser({ email: newEmail })
+    if (error) {
+      console.log(error)
+    }
+    revalidatePath('/account')
+  }
 
   return (
     <section className="mb-32 bg-black">
@@ -65,17 +93,18 @@ export default async function Account() {
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
               <p className="pb-4 sm:pb-0">64 characters maximum</p>
-              <Button variant="slim" type="submit" form="name" disabled={true}>
+              <Button variant="slim" type="submit" form="nameForm" disabled={true}>
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
                 Update Name
               </Button>
             </div>
           }
         >
           <div className="mt-8 mb-4 text-xl font-semibold">
-            <form id="nameForm">
+            <form id="nameForm" action={updateName}>
               <input
                 type="text"
-                id="name"
+                name="name"
                 className="w-1/2 p-3 rounded-md bg-zinc-800"
                 defaultValue={userDetails?.full_name}
                 placeholder="Your name"
@@ -87,11 +116,28 @@ export default async function Account() {
         <Card
           title="Your Email"
           description="Please enter the email address you want to use to login."
-          footer={<p>We will email you to verify the change.</p>}
+          footer={
+            <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+              <p className="pb-4 sm:pb-0">We will email you to verify the change.</p>
+              <Button variant="slim" type="submit" form="emailForm" disabled={true}>
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Update Email
+              </Button>
+            </div>
+          }
         >
-          <p className="mt-8 mb-4 text-xl font-semibold">
-            {user ? user.email : undefined}
-          </p>
+          <div className="mt-8 mb-4 text-xl font-semibold">
+            <form id="emailForm" action={updateEmail}>
+              <input
+                type="text"
+                name="email"
+                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                defaultValue={user ? user.email : ""}
+                placeholder="Your email"
+                maxLength={64}
+              />
+            </form>
+          </div>
         </Card>
       </div>
     </section>
