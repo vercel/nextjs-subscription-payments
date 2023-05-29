@@ -194,3 +194,25 @@ npm run dev
 yarn
 yarn dev
 ```
+
+## Vercel environment variables setup
+
+For reference, here are the vercel environment variables that need to be set up in Vercel. Once added according to their environment type, you can pull them down locally using the `vercel env pull .env.local` command:
+
+### Preview, Production
+* NEXT_PUBLIC_SITE_URL
+* NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_LIVE
+* STRIPE_SECRET_KEY_LIVE
+* STRIPE_WEBHOOK_SECRET_LIVE
+
+### Development
+* NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+* STRIPE_SECRET_KEY
+* STRIPE_WEBHOOK_SECRET
+
+### Development, Preview, Production
+* NEXT_PUBLIC_SUPABASE_ANON_KEY
+* NEXT_PUBLIC_SUPABASE_URL
+* SUPABASE_DB_HOST
+* SUPABASE_DB_PASSWORD
+* SUPABASE_SERVICE_ROLE_KEY
