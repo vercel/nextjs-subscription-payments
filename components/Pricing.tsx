@@ -16,17 +16,17 @@ interface ProductWithPrices extends Product {
   prices: Price[];
 }
 interface PriceWithProduct extends Price {
-  products: Product;
+  products: Product | null;
 }
 interface SubscriptionWithProduct extends Subscription {
-  prices: PriceWithProduct;
+  prices: PriceWithProduct | null;
 }
 
 interface Props {
-  session: Session;
-  user: User;
+  session: Session | null;
+  user: User | null | undefined;
   products: ProductWithPrices[];
-  subscription: SubscriptionWithProduct;
+  subscription: SubscriptionWithProduct | null;
 }
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
