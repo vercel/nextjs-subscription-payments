@@ -4,21 +4,29 @@ import Button from '@/components/ui/Button';
 import { Database } from '@/types_db';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
+import { Session, User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 type Product = Database['public']['Tables']['products']['Row'];
 type Price = Database['public']['Tables']['prices']['Row'];
 interface ProductWithPrices extends Product {
   prices: Price[];
 }
+interface PriceWithProduct extends Price {
+  products: Product;
+}
+interface SubscriptionWithProduct extends Subscription {
+  prices: PriceWithProduct;
+}
 
 interface Props {
-  session: any;
-  user: any;
+  session: Session;
+  user: User;
   products: ProductWithPrices[];
-  subscription: any;
+  subscription: SubscriptionWithProduct;
 }
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
@@ -45,6 +53,9 @@ export default function Pricing({
     setPriceIdLoading(price.id);
     if (!user) {
       return router.push('/signin');
+    }
+    if (price.product_id === subscription?.prices?.products?.id) {
+      return router.push('/account');
     }
     try {
       const { sessionId } = await postData({
