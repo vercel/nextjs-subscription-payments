@@ -1,9 +1,6 @@
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-
-import { Subscription, UserDetails } from '@/types';
 import { Database } from '@/types_db';
-import { ProductWithPrice } from 'types';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export const createServerSupabaseClient = () =>
   createServerComponentClient<Database>({ cookies });
@@ -28,7 +25,7 @@ export async function getUserDetails() {
       .from('users')
       .select('*')
       .single();
-    return userDetails as unknown as UserDetails;
+    return userDetails;
   } catch (error) {
     console.error('Error:', error);
     return null;
@@ -42,17 +39,16 @@ export async function getSubscription() {
       .from('subscriptions')
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
-      .single();
-    return subscription as Subscription;
+      .single()
+      .throwOnError();
+    return subscription;
   } catch (error) {
     console.error('Error:', error);
     return null;
   }
 }
 
-export const getActiveProductsWithPrices = async (): Promise<
-  ProductWithPrice[]
-> => {
+export const getActiveProductsWithPrices = async () => {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from('products')
@@ -65,6 +61,5 @@ export const getActiveProductsWithPrices = async (): Promise<
   if (error) {
     console.log(error.message);
   }
-  // TODO: improve the typing here.
-  return (data as any) || [];
+  return data ?? [];
 };

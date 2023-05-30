@@ -1,13 +1,10 @@
-import Navbar from '@/components/ui/Navbar';
-import Footer from '@/components/ui/Footer';
 import SupabaseProvider from './supabase-provider';
-
-import { PageMeta } from '../types';
-
+import Footer from '@/components/ui/Footer';
+import Navbar from '@/components/ui/Navbar';
 import 'styles/main.css';
 import 'styles/chrome-bug.css';
 
-const meta: PageMeta = {
+const meta = {
   title: 'Next.js Subscription Starter',
   description: 'Brought to you by Vercel, Stripe, and Supabase.',
   cardImage: '/og.png',

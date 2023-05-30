@@ -1,19 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import cn from 'classnames';
-
 import Button from '@/components/ui/Button';
+import { Database } from '@/types_db';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
+import cn from 'classnames';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-import { Price, ProductWithPrice } from 'types';
+type Product = Database['public']['Tables']['products']['Row'];
+type Price = Database['public']['Tables']['prices']['Row'];
+interface ProductWithPrices extends Product {
+  prices: Price[];
+}
 
 interface Props {
   session: any;
   user: any;
-  products: ProductWithPrice[];
+  products: ProductWithPrices[];
   subscription: any;
 }
 
@@ -104,7 +108,7 @@ export default function Pricing({
                   price.unit_amount &&
                   new Intl.NumberFormat('en-US', {
                     style: 'currency',
-                    currency: price.currency,
+                    currency: price.currency!,
                     minimumFractionDigits: 0
                   }).format(price.unit_amount / 100);
 
@@ -185,19 +189,6 @@ export default function Pricing({
                 Yearly billing
               </button>
             )}
-            {intervals.includes('lifetime') && (
-              <button
-                onClick={() => setBillingInterval('lifetime')}
-                type="button"
-                className={`${
-                  billingInterval === 'lifetime'
-                    ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                    : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
-                } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
-              >
-                One-time billing
-              </button>
-            )}
           </div>
         </div>
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
@@ -208,7 +199,7 @@ export default function Pricing({
             if (!price) return null;
             const priceString = new Intl.NumberFormat('en-US', {
               style: 'currency',
-              currency: price.currency,
+              currency: price.currency!,
               minimumFractionDigits: 0
             }).format((price?.unit_amount || 0) / 100);
             return (

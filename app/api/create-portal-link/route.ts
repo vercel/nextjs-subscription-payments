@@ -8,10 +8,7 @@ import { Database } from '@/types_db';
 export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
-      const supabase = createRouteHandlerClient<Database>({
-        headers,
-        cookies
-      });
+      const supabase = createRouteHandlerClient<Database>({cookies});
       const {
         data: { user }
       } = await supabase.auth.getUser();

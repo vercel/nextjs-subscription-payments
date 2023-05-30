@@ -15,7 +15,7 @@
     "@supabase/auth-helpers-nextjs": "^0.7.0",
     "@supabase/auth-ui-react": "^0.4.2",
     "@supabase/auth-ui-shared": "^0.1.6",
-    "@supabase/supabase-js": "^2.22.0",
+    "@supabase/supabase-js": "^2.23.0",
     "classnames": "^2.3.2",
     "next": "13.4.3",
     "react": "^18.2.0",

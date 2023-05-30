@@ -1,4 +1,6 @@
-import { Price } from 'types';
+import { Database } from '@/types_db';
+
+type Price = Database['public']['Tables']['prices']['Row'];
 
 export const getURL = () => {
   let url =

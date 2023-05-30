@@ -1,11 +1,11 @@
+import { toDateTime } from './helpers';
+import { stripe } from './stripe';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
-
-import { stripe } from './stripe';
-import { toDateTime } from './helpers';
-
-import { Price, Product } from 'types';
 import type { Database } from 'types_db';
+
+type Product = Database['public']['Tables']['products']['Row'];
+type Price = Database['public']['Tables']['prices']['Row'];
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
@@ -19,7 +19,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     id: product.id,
     active: product.active,
     name: product.name,
-    description: product.description ?? undefined,
+    description: product.description ?? null,
     image: product.images?.[0] ?? null,
     metadata: product.metadata
   };
@@ -35,12 +35,12 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
     product_id: typeof price.product === 'string' ? price.product : '',
     active: price.active,
     currency: price.currency,
-    description: price.nickname ?? undefined,
+    description: price.nickname ?? null,
     type: price.type,
-    unit_amount: price.unit_amount ?? undefined,
-    interval: price.recurring?.interval,
-    interval_count: price.recurring?.interval_count,
-    trial_period_days: price.recurring?.trial_period_days,
+    unit_amount: price.unit_amount ?? null,
+    interval: price.recurring?.interval ?? null,
+    interval_count: price.recurring?.interval_count ?? null,
+    trial_period_days: price.recurring?.trial_period_days ?? null,
     metadata: price.metadata
   };
 
