@@ -1,8 +1,13 @@
+import { type } from 'os';
 import Stripe from 'stripe';
 export interface PageMeta {
   title: string;
   description: string;
   cardImage: string;
+  url: string;
+  robots?: string;
+  favicon?: string;
+  type?: string;
 }
 
 export interface Customer {
@@ -25,13 +30,14 @@ export interface ProductWithPrice extends Product {
 
 export interface UserDetails {
   id: string /* primary key */;
-  first_name: string;
-  last_name: string;
+  email?: string;
   full_name?: string;
   avatar_url?: string;
   billing_address?: Stripe.Address;
   payment_method?: Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
 }
+
+type PriceRecurringIntervalExtended = Stripe.Price.Recurring.Interval | "lifetime";
 
 export interface Price {
   id: string /* primary key */;
@@ -41,7 +47,7 @@ export interface Price {
   unit_amount?: number;
   currency?: string;
   type?: Stripe.Price.Type;
-  interval?: Stripe.Price.Recurring.Interval;
+  interval?: PriceRecurringIntervalExtended;
   interval_count?: number;
   trial_period_days?: number | null;
   metadata?: Stripe.Metadata;

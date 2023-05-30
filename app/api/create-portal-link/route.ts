@@ -1,14 +1,17 @@
-import { NextApiHandler } from 'next';
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
-
+import { cookies, headers } from 'next/headers';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { stripe } from '@/utils/stripe';
 import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
 import { getURL } from '@/utils/helpers';
+import { Database } from '@/types_db';
 
-const CreatePortalLink: NextApiHandler = async (req, res) => {
+export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
-      const supabase = createServerSupabaseClient({ req, res });
+      const supabase = createRouteHandlerClient<Database>({
+        headers,
+        cookies
+      });
       const {
         data: { user }
       } = await supabase.auth.getUser();
@@ -24,18 +27,22 @@ const CreatePortalLink: NextApiHandler = async (req, res) => {
         customer,
         return_url: `${getURL()}/account`
       });
-
-      return res.status(200).json({ url });
+      return new Response(JSON.stringify({ url }), {
+        status: 200
+      });
     } catch (err: any) {
       console.log(err);
-      res
-        .status(500)
-        .json({ error: { statusCode: 500, message: err.message } });
+      return new Response(
+        JSON.stringify({ error: { statusCode: 500, message: err.message } }),
+        {
+          status: 500
+        }
+      );
     }
   } else {
-    res.setHeader('Allow', 'POST');
-    res.status(405).end('Method Not Allowed');
+    return new Response('Method Not Allowed', {
+      headers: { Allow: 'POST' },
+      status: 405
+    });
   }
-};
-
-export default CreatePortalLink;
+}
