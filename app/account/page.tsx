@@ -14,13 +14,16 @@ import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
 export default async function Account() {
-  const session = await getSession();
+  const [session, userDetails, subscription] = await Promise.all([
+    getSession(),
+    getUserDetails(),
+    getSubscription()
+  ]);
+
   const user = session?.user;
-  const userDetails = await getUserDetails();
-  const subscription = await getSubscription();
 
   if (!session) {
-    redirect('/signin');
+    return redirect('/signin');
   }
 
   const subscriptionPrice =
