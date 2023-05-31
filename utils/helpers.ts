@@ -23,7 +23,7 @@ export const postData = async ({
 }) => {
   console.log('posting,', url, data);
 
-  const res: Response = await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/json' }),
     credentials: 'same-origin',
