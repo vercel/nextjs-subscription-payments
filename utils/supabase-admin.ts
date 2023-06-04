@@ -56,6 +56,27 @@ const createOrRetrieveCustomer = async ({
   email: string;
   uuid: string;
 }) => {
+  
+  const existingCustomer = await stripe.customers.list({ email: email });
+  if (existingCustomer.data.length > 0) {
+    const stripeCustomerId = existingCustomer.data[0].id;
+    console.log(
+      `Customer already exists in Stripe with ID: ${stripeCustomerId}`
+    );
+
+    // Insert the customer ID into the Supabase customers table
+    const { error } = await supabaseAdmin
+      .from("customers")
+      .insert([{ id: uuid, stripe_customer_id: stripeCustomerId }]);
+
+    if (error) {
+      throw error;
+    }
+
+    console.log(`Customer ID inserted into the Supabase customers table.`);
+    return stripeCustomerId;
+  }
+  
   const { data, error } = await supabaseAdmin
     .from('customers')
     .select('stripe_customer_id')
