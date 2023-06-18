@@ -8,7 +8,6 @@ const Logo = ({ className = '', ...props }) => (
     className={className}
     {...props}
   >
-    <defs><style>.cls-1{fill:#33bbcf;}.cls-2{fill:#fff;}.cls-2,.cls-3{stroke:#000;stroke-miterlimit:10;stroke-width:4px;}.cls-3{fill:none;}</style></defs>
   <circle className="cls-1 fill-[#33bbcf]" cx="60.43" cy="59.52" r="53" transform="translate(-18.18 27.66) rotate(-22.5)"/>
   <path d="M60.43,8.52a51,51,0,1,1-51,51,51.06,51.06,0,0,1,51-51m0-4a55,55,0,1,0,55,55,55,55,0,0,0-55-55Z"/>
   <rect className="cls-2 fill-[#fff] stroke-black stroke-[4px]" x="18.43" y="41.52" width="84" height="40" rx="11.48"/>
