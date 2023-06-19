@@ -51,7 +51,9 @@ export default async function Account() {
     revalidatePath('/account');
   };
 
-
+  const downloadHb = async () => {
+    return;
+  };
 
   const updateEmail = async (formData: FormData) => {
     'use server';
