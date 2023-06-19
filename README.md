@@ -119,11 +119,15 @@ You can find the first two keys on the [API keys tab](https://dashboard.stripe.c
 
 #### Complete Vercel deployment
 
-Once you've set your environment variables in the Vercel deployment interface, complete your deployment. Vercel may take a few minutes to build your application. It will then provide you with a deployment URL. Copy this URL.
+Once you've set your environment variables in the Vercel deployment interface, complete your deployment. Vercel may take a few minutes to build your application. It will then provide you with a domain URL for your deployment. Copy this URL.
+
+*NOTE:* Vercel assigns you a domain that is stable from deployment to redeployment (`https://your-deployment-url.vercel.app`) and a dynamic URL that changes every time you redploy (e.g., `https://your-deployment-url.vercel-12345678-your-organization.app`). You want to use the stable one, not the dynamic one!
 
 #### Complete Stripe webhook configuration
 
 Now that we have a deployment URL, we can complete our Stripe webhook configuration. Go back to the Stripe [test Webhooks page](https://dashboard.stripe.com/test/webhooks). Click your endpoint, and then click `... > Update Details`. In the `Endpoint URL` field, paste your deployment URL and add `/api/webhooks` to the end. For example, if your deployment URL is `https://your-deployment-url.vercel.app`, then your endpoint URL should be `https://your-deployment-url.vercel.app/api/webhooks`. Click `Update endpoint`.
+
+
 
 #### Create product and pricing information
 
