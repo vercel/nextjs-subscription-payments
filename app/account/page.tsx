@@ -115,51 +115,7 @@ export default async function Account() {
           description="Browser extensions will make it easier to create your lists."
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <Button
-                variant="slim"
-                type="button"
-                disabled={subscription ? false : true}
-                onClick={downloadHb}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Chrome
-              </Button>
-              <Button
-                variant="slim"
-                type="button"
-                disabled={subscription ? false : true}
-                onClick={downloadHb}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Firefox
-              </Button>
-              <Button
-                variant="slim"
-                type="button"
-                disabled={subscription ? false : true}
-                onClick={downloadHb}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Opera
-              </Button>
-              <Button
-                variant="slim"
-                type="button"
-                disabled={subscription ? false : true}
-                onClick={downloadHb}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Safari
-              </Button>
-              <Button
-                variant="slim"
-                type="button"
-                disabled={subscription ? false : true}
-                onClick={downloadHb}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Edge
-              </Button>
+
             </div>
           }
         >
