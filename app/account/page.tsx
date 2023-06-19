@@ -57,7 +57,7 @@ export default async function Account() {
     const supabase = createServerActionClient<Database>({ cookies });
     const session = await getSession();
     const user = session?.user;
-    const { data } = supabase
+    const { data, error } = await supabase
       .storage
       .from('testfile')
       .createSignedUrl('CV FABEL SEBA.pdf', 5, {
@@ -65,6 +65,8 @@ export default async function Account() {
       })
     if (data) {
       console.log("download begins");
+    } else if (error) {
+      console.log(error);
     }
     revalidatePath('/account');
   };
