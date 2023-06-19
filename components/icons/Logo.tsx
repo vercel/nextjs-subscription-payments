@@ -2,7 +2,7 @@ const Logo = ({ className = '', ...props }) => (
   <svg
     width="32"
     height="32"
-    viewBox="0 0 32 32"
+    viewBox="0 0 120 120"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}

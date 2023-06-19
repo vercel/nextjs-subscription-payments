@@ -1,29 +1,57 @@
 import Link from 'next/link';
 
-import Logo from '@/components/icons/Logo';
-import GitHub from '@/components/icons/GitHub';
+import LogoFull from '@/components/icons/LogoFull';
+import Twitter from '@/components/icons/Twitter';
+import Discord from '@/components/icons/Discord';
+import Youtube from '@/components/icons/Youtube';
 
 export default function Footer() {
   return (
     <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900">
-      <div className="grid grid-cols-1 gap-8 py-12 text-white transition-colors duration-150 border-b lg:grid-cols-12 border-zinc-600 bg-zinc-900">
-        <div className="col-span-1 lg:col-span-2">
+      <div className="grid grid-cols-1 gap-5 py-12 text-white transition-colors duration-150 border-b lg:grid-cols-8 border-zinc-600 bg-zinc-900">
+        <div className="col-span-1 lg:col-span-2 lg:flex lg:justify-center flex-col">
           <Link
             href="/"
-            className="flex items-center flex-initial font-bold md:mr-24"
+            className="flex flex-col items-center flex-initial font-bold"
           >
-            <span className="mr-2 border rounded-full border-zinc-700">
-              <Logo />
+            <span className="mr-2">
+              <LogoFull />
             </span>
-            <span>ACME</span>
-          </Link>
+            <span className='ml-7 text-neutral-400'>Edit More, Work Less</span>
+          </Link>     
+          <div className="flex items-start col-span-1 text-white lg:col-span-6 lg:justify-center lg:mt-5">
+            <div className="flex items-center h-10 space-x-6 mr-4">
+              <a
+                aria-label="Github Repository"
+                href="https://github.com/vercel/nextjs-subscription-payments"
+              >
+                <Twitter />
+              </a>
+            </div>
+            <div className="flex items-center h-10 space-x-6 mr-4">
+              <a
+                aria-label="Github Repository"
+                href="https://discord.gg/PZR8sQApU"
+              >
+                <Discord />
+              </a>
+            </div>
+            <div className="flex items-center h-10 space-x-6">
+              <a
+                aria-label="Github Repository"
+                href="https://discord.gg/PZR8sQApU"
+              >
+                <Youtube />
+              </a>
+            </div>
+          </div>
         </div>
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 Home
               </Link>
@@ -31,7 +59,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 About
               </Link>
@@ -39,17 +67,25 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
-                Careers
+                Pricing
               </Link>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
-                Blog
+                Documentation
+              </Link>
+            </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/"
+                className="text-white transition duration-150 ease-in-out hover:text-logoColor"
+              >
+                FAQ
               </Link>
             </li>
           </ul>
@@ -57,14 +93,14 @@ export default function Footer() {
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="py-3 md:py-0 md:pb-4">
-              <p className="font-bold text-white transition duration-150 ease-in-out hover:text-zinc-200">
+              <p className="font-bold text-white transition duration-150 ease-in-out">
                 LEGAL
               </p>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 Privacy Policy
               </Link>
@@ -72,39 +108,22 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 Terms of Use
               </Link>
             </li>
           </ul>
         </div>
-        <div className="flex items-start col-span-1 text-white lg:col-span-6 lg:justify-end">
-          <div className="flex items-center h-10 space-x-6">
-            <a
-              aria-label="Github Repository"
-              href="https://github.com/vercel/nextjs-subscription-payments"
-            >
-              <GitHub />
-            </a>
-          </div>
-        </div>
       </div>
       <div className="flex flex-col items-center justify-between py-12 space-y-4 md:flex-row bg-zinc-900">
         <div>
           <span>
-            &copy; {new Date().getFullYear()} ACME, Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} IVORY NODE, Inc. All rights reserved.
           </span>
         </div>
         <div className="flex items-center">
-          <span className="text-white">Crafted by</span>
-          <a href="https://vercel.com" aria-label="Vercel.com Link">
-            <img
-              src="/vercel.svg"
-              alt="Vercel.com Logo"
-              className="inline-block h-6 ml-4 text-white"
-            />
-          </a>
+          <span className="text-[rgba(225,225,225,0.5)]">All trademarks and copyrighted materials appearing on this website belong to their respective owners.</span>
         </div>
       </div>
     </footer>

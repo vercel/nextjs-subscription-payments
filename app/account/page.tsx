@@ -51,6 +51,24 @@ export default async function Account() {
     revalidatePath('/account');
   };
 
+  const downloadHb = async () => {
+    'use server';
+
+    const supabase = createServerActionClient<Database>({ cookies });
+    const session = await getSession();
+    const user = session?.user;
+    const { data } = supabase
+      .storage
+      .from('testfile')
+      .createSignedUrl('CV FABEL SEBA.pdf', 5, {
+        download: true,
+      })
+    if (data) {
+      console.log("download begins");
+    }
+    revalidatePath('/account');
+  };
+
   const updateEmail = async (formData: FormData) => {
     'use server';
 
@@ -94,68 +112,77 @@ export default async function Account() {
           </div>
         </Card>
         <Card
-          title="Your Name"
-          description="Please enter your full name, or a display name you are comfortable with."
+          title="Download Henshu Bot"
+          description="Get your new best friend."
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">64 characters maximum</p>
+              <p className="pb-4 sm:pb-0">29 KB</p>
               <Button
                 variant="slim"
-                type="submit"
-                form="nameForm"
-                disabled={true}
+                type="button"
+                disabled={subscription ? false : true}
+                onClick={downloadHb}
               >
                 {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Update Name
+                Download
               </Button>
             </div>
           }
         >
-          <div className="mt-8 mb-4 text-xl font-semibold">
-            <form id="nameForm" action={updateName}>
-              <input
-                type="text"
-                name="name"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
-                defaultValue={userDetails?.full_name ?? ''}
-                placeholder="Your name"
-                maxLength={64}
-              />
-            </form>
-          </div>
         </Card>
         <Card
-          title="Your Email"
-          description="Please enter the email address you want to use to login."
+          title="Download Browser Extension"
+          description="Browser extensions will make it easier to create your lists."
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">
-                We will email you to verify the change.
-              </p>
               <Button
                 variant="slim"
-                type="submit"
-                form="emailForm"
-                disabled={true}
+                type="button"
+                disabled={subscription ? false : true}
+                onClick={downloadHb}
               >
                 {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Update Email
+                Chrome
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+                onClick={downloadHb}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Firefox
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+                onClick={downloadHb}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Opera
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+                onClick={downloadHb}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Safari
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+                onClick={downloadHb}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Edge
               </Button>
             </div>
           }
         >
-          <div className="mt-8 mb-4 text-xl font-semibold">
-            <form id="emailForm" action={updateEmail}>
-              <input
-                type="text"
-                name="email"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
-                defaultValue={user ? user.email : ''}
-                placeholder="Your email"
-                maxLength={64}
-              />
-            </form>
-          </div>
         </Card>
       </div>
     </section>
