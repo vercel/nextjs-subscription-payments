@@ -126,15 +126,9 @@ export default async function Account() {
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
               <p className="pb-4 sm:pb-0">29 KB</p>
-              <Button
-                variant="slim"
-                type="button"
-                disabled={subscription ? false : true}
-                onClick={downloadHb}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+              <Link href="https://nojjndvasaxxanmaqgjw.supabase.co/storage/v1/object/public/testfile/CV%20FABEL%20SEBA.pdf?t=2023-06-19T20%3A03%3A42.097Z">
                 Download
-              </Button>
+              </Link>
             </div>
           }
         >
