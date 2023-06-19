@@ -51,32 +51,7 @@ export default async function Account() {
     revalidatePath('/account');
   };
 
-  const downloadHb = async () => {
-    'use server';
 
-    const supabase = createServerActionClient<Database>({ cookies });
-    const session = await getSession();
-    const user = session?.user;
-    const { data, error } = await supabase
-      .storage
-      .from('testfile')
-      .createSignedUrl('private/CV FABEL SEBA2.pdf', 5, {
-        download: true,
-      })
-    if (data) {
-      console.log("download begins");
-      const link = document.createElement('a');
-      link.href = data?.signedUrl;
-      link.download = 'CV FABEL SEBA';
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else if (error) {
-      console.log("pas la bonne méthode pour dl: ", error);
-    }
-    revalidatePath('/account');
-  };
 
   const updateEmail = async (formData: FormData) => {
     'use server';
