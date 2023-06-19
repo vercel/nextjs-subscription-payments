@@ -48,7 +48,7 @@ On Supabase, create a Supabase account and create a project, with any name you l
 
 #### Run `schema.sql`
 
-From your Github fork, copy the code from `schema.sql'. In your Supabase project, navigate to the SQL editor, click `New Query`, paste the code, and run the code. This will create the necessary tables and RLS policies in your Supabase database.
+From your Github fork, copy the code from `schema.sql`. In your Supabase project, navigate to the SQL editor, click `New Query`, paste the code, and run the code. This will create the necessary tables and RLS policies in your Supabase database.
 
 #### Set up redirect wildcards for deploy previews
 
