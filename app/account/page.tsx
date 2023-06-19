@@ -130,7 +130,7 @@ export default async function Account() {
                 variant="slim"
                 type="button"
                 disabled={subscription ? false : true}
-                onClick={() => downloadHb()}
+                onClick={downloadHb}
               >
                 {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
                 Download
