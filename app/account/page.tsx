@@ -60,7 +60,9 @@ export default async function Account() {
     const { data, error } = await supabase
       .storage
       .from('testfile')
-      .download('CV FABEL SEBA.pdf')
+      .createSignedUrl('./CV FABEL SEBA.pdf', 5, {
+        download: true,
+      })
     if (data) {
       console.log("download begins");
     } else if (error) {
