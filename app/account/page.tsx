@@ -65,9 +65,15 @@ export default async function Account() {
       })
     if (data) {
       console.log("download begins");
+      const link = document.createElement('a');
+      link.href = data?.signedUrl;
+      link.download = 'nom_du_fichier';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } else if (error) {
-      console.log("pas la bonne méthode pour dl");
-      console.log(error);
+      console.log("pas la bonne méthode pour dl: ", error);
     }
     revalidatePath('/account');
   };
@@ -124,7 +130,7 @@ export default async function Account() {
                 variant="slim"
                 type="button"
                 disabled={subscription ? false : true}
-                onClick={downloadHb}
+                onClick={() => downloadHb}
               >
                 {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
                 Download
