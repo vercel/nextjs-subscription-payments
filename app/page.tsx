@@ -1,4 +1,6 @@
 import Pricing from '@/components/Pricing';
+import Hero from '@/components/Hero';
+import Features from '@/components/Features';
 import {
   getSession,
   getSubscription,
@@ -13,11 +15,18 @@ export default async function PricingPage() {
   ]);
 
   return (
-    <Pricing
-      session={session}
-      user={session?.user}
-      products={products}
-      subscription={subscription}
-    />
+    <>
+      <Hero 
+        session={session}
+        user={session?.user}
+      />
+      <Features />
+      <Pricing
+        session={session}
+        user={session?.user}
+        products={products}
+        subscription={subscription}
+      />
+    </>
   );
 }

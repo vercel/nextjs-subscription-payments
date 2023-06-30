@@ -1,4 +1,5 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
+import ManageDownloadButton from './ManageDownloadButton';
 import {
   getSession,
   getUserDetails,
@@ -34,39 +35,6 @@ export default async function Account() {
       minimumFractionDigits: 0
     }).format((subscription?.prices?.unit_amount || 0) / 100);
 
-  const updateName = async (formData: FormData) => {
-    'use server';
-
-    const newName = formData.get('name') as string;
-    const supabase = createServerActionClient<Database>({ cookies });
-    const session = await getSession();
-    const user = session?.user;
-    const { error } = await supabase
-      .from('users')
-      .update({ full_name: newName })
-      .eq('id', user?.id);
-    if (error) {
-      console.log(error);
-    }
-    revalidatePath('/account');
-  };
-
-  const downloadHb = async () => {
-    return;
-  };
-
-  const updateEmail = async (formData: FormData) => {
-    'use server';
-
-    const newEmail = formData.get('email') as string;
-    const supabase = createServerActionClient<Database>({ cookies });
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
-    if (error) {
-      console.log(error);
-    }
-    revalidatePath('/account');
-  };
-
   return (
     <section className="mb-32 bg-black">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
@@ -81,10 +49,10 @@ export default async function Account() {
       </div>
       <div className="p-4">
         <Card
-          title="Your Plan"
+          title={`Hello ${userDetails?.full_name ?? ''}`}
           description={
             subscription
-              ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
+              ? `Active until ${subscription?.current_period_end}.`
               : 'You are not currently subscribed to any plan.'
           }
           footer={<ManageSubscriptionButton session={session} />}
@@ -93,21 +61,14 @@ export default async function Account() {
             {subscription ? (
               `${subscriptionPrice}/${subscription?.prices?.interval}`
             ) : (
-              <Link href="/">Choose your plan</Link>
+              <Link href="/#pricing"><span className='underline'>Choose your plan</span></Link>
             )}
           </div>
         </Card>
         <Card
           title="Download Henshu Bot"
-          description="Get your new best friend."
-          footer={
-            <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">29 KB</p>
-              <Link href="https://nojjndvasaxxanmaqgjw.supabase.co/storage/v1/object/public/testfile/CV%20FABEL%20SEBA.pdf?t=2023-06-19T20%3A03%3A42.097Z" download="CV FABEL SEBA.pdf">
-                Download
-              </Link>
-            </div>
-          }
+          description={subscription ? "Get your new best friend." : "Subscribe to any plan to get access"}
+          footer={<ManageDownloadButton session={session} sub={subscription} />}
         >
         </Card>
         <Card
@@ -115,7 +76,46 @@ export default async function Account() {
           description="Browser extensions will make it easier to create your lists."
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Chrome
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Firefox
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Opera
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Safari
+              </Button>
+              <Button
+                variant="slim"
+                type="button"
+                disabled={subscription ? false : true}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Edge
+              </Button>
             </div>
           }
         >

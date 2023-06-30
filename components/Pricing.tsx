@@ -29,7 +29,7 @@ interface Props {
   subscription: SubscriptionWithProduct | null;
 }
 
-type BillingInterval = 'lifetime' | 'year' | 'month';
+type BillingInterval = 'week' | 'month' | 'year';
 
 export default function Pricing({
   session,
@@ -95,7 +95,7 @@ export default function Pricing({
 
   if (products.length === 1)
     return (
-      <section className="bg-black">
+      <section id='pricing' className="bg-black">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
             <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">

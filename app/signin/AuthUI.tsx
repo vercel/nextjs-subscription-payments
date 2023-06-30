@@ -14,6 +14,7 @@ export default function AuthUI() {
         providers={['google']}
         redirectTo={getURL()}
         magicLink={true}
+        onlyThirdPartyProviders={true}
         appearance={{
           theme: ThemeSupa,
           variables: {
