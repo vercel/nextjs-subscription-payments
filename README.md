@@ -119,7 +119,7 @@ You can find the first two keys on the [API keys tab](https://dashboard.stripe.c
 
 #### Complete Vercel deployment
 
-Once you've set your environment variables in the Vercel deployment interface, complete your deployment. Vercel may take a few minutes to build your application. It will then provide you with a domain URL for your deployment. Copy this URL and add it to .env.local:
+Once you've set your environment variables in the Vercel deployment interface, complete your deployment. Vercel may take a few minutes to build your application. It will then provide you with a domain URL for your deployment. Copy this URL and add it as an [Environment Variable](https://vercel.com/docs/concepts/projects/environment-variables) in the Vercel deployment interface:
 
 ```
 NEXT_PUBLIC_SITE_URL=https://your-deployment-url.vercel.app
@@ -185,7 +185,7 @@ Use the Vercel CLI to download the development env vars:
 vercel env pull .env.local
 ```
 
-Running this command will create a new `.env.local` file in your project folder. For security purposes, you will need to set the `SUPABASE_SERVICE_ROLE_KEY` manually from your [Supabase dashboard](https://app.supabase.io/) (`Settings > API`).
+Running this command will create a new `.env.local` file in your project folder. For security purposes, you will need to set the `SUPABASE_SERVICE_ROLE_KEY` manually from your [Supabase dashboard](https://app.supabase.io/) (`Settings > API`). You will also need to manually change the `NEXT_PUBLIC_SITE_URL` variable in `.env.local` to "http://localhost:3000".
 
 ### Use the Stripe CLI to test webhooks
 
