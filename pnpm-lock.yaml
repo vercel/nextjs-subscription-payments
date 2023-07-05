@@ -3141,7 +3141,7 @@ packages:
       pirates: 4.0.5
       ts-interface-checker: 0.1.13
 
-  /supabase/1.64.8:
+  /supabase/1.75.3:
     resolution: {integrity: sha512-HrJe7vJx8he1JdgUn8if+JxZkDugD030xNqy9Jxlbs8X/lNuEnmo7EW0uDJsMVTz6L8hXTuafHlJy4HiULa1Qw==}
     engines: {npm: '>=8'}
     hasBin: true
