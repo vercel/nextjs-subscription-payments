@@ -33,6 +33,8 @@ The process is slightly different depending upon whether you start from Github o
 
 To get started from Github, click the "Deploy" button below. You may do this either from your own fork or from the [original template repo](https://github.com/vercel/nextjs-subscription-payments). 
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnextjs-subscription-payments&project-name=nextjs-subscription-payments&repo-name=nextjs-subscription-payments&demo-title=Next.js%20Subscription%20Payments%20Starter&demo-description=Demo%20project%20on%20Vercel&demo-url=https%3A%2F%2Fsubscription-payments.vercel.app&demo-image=https%3A%2F%2Fsubscription-payments.vercel.app%2Fdemo.png&integration-ids=oac_jUduyjQgOyzev1fjrW83NYOv&external-id=nextjs-subscription-payments)
+
 Vercel will prompt you to create a new Github repo. If you've used a fork, you may link your Vercel deployment to your existing fork by selecting "Import a different Git repository" from the left menu. If you've used the master template or started from the [Vercel website](https://vercel.com/new/promptly-technologies/templates/next.js/subscription-starter) instead of Github, you may allow Vercel to create a repo for you.
 
 #### Open a Codespace or clone the repo
