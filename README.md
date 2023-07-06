@@ -127,6 +127,8 @@ Once you've set your environment variables in the Vercel deployment interface, c
 NEXT_PUBLIC_SITE_URL=https://your-deployment-url.vercel.app
 ```
 
+For this variable, check the box to apply it to the "Production" environment, but make sure to leave the "Development" and "Preview" boxes unchecked.
+
 Keep the url on your clipboard, because you will also need it for the next step.
 
 *NOTE:* Vercel assigns you a domain that is stable from deployment to redeployment (`https://your-deployment-url.vercel.app`) and a dynamic URL that changes every time you redploy (e.g., `https://your-deployment-url.vercel-12345678-your-organization.app`). You want to use the stable one, not the dynamic one!
