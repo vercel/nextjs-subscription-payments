@@ -2,6 +2,9 @@
 import SupabaseProvider from './supabase-provider';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
+import Card from '@/components/ui/Card';
+import Header from '@/components/ui/Navbar/Header';
+
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 import {ChakraProviders} from './chakra-providers';
@@ -53,12 +56,21 @@ export default function RootLayout({
           <SupabaseProvider>
             {/* @ts-expect-error */}
             <Navbar />
+            {/* <Header/> */}
             <main
               id="skip"
               className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
             >
               {children}
             </main>
+           
+              <Card
+          title="Star Trek - The Next Generation"
+          description="Go where no one has gone before..."
+          imageUrl="https://picsum.photos/200/300"
+          buttonText="Enlist Now"
+          buttonLink="https://example.com"
+        />
             <Footer />
           </SupabaseProvider>
         </ChakraProviders>

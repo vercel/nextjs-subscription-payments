@@ -177,6 +177,8 @@ export interface Database {
       users: {
         Row: {
           avatar_url: string | null
+          username: string
+          website: string | null
           billing_address: Json | null
           full_name: string | null
           id: string
@@ -184,6 +186,8 @@ export interface Database {
         }
         Insert: {
           avatar_url?: string | null
+          username: string
+          website?: string | null
           billing_address?: Json | null
           full_name?: string | null
           id: string
@@ -191,6 +195,8 @@ export interface Database {
         }
         Update: {
           avatar_url?: string | null
+          username?: string
+          website?: string | null
           billing_address?: Json | null
           full_name?: string | null
           id?: string

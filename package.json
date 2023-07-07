@@ -30,6 +30,7 @@
     "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
+    "@chakra-ui/icons": "^2.0.19",
     "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
     "@types/node": "^20.2.3",
     "@types/react": "^18.2.7",
