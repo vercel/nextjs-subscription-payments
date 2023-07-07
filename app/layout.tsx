@@ -3,7 +3,6 @@ import SupabaseProvider from './supabase-provider';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import Card from '@/components/ui/Card';
-import Header from '@/components/ui/Navbar/Header';
 
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
