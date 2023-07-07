@@ -1,10 +1,10 @@
 import Stripe from 'stripe';
-import { stripe } from '@/utils/stripe';
+import { stripe } from '@/lib/stripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
   manageSubscriptionStatusChange
-} from '@/utils/supabase-admin';
+} from '@/lib/supabase-admin';
 import { headers } from 'next/headers';
 
 const relevantEvents = new Set([

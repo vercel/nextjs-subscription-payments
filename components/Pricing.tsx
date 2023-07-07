@@ -3,8 +3,8 @@
 import Button from '@/components/ui/Button';
 import LogoCloud from '@/components/ui/Footer/LogoCloud';
 import { Database } from '@/types_db';
-import { postData } from '@/utils/helpers';
-import { getStripe } from '@/utils/stripe-client';
+import { postData } from '@/lib/helpers';
+import { getStripe } from '@/lib/stripe-client';
 import { Session, User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';

@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { stripe } from '@/utils/stripe';
-import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
-import { getURL } from '@/utils/helpers';
+import { stripe } from '@/lib/stripe';
+import { createOrRetrieveCustomer } from '@/lib/supabase-admin';
+import { getURL } from '@/lib/helpers';
 import { Database } from '@/types_db';
 
 export async function POST(req: Request) {
