@@ -4,7 +4,7 @@ import {
   getUserDetails,
   getSubscription
 } from '@/app/supabase-server';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
@@ -129,7 +129,7 @@ export default async function Account() {
                 We will email you to verify the change.
               </p>
               <Button
-                variant="slim"
+                // variant="slim"
                 type="submit"
                 form="emailForm"
                 disabled={true}
@@ -161,7 +161,7 @@ export default async function Account() {
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
               <p className="pb-4 sm:pb-0">Update your profile information.</p>
               <Button
-                variant="slim"
+                // variant="slim"
                 type="submit"
                 form="profileForm"
                 disabled={false}
