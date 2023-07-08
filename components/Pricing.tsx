@@ -1,6 +1,16 @@
 'use client';
 
-import Button from '@/components/ui/Button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ModeToggle } from "./ModeToggle";
 import LogoCloud from '@/components/ui/Footer/LogoCloud';
 import { Database } from '@/types_db';
 import { postData } from '@/lib/helpers';
@@ -139,7 +149,7 @@ export default function Pricing({
                         </span>
                       </p>
                       <p className="mt-4 text-zinc-300">{price.description}</p>
-                      <Button
+                      {/* <Button
                         variant="slim"
                         type="button"
                         disabled={false}
@@ -151,7 +161,7 @@ export default function Pricing({
                         subscription?.prices?.products?.name
                           ? 'Manage'
                           : 'Subscribe'}
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 );
@@ -239,7 +249,7 @@ export default function Pricing({
                       /{billingInterval}
                     </span>
                   </p>
-                  <Button
+                  {/* <Button
                     variant="slim"
                     type="button"
                     disabled={!session}
@@ -250,7 +260,7 @@ export default function Pricing({
                     {product.name === subscription?.prices?.products?.name
                       ? 'Manage'
                       : 'Subscribe'}
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             );
@@ -258,6 +268,34 @@ export default function Pricing({
         </div>
         <LogoCloud />
       </div>
+
+
+            <Card>
+  <CardHeader>
+    <CardTitle>Star Trek - The Next Generation</CardTitle>
+    <CardDescription>Card Description</CardDescription>
+  </CardHeader>
+  <CardContent>
+  <Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+
+  </CardContent>
+  <CardFooter>
+    <p>Card Footer</p>
+  </CardFooter>
+</Card>
+
+<Button
+variant="outline"
+
+>
+  Press here.
+</Button>
+
+<ModeToggle></ModeToggle>
+
     </section>
   );
 }
