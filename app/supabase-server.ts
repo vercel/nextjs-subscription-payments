@@ -41,7 +41,7 @@ export async function getSubscription() {
       .from('subscriptions')
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
-      .single()
+      .maybeSingle()
       .throwOnError();
     return subscription;
   } catch (error) {
