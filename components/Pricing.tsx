@@ -54,7 +54,7 @@ export default function Pricing({
     if (!user) {
       return router.push('/signin');
     }
-    if (price.product_id === subscription?.prices?.products?.id) {
+    if (subscription) {
       return router.push('/account');
     }
     try {
@@ -246,9 +246,7 @@ export default function Pricing({
                     onClick={() => handleCheckout(price)}
                     className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                   >
-                    {product.name === subscription?.prices?.products?.name
-                      ? 'Manage'
-                      : 'Subscribe'}
+                    {subscription ? 'Manage' : 'Subscribe'}
                   </Button>
                 </div>
               </div>
