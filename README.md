@@ -19,75 +19,42 @@ The all-in-one starter kit for high-performance SaaS applications.
 
 ![Architecture diagram](./public/architecture_diagram.svg)
 
-## Step-by-step setup 
+## Step-by-step setup
 
 When deploying this template, the sequence of steps is important. Follow the steps below in order to get up and running.
 
-The process is slightly different depending upon whether you start from Github or you start from Vercel, but it should work either way.
-
-**Note:** We're working on our Stripe integration. We've documented the required steps below under "Configure Stripe" until the integration is ready.
-
 ### Initiate Deployment
 
-#### Initiate Vercel Deployment
+- Redeploy
+- Create products and prices
 
-To get started from Github, click the "Deploy" button below. You may do this either from your own fork or from the [original template repo](https://github.com/vercel/nextjs-subscription-payments). 
+#### Vercel Deploy Button
 
-Vercel will prompt you to create a new Github repo. If you've used a fork, you may link your Vercel deployment to your existing fork by selecting "Import a different Git repository" from the left menu. If you've used the master template or started from the [Vercel website](https://vercel.com/new/promptly-technologies/templates/next.js/subscription-starter) instead of Github, you may allow Vercel to create a repo for you.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnextjs-subscription-payments&env=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY&envDescription=Enter%20your%20Stripe%20API%20keys.&envLink=https%3A%2F%2Fdashboard.stripe.com%2Fapikeys&project-name=nextjs-subscription-payments&repository-name=nextjs-subscription-payments&integration-ids=oac_VqOgBHqhEoFTPzGkPd7L0iH6&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnextjs-subscription-payments%2Ftree%2Fmain)
 
-#### Open a Codespace or clone the repo
+The Vercel Deployment will create a new repository with this template on your GitHub account and guide your through a new Supabase project creation. The [Supabase Vercel Deploy Integration](https://vercel.com/integrations/supabase-v2) will set up the necessary Supabase environment variables and run the [SQL migrations](./supabase/migrations/20230530034630_init.sql) to set up the Database schema on your account. You can inspect the created tables in your project's [Table editor](https://app.supabase.com/project/_/editor).
 
-Before proceeding with your Vercel deployment, you'll need to set up a [Supabase](https://supabase.com) project. For this step, it will be helpful to either open a Github codespace from your fork or clone the repo to your local machine. To clone the repo, use `git clone https://github.com/[your_username]/[your_repo_name]` and then `cd [your_repo_name]`.
+Should the automatic setup fail, please [create a Supabase account](https://app.supabase.com/projects), and a new project if needed. In your project, navigate to the [SQL editor](https://app.supabase.com/project/_/sql) and select the "Stripe Subscriptions" starter template from the Quick start section.
 
-### Set up Supabase
+### Configure Auth
 
-#### Create a Supabase project
+In your Supabase project, navigate to [auth > URL configuration](https://app.supabase.com/project/_/auth/url-configuration) and set your main production URL (e.g. https://your-deployment-url.vercel.app) as the site url.
 
-On Supabase, create a Supabase account and create a project, with any name you like. Also generate an access token from https://app.supabase.com/account/tokens. You will need this later.
+Next, in your Vercel deployment settings, add a new **Production** environment variable called `NEXT_PUBLIC_SITE_URL` and set it to the same URL. Make sure to deselect preview and development environments to make sure that preview branches and local development work correctly.
 
+#### [Optional] - Set up redirect wildcards for deploy previews
 
-#### Run `schema.sql`
-
-From your Github fork, copy the code from `schema.sql`. In your Supabase project, navigate to the SQL editor, click `New Query`, paste the code, and run the code. This will create the necessary tables and RLS policies in your Supabase database.
-
-#### Set up redirect wildcards for deploy previews
-
-For auth redirects (magic links, OAuth providers) to work correctly in deploy previews, navigate to the auth settings (i.e. `https://app.supabase.com/project/:project-id/auth/url-configuration`) and add the following wildcard URL to "Redirect URLs": `https://**vercel.app/*/*`. (You can read more about redirect wildcard patterns in the [docs](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).)
+For auth redirects (email confirmations, magic links, OAuth providers) to work correctly in deploy previews, navigate to the [auth settings](https://app.supabase.com/project/_/auth/url-configuration) and add the following wildcard URL to "Redirect URLs": `https://*-username.vercel.app/**`. You can read more about redirect wildcard patterns in the [docs](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
 
 #### [Optional] - Set up OAuth providers
 
-You can use third-party login providers like GitHub or Google. Refer to the [docs](https://supabase.io/docs/guides/auth#third-party-logins) to learn how to configure these. Once configured, you can add them to the `provider` array of the `Auth` component on the [`signin.tsx`](./pages/signin.tsx) page.
+You can use third-party login providers like GitHub or Google. Refer to the [docs](https://supabase.io/docs/guides/auth#third-party-logins) to learn how to configure these. Once configured, you can add them to the `provider` array of the [`Auth` component](./app/signin/AuthUI.tsx) page.
 
-#### Generate types from your Supabase database
+#### [Maybe Optional] - Set up Supabase environment variables (not needed if you installed via the Deploy Button)
 
-Now open a terminal in your codespace or cloned repo. You can use the [Supabase CLI](https://supabase.com/docs/reference/cli/usage#supabase-gen-types-typescript) to generate types from your Database by running:
+If you've deployed this template via the "Deploy to Vercel" button above, you can skip this step. Otherwise navigate to the [API settings](https://app.supabase.com/project/_/settings/api) and paste them into the Vercel deployment interface. Copy project API keys and paste into the `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` fields, and copy the project URL and paste to Vercel as `NEXT_PUBLIC_SUPABASE_URL`.
 
-1. To install Supabase cli
-
-```bash
-npm install supabase --save-dev
-yarn add supabase --dev
-```
-
-2. Connect to Supabase
-
-```bash
-npx supabase login
-```
-
-3. Enter the access token you created earlier. (As mentioned above, you can generate an access token from https://app.supabase.com/account/tokens.)
-
-4. Generate types
-
-```bash
-npx supabase gen types typescript --project-id [YOUR-PROJECT-REF] --schema public > types_db.ts
-```
-
-#### Set up Supabase environment variables
-
-Next, we need to set up environment variables for our Supabase project. We can copy these from `Supabase > Project Settings > API` and paste them into the Vercel deployment interface. Copy project API keys and paste into the `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` fields, and copy the project URL and paste to Vercel as `NEXT_PUBLIC_SUPABASE_URL`. 
-
-This completes Supabase setup.
+Congrats, this completes the Supabase setup, almost there!
 
 ### Configure Stripe
 
@@ -100,38 +67,15 @@ For the following steps, make sure you have the ["Test Mode" toggle](https://str
 We need to create a webhook in the `Developers` section of Stripe. Pictured in the architecture diagram above, this webhook is the piece that connects Stripe to your Vercel Serverless Functions.
 
 1. Click the "Add Endpoint" button on the [test Endpoints page](https://dashboard.stripe.com/test/webhooks).
-1. Enter any placeholder text for the endpoint URL. (We will return later and change this to `https://your-deployment-url.vercel.app/api/webhooks` once we complete deployment to Vercel.)
+1. Enter your production deployment URL followed by `/api/webhooks` for the endpoint URL. (e.g. `https://your-deployment-url.vercel.app/api/webhooks`)
 1. Click `Select events` under the `Select events to listen to` heading.
 1. Click `Select all events` in the `Select events to send` section.
 1. Copy `Signing secret` as we'll need that in the next step.
+1. In addition to the `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` and the `STRIPE_SECRET_KEY` we've set earlier during deployment, we need to add the webhook secret as `STRIPE_WEBHOOK_SECRET` env var.
 
-#### Set Stripe environment variables
+#### Redeploy with new env vars
 
-To securely interact with Stripe, we need to add a few more [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables) in the Vercel deployment interface.
-
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET_LIVE`
-
-You can find the first two keys on the [API keys tab](https://dashboard.stripe.com/test/apikeys) in Stripe. The `STRIPE_WEBHOOK_SECRET_LIVE` is the `Signing secret` copied in the previous webhook configuration step.
-
-### Complete deployment
-
-#### Complete Vercel deployment
-
-Once you've set your environment variables in the Vercel deployment interface, complete your deployment. Vercel may take a few minutes to build your application. It will then provide you with a domain URL for your deployment. Copy this URL and add it to .env.local:
-
-```
-NEXT_PUBLIC_SITE_URL=https://your-deployment-url.vercel.app
-```
-
-Keep the url on your clipboard, because you will also need it for the next step.
-
-*NOTE:* Vercel assigns you a domain that is stable from deployment to redeployment (`https://your-deployment-url.vercel.app`) and a dynamic URL that changes every time you redploy (e.g., `https://your-deployment-url.vercel-12345678-your-organization.app`). You want to use the stable one, not the dynamic one!
-
-#### Complete Stripe webhook configuration
-
-Now that we have a deployment URL, we can complete our Stripe webhook configuration. Go back to the Stripe [test Webhooks page](https://dashboard.stripe.com/test/webhooks). Click your endpoint, and then click `... > Update Details`. In the `Endpoint URL` field, paste your deployment URL and add `/api/webhooks` to the end. For example, if your deployment URL is `https://your-deployment-url.vercel.app`, then your endpoint URL should be `https://your-deployment-url.vercel.app/api/webhooks`. Click `Update endpoint`.
+For the newly set environment variables to take effect and everything to work together correctly, we need to redeploy our app in Vercel. In your Vercel Dashboard, navigate to deployments, click the overflow menu button and select "Redeploy" (do NOT enable the "Use existing Build Cache" option). Once Vercel has rebuilt and redeployed your app, you're ready to set up your products and prices.
 
 #### Create product and pricing information
 
@@ -150,7 +94,7 @@ For example, you can create business models with different pricing tiers, e.g.:
 
 Optionally, to speed up the setup, we have added a [fixtures file](fixtures/stripe-fixtures.json) to bootstrap test product and pricing data in your Stripe account. The [Stripe CLI](https://stripe.com/docs/stripe-cli#install) `fixtures` command executes a series of API requests defined in this JSON file. Simply run `stripe fixtures fixtures/stripe-fixtures.json`.
 
-**Important:** Be sure webhook forwarding is active when you create your products, or the products created will not be imported into your database.
+**Important:** Make sure that you've configured your Stripe webhook correctly and redeployed with all needed environment variables.
 
 #### Configure the Stripe customer portal
 
@@ -164,7 +108,7 @@ Optionally, to speed up the setup, we have added a [fixtures file](fixtures/stri
 
 ### That's it
 
-That's it. Now you're ready to earn recurring revenue from your customers. 🥳
+I know, that was quite a lot to get through, but it's worth it. You're now ready to earn recurring revenue from your customers. 🥳
 
 ## Develop locally
 
@@ -227,7 +171,7 @@ To run the project in live mode and process payments with Stripe, switch Stripe 
 
 ### Redeploy
 
-Afterward, you will need to rebuild your production deployment for the changes to take effect. Within your project Dashboard, navigate to the "Deployments" tab, select the most recent deployment, click the overflow menu button (next to the "Visit" button) and select "Redeploy." 
+Afterward, you will need to rebuild your production deployment for the changes to take effect. Within your project Dashboard, navigate to the "Deployments" tab, select the most recent deployment, click the overflow menu button (next to the "Visit" button) and select "Redeploy" (do NOT enable the "Use existing Build Cache" option).
 
 To verify you are running in production mode, test checking out with the [Stripe test card](https://stripe.com/docs/testing). The test card should not work.
 
