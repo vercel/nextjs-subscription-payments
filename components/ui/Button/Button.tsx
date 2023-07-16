@@ -61,5 +61,5 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
     </Component>
   );
 });
-
+Button.displayName = 'Button';
 export default Button;
