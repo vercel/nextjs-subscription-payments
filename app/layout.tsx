@@ -60,9 +60,9 @@ export default function RootLayout({
               id="skip"
               className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
             >
-              <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
                 {children}
-              </ThemeProvider>
+              {/* </ThemeProvider> */}
             </main>
 
             <Footer />
