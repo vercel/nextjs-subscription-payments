@@ -1,30 +1,31 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
 import {
-  getSession,
-  getUserDetails,
+  getAuthUser,
+  getUser,
   getSubscription
 } from '@/app/supabase-server';
-import Button from '@/components/ui/Button';
-import { Database } from '@/types_db';
+import { Button } from '@/components/ui/button';
+import { Database } from '@/types/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode} from 'react';
 
 export default async function Account() {
-  const [session, userDetails, subscription] = await Promise.all([
-    getSession(),
-    getUserDetails(),
+  const [userDetails, subscription] = await Promise.all([
+    getUser(),
     getSubscription()
   ]);
 
-  const user = session?.user;
+  const user = await getAuthUser()
 
-  if (!session) {
-    return redirect('/signin');
+  if (!user) {
+    redirect("/signin")
   }
+
+
 
   const subscriptionPrice =
     subscription &&
@@ -39,8 +40,8 @@ export default async function Account() {
 
     const newName = formData.get('name') as string;
     const supabase = createServerActionClient<Database>({ cookies });
-    const session = await getSession();
-    const user = session?.user;
+    // const session = await getSession();
+    // const user = session?.user;
     const { error } = await supabase
       .from('users')
       .update({ full_name: newName })
@@ -63,6 +64,33 @@ export default async function Account() {
     revalidatePath('/account');
   };
 
+
+  const updateProfile = async (formData: FormData) => {
+    'use server';
+  
+    const newName = formData.get('name') as string;
+    const newUsername = formData.get('username') as string;
+    const newAvatarUrl = formData.get('avatar_url') as string;
+    const newWebsite = formData.get('website') as string;
+  
+    const supabase = createServerActionClient<Database>({ cookies });
+    // const session = await getSession();
+    // const user = session?.user;
+    const { error } = await supabase
+      .from('users')
+      .update({
+        full_name: newName,
+        username: newUsername,
+        avatar_url: newAvatarUrl,
+        website: newWebsite,
+      })
+      .eq('id', user?.id);
+    if (error) {
+      console.log(error);
+    }
+    revalidatePath('/account');
+  };
+  
   return (
     <section className="mb-32 bg-black">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
@@ -83,7 +111,7 @@ export default async function Account() {
               ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
               : 'You are not currently subscribed to any plan.'
           }
-          footer={<ManageSubscriptionButton session={session} />}
+          footer={<ManageSubscriptionButton user={user} />}
         >
           <div className="mt-8 mb-4 text-xl font-semibold">
             {subscription ? (
@@ -92,38 +120,7 @@ export default async function Account() {
               <Link href="/">Choose your plan</Link>
             )}
           </div>
-        </Card>
-        <Card
-          title="Your Name"
-          description="Please enter your full name, or a display name you are comfortable with."
-          footer={
-            <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">64 characters maximum</p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="nameForm"
-                disabled={true}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
-                Update Name
-              </Button>
-            </div>
-          }
-        >
-          <div className="mt-8 mb-4 text-xl font-semibold">
-            <form id="nameForm" action={updateName}>
-              <input
-                type="text"
-                name="name"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
-                defaultValue={userDetails?.full_name ?? ''}
-                placeholder="Your name"
-                maxLength={64}
-              />
-            </form>
-          </div>
-        </Card>
+        </Card> 
         <Card
           title="Your Email"
           description="Please enter the email address you want to use to login."
@@ -133,7 +130,7 @@ export default async function Account() {
                 We will email you to verify the change.
               </p>
               <Button
-                variant="slim"
+                // variant="slim"
                 type="submit"
                 form="emailForm"
                 disabled={true}
@@ -157,7 +154,56 @@ export default async function Account() {
             </form>
           </div>
         </Card>
+
+    <Card
+          title="Your Profile"
+          description="Please update your profile information."
+          footer={
+            <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+              <p className="pb-4 sm:pb-0">Update your profile information.</p>
+              <Button
+                // variant="slim"
+                type="submit"
+                form="profileForm"
+                disabled={false}
+              >
+                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+                Update Profile
+              </Button>
+            </div>
+          }
+        >
+         <div className="mt-8 mb-4 text-xl font-semibold">
+            <form id="profileForm" action={updateProfile}>
+            <input
+                type="text"
+                name="avatar_url"
+                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                defaultValue={userDetails?.avatar_url ?? ''}
+                placeholder="Your avatar url"
+                maxLength={64}
+              />
+                <input
+                type="text"
+                name="full_name"
+                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                defaultValue={userDetails?.full_name ?? ''}
+                placeholder="Your Full Name"
+                maxLength={64}
+              />
+               <input
+                type="text"
+                name="website"
+                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                defaultValue={userDetails?.website ?? ''}
+                placeholder="Your website"
+                maxLength={64}
+              />
+            </form>
+          </div>
+        </Card>
       </div>
+     
     </section>
   );
 }

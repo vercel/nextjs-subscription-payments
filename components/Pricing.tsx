@@ -1,13 +1,30 @@
 'use client';
 
-import Button from '@/components/ui/Button';
-import { Database } from '@/types_db';
-import { postData } from '@/utils/helpers';
-import { getStripe } from '@/utils/stripe-client';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ModeToggle } from "./mode-toggle";
+import LogoCloud from '@/components/ui/Footer/LogoCloud';
+import { Database } from '@/types/types_db';
+import { postData } from '@/lib/helpers';
+import { getStripe } from '@/lib/stripe-client';
 import { Session, User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 type Product = Database['public']['Tables']['products']['Row'];
@@ -23,7 +40,6 @@ interface SubscriptionWithProduct extends Subscription {
 }
 
 interface Props {
-  session: Session | null;
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
@@ -32,7 +48,6 @@ interface Props {
 type BillingInterval = 'lifetime' | 'year' | 'month';
 
 export default function Pricing({
-  session,
   user,
   products,
   subscription
@@ -138,7 +153,7 @@ export default function Pricing({
                         </span>
                       </p>
                       <p className="mt-4 text-zinc-300">{price.description}</p>
-                      <Button
+                      {/* <Button
                         variant="slim"
                         type="button"
                         disabled={false}
@@ -150,7 +165,7 @@ export default function Pricing({
                         subscription?.prices?.products?.name
                           ? 'Manage'
                           : 'Subscribe'}
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 );
@@ -238,7 +253,7 @@ export default function Pricing({
                       /{billingInterval}
                     </span>
                   </p>
-                  <Button
+                  {/* <Button
                     variant="slim"
                     type="button"
                     disabled={!session}
@@ -249,7 +264,7 @@ export default function Pricing({
                     {product.name === subscription?.prices?.products?.name
                       ? 'Manage'
                       : 'Subscribe'}
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             );
@@ -257,63 +272,57 @@ export default function Pricing({
         </div>
         <LogoCloud />
       </div>
+
+
+            <Card>
+  <CardHeader>
+    <CardTitle>Star Trek - The Next Generation</CardTitle>
+    <CardDescription>Card Description</CardDescription>
+  </CardHeader>
+  <CardContent>
+  
+  <Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+
+  </CardContent>
+  <CardFooter>
+    <p>Card Footer</p>
+  </CardFooter>
+</Card>
+
+<Button
+variant="outline"
+
+>
+  Press here.
+</Button>
+
+<ModeToggle></ModeToggle>
+<Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Is it accessible?</AccordionTrigger>
+        <AccordionContent>
+          Yes. It adheres to the WAI-ARIA design pattern.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="item-2">
+        <AccordionTrigger>Is it styled?</AccordionTrigger>
+        <AccordionContent>
+          Yes. It comes with default styles that matches the other
+          components&apos; aesthetic.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="item-3">
+        <AccordionTrigger>Is it animated?</AccordionTrigger>
+        <AccordionContent>
+          Yes. It&apos;s animated by default, but you can disable it if you
+          prefer.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
     </section>
   );
 }
 
-function LogoCloud() {
-  return (
-    <div>
-      <p className="mt-24 text-xs uppercase text-zinc-400 text-center font-bold tracking-[0.3em]">
-        Brought to you by
-      </p>
-      <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
-        <div className="flex items-center justify-start">
-          <a href="https://nextjs.org" aria-label="Next.js Link">
-            <img
-              src="/nextjs.svg"
-              alt="Next.js Logo"
-              className="h-12 text-white"
-            />
-          </a>
-        </div>
-        <div className="flex items-center justify-start">
-          <a href="https://vercel.com" aria-label="Vercel.com Link">
-            <img
-              src="/vercel.svg"
-              alt="Vercel.com Logo"
-              className="h-6 text-white"
-            />
-          </a>
-        </div>
-        <div className="flex items-center justify-start">
-          <a href="https://stripe.com" aria-label="stripe.com Link">
-            <img
-              src="/stripe.svg"
-              alt="stripe.com Logo"
-              className="h-12 text-white"
-            />
-          </a>
-        </div>
-        <div className="flex items-center justify-start">
-          <a href="https://supabase.io" aria-label="supabase.io Link">
-            <img
-              src="/supabase.svg"
-              alt="supabase.io Logo"
-              className="h-10 text-white"
-            />
-          </a>
-        </div>
-        <div className="flex items-center justify-start">
-          <a href="https://github.com" aria-label="github.com Link">
-            <img
-              src="/github.svg"
-              alt="github.com Logo"
-              className="h-8 text-white"
-            />
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
