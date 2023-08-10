@@ -13,7 +13,7 @@ export default function UserAuthForm() {
     <div className="flex flex-col space-y-4">
       <Auth
         supabaseClient={supabase}
-        providers={["github", "google"]}
+        providers={[]}
         redirectTo={getURL()}
         magicLink={true}
         appearance={{
