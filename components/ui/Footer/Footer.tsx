@@ -2,7 +2,7 @@
 import { Box, Grid, GridItem, Link, VStack, Text, Flex, useColorModeValue } from "@chakra-ui/react";
 
 import Logo from '@/components/icons/Logo';
-import GitHub from '@/components/icons/GitHub';
+// import GitHub from '@/components/icons/GitHub';
 
 export default function Footer() {
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -48,7 +48,7 @@ export default function Footer() {
         <GridItem colSpan={{ base: 1, lg: 6 }}>
           <Flex justify="flex-end">
             <Link href="https://github.com/vercel/nextjs-subscription-payments" isExternal>
-              <GitHub boxSize={6} />
+              {/* <GitHub boxSize={6} /> */}
             </Link>
           </Flex>
         </GridItem>
