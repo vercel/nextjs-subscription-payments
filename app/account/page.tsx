@@ -1,11 +1,11 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
 import {
-  getSession,
-  getUserDetails,
+  getAuthUser,
+  getUser,
   getSubscription
 } from '@/app/supabase-server';
 import { Button } from '@/components/ui/button';
-import { Database } from '@/types_db';
+import { Database } from '@/types/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -14,17 +14,18 @@ import { redirect } from 'next/navigation';
 import { ReactNode} from 'react';
 
 export default async function Account() {
-  const [session, userDetails, subscription] = await Promise.all([
-    getSession(),
-    getUserDetails(),
+  const [userDetails, subscription] = await Promise.all([
+    getUser(),
     getSubscription()
   ]);
 
-  const user = session?.user;
+  const user = await getAuthUser()
 
-  if (!session) {
-    return redirect('/signin');
+  if (!user) {
+    redirect("/signin")
   }
+
+
 
   const subscriptionPrice =
     subscription &&
@@ -39,8 +40,8 @@ export default async function Account() {
 
     const newName = formData.get('name') as string;
     const supabase = createServerActionClient<Database>({ cookies });
-    const session = await getSession();
-    const user = session?.user;
+    // const session = await getSession();
+    // const user = session?.user;
     const { error } = await supabase
       .from('users')
       .update({ full_name: newName })
@@ -73,8 +74,8 @@ export default async function Account() {
     const newWebsite = formData.get('website') as string;
   
     const supabase = createServerActionClient<Database>({ cookies });
-    const session = await getSession();
-    const user = session?.user;
+    // const session = await getSession();
+    // const user = session?.user;
     const { error } = await supabase
       .from('users')
       .update({
@@ -110,7 +111,7 @@ export default async function Account() {
               ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
               : 'You are not currently subscribed to any plan.'
           }
-          footer={<ManageSubscriptionButton session={session} />}
+          footer={<ManageSubscriptionButton user={user} />}
         >
           <div className="mt-8 mb-4 text-xl font-semibold">
             {subscription ? (
