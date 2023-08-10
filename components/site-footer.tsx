@@ -13,15 +13,10 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
           <Icons.logo />
           <p className="text-center text-sm leading-loose md:text-left">
             Built by{" "}
-            <a
-              href={siteConfig.links.twitter}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              shadcn
-            </a>
-            . Hosted on{" "}
+            
+              Fable Studio
+     
+            {/* Hosted on{" "}
             <a
               href="https://vercel.com"
               target="_blank"
@@ -29,8 +24,8 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
               className="font-medium underline underline-offset-4"
             >
               Vercel
-            </a>
-            . Illustrations by{" "}
+            </a> */}
+            {/* . Illustrations by{" "}
             <a
               href="https://popsy.co"
               target="_blank"
@@ -38,15 +33,15 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
               className="font-medium underline underline-offset-4"
             >
               Popsy
-            </a>
-            . The source code is available on{" "}
+            </a> */}
+            . Follow us on{" "}
             <a
-              href={siteConfig.links.github}
+              href={siteConfig.links.twitter}
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
-              GitHub
+              X
             </a>
             .
           </p>

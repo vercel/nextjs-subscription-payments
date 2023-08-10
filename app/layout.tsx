@@ -118,8 +118,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
             {children}
             
             {/* <Analytics /> */}
-            {/* <Toaster />
-            <TailwindIndicator /> */}
+            <Toaster />
+            <TailwindIndicator />
 
             {/* <SiteFooter /> */}
           </ThemeProvider>

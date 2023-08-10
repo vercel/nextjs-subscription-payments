@@ -62,9 +62,9 @@ export default async function IndexPage() {
             Follow along on Twitter
           </Link>
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            An example app built using Next.js 13 server components.
+            The Simulation
           </h1>
-          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+          {/* <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             I&apos;m building a web app with Next.js 13 and open sourcing
             everything. Follow along as we figure this out together.
           </p>
@@ -80,7 +80,7 @@ export default async function IndexPage() {
             >
               GitHub
             </Link>
-          </div>
+          </div> */}
         </div>
       </section>
       <section
@@ -89,12 +89,10 @@ export default async function IndexPage() {
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-            Features
+            Showrunner
           </h2>
           <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            This project is an experiment to see how a modern app, with features
-            like auth, subscriptions, API routes, and static pages would work in
-            Next.js 13 app dir.
+            Sign up for a free account and start building your own show within the Simulation
           </p>
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
@@ -118,15 +116,15 @@ export default async function IndexPage() {
             </div>
           ))}
         </div>
-        <div className="mx-auto text-center md:max-w-[58rem]">
+        {/* <div className="mx-auto text-center md:max-w-[58rem]">
           <p className="leading-normal text-muted-foreground sm:text-lg sm:leading-7">
             Taxonomy also includes a blog and a full-featured documentation site
             built using Contentlayer and MDX.
           </p>
-        </div>
+        </div> */}
       </section>
       <section id="open-source" className="container py-8 md:py-12 lg:py-24">
-        <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
+        {/* <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
           <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
             Proudly Open Source
           </h2>
@@ -143,7 +141,7 @@ export default async function IndexPage() {
             </Link>
             .{" "}
           </p>
-        </div>
+        </div> */}
       </section>
     </>
   )
