@@ -23,14 +23,38 @@ import { Search } from "@/app/dashboard/components/search"
 import TeamSwitcher from "@/app/dashboard/components/team-switcher"
 import { UserNav } from "@/app/dashboard/components/user-nav"
 
+import { EmptyPlaceholder } from "@/components/empty-placeholder"
+import { DashboardHeader } from "@/components/header"
+import { PostCreateButton } from "@/components/post-create-button"
+import { PostItem } from "@/components/post-item"
+import { DashboardShell } from "@/components/shell"
+import { createServerSupabaseClient } from "@/app/supabase-server"
+
+
 export const metadata: Metadata = {
   title: "Dashboard",
-  description: "Example dashboard app built using the components.",
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+
+  const supabase = createServerSupabaseClient()
+
+  const { data: posts } = await supabase
+    .from("posts")
+    .select("id, title, published, created_at")
+    .order("updated_at", { ascending: false })
+    
   return (
-    <>
+
+   
+
+     <DashboardShell>
+      <DashboardHeader heading="Dashboard" text="Create and manage your Simulation">
+      </DashboardHeader>
+      
+
+
+
       <div className="md:hidden">
         <Image
           src="/dashboard-light.png"
@@ -48,7 +72,7 @@ export default function DashboardPage() {
         />
       </div>
       <div className="hidden flex-col md:flex">
-        <div className="border-b">
+        {/* <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <TeamSwitcher />
             <MainNav className="mx-6" />
@@ -57,7 +81,7 @@ export default function DashboardPage() {
               <UserNav />
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
@@ -69,7 +93,7 @@ export default function DashboardPage() {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="analytics" disabled>
+              {/* <TabsTrigger value="analytics" disabled>
                 Analytics
               </TabsTrigger>
               <TabsTrigger value="reports" disabled>
@@ -77,7 +101,7 @@ export default function DashboardPage() {
               </TabsTrigger>
               <TabsTrigger value="notifications" disabled>
                 Notifications
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -208,6 +232,6 @@ export default function DashboardPage() {
           </Tabs>
         </div>
       </div>
-    </>
+      </DashboardShell>
   )
 }
