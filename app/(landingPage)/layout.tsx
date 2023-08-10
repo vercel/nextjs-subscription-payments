@@ -23,7 +23,7 @@ export default async function landingPageLayout({
           <MainNav items={landingPageConfig.mainNav} />
           <nav>
             <Link
-              href={user ? "/dashboard" : "/login"}
+              href={user ? "/dashboard" : "/signin"}
               className={cn(
                 buttonVariants({ variant: "secondary", size: "sm" }),
                 "px-4"
