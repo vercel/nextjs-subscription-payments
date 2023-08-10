@@ -25,6 +25,7 @@ import {
   X,
   Apple,
   type Icon as LucideIcon,
+  KanbanSquare,
 } from "lucide-react"
 
 export type Icon = LucideIcon
@@ -52,6 +53,7 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   check: Check,
+  kanbanSquare: KanbanSquare,
   google: ({ ...props }: LucideProps) => (
     <svg role="img" viewBox="0 0 24 24" {...props}>
       <path
