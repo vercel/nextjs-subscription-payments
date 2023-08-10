@@ -6,11 +6,11 @@ export const dashboardConfig: DashboardConfig = {
     //   title: "Documentation",
     //   href: "/docs",
     // },
-    {
-      title: "Support",
-      href: "/support",
-      disabled: true,
-    },
+    // {
+    //   title: "Support",
+    //   href: "/support",
+    //   disabled: true,
+    // },
   ],
   sidebarNav: [
     {
@@ -18,15 +18,15 @@ export const dashboardConfig: DashboardConfig = {
       href: "/dashboard",
       icon: "kanbanSquare",
     },
-    {
-      title: "Billing",
-      href: "/dashboard/billing",
-      icon: "billing",
-    },
-    {
-      title: "Settings",
-      href: "/dashboard/settings",
-      icon: "settings",
-    },
+    // {
+    //   title: "Billing",
+    //   href: "/dashboard/billing",
+    //   icon: "billing",
+    // },
+    // {
+    //   title: "Settings",
+    //   href: "/dashboard/settings",
+    //   icon: "settings",
+    // },
   ],
 }

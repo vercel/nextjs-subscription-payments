@@ -10,7 +10,7 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
   const user = await getAuthUser();
 
   if (user) {
-    return redirect('/dashboard');
+    return redirect('/');
   }
 
   return <div className="min-h-screen">{children}</div>

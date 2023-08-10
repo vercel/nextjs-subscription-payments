@@ -29,6 +29,7 @@ import { PostCreateButton } from "@/components/post-create-button"
 import { PostItem } from "@/components/post-item"
 import { DashboardShell } from "@/components/shell"
 import { createServerSupabaseClient } from "@/app/supabase-server"
+import { cn } from "@/lib/utils"
 
 
 export const metadata: Metadata = {
@@ -85,15 +86,15 @@ export default async function DashboardPage() {
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-            <div className="flex items-center space-x-2">
+            {/* <div className="flex items-center space-x-2">
               <CalendarDateRangePicker />
               <Button>Download</Button>
-            </div>
+            </div> */}
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
-            <TabsList>
+            {/* <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              {/* <TabsTrigger value="analytics" disabled>
+              <TabsTrigger value="analytics" disabled>
                 Analytics
               </TabsTrigger>
               <TabsTrigger value="reports" disabled>
@@ -101,8 +102,8 @@ export default async function DashboardPage() {
               </TabsTrigger>
               <TabsTrigger value="notifications" disabled>
                 Notifications
-              </TabsTrigger> */}
-            </TabsList>
+              </TabsTrigger>
+            </TabsList> */}
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
@@ -124,16 +125,16 @@ export default async function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">$45,231.89</div>
+                    <div className="text-2xl font-bold">$2,231.89</div>
                     <p className="text-xs text-muted-foreground">
-                      +20.1% from last month
+                      +6.1% from last month
                     </p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Subscriptions
+                      Unique Views
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -159,7 +160,7 @@ export default async function DashboardPage() {
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                    <CardTitle className="text-sm font-medium">Simulated Hours</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -175,7 +176,7 @@ export default async function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+12,234</div>
+                    <div className="text-2xl font-bold">+134</div>
                     <p className="text-xs text-muted-foreground">
                       +19% from last month
                     </p>
@@ -184,7 +185,7 @@ export default async function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Active Now
+                      Active Visitors
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -218,13 +219,18 @@ export default async function DashboardPage() {
                 </Card>
                 <Card className="col-span-3">
                   <CardHeader>
-                    <CardTitle>Recent Sales</CardTitle>
+                    <CardTitle>Recent Episodes</CardTitle>
                     <CardDescription>
-                      You made 265 sales this month.
+                      You haven't created any episodes yet.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales />
+                    <EmptyPlaceholder
+                    className={cn(
+                      "min-h-10" , "max-h-10"
+                    )}
+                    />
+
                   </CardContent>
                 </Card>
               </div>
