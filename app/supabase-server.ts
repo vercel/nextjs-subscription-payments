@@ -1,4 +1,5 @@
-import { Database } from '@/types_db';
+import { Database } from '@/types/types_db';
+import { Post, User } from "@/types/main"
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
@@ -8,32 +9,7 @@ export const createServerSupabaseClient = cache(() =>{
   return createServerComponentClient<Database>({ cookies: () => cookieStore });
 });
 
-export async function getSession() {
-  const supabase = createServerSupabaseClient();
-  try {
-    const {
-      data: { session }
-    } = await supabase.auth.getSession();
-    return session;
-  } catch (error) {
-    console.error('Error:', error);
-    return null;
-  }
-}
 
-export async function getUserDetails() {
-  const supabase = createServerSupabaseClient();
-  try {
-    const { data: userDetails } = await supabase
-      .from('users')
-      .select('*')
-      .single();
-    return userDetails;
-  } catch (error) {
-    console.error('Error:', error);
-    return null;
-  }
-}
 
 export async function getSubscription() {
   const supabase = createServerSupabaseClient();
@@ -51,6 +27,54 @@ export async function getSubscription() {
   }
 }
 
+export async function getSupabaseSession() {
+  const supabase = createServerSupabaseClient()
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    return session
+  } catch (error) {
+    console.error("Error:", error)
+    return null
+  }
+}
+
+export async function getAuthUser() {
+  const supabase = createServerSupabaseClient()
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    return user
+  } catch (error) {
+    console.error("Error:", error)
+    return null
+  }
+}
+
+export async function getUser() {
+  const supabase = createServerSupabaseClient()
+  try {
+    const { data } = await supabase.from("users").select("*").single()
+    return data
+  } catch (error) {
+    console.error("Error:", error)
+    return null
+  }
+}
+
+export async function getPostForUser(postId: Post["id"], userId: User["id"]) {
+  const supabase = createServerSupabaseClient()
+  const { data } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("id", postId)
+    .eq("author_id", userId)
+    .single()
+  return data ? { ...data, content: data.content as unknown as JSON } : null
+}
+
 export const getActiveProductsWithPrices = async () => {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
@@ -66,3 +90,14 @@ export const getActiveProductsWithPrices = async () => {
   }
   return data ?? [];
 };
+
+// export async function getPostForUser(postId: Post["id"], userId: User["id"]) {
+//   const supabase = createServerSupabaseClient()
+//   const { data } = await supabase
+//     .from("posts")
+//     .select("*")
+//     .eq("id", postId)
+//     .eq("author_id", userId)
+//     .single()
+//   return data ? { ...data, content: data.content as unknown as JSON } : null
+// }
