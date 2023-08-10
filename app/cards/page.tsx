@@ -4,7 +4,7 @@ import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 import { DemoCookieSettings } from "./components/cookie-settings"
-import { DemoCreateAccount } from "./components/create-account"
+import { CreateAccount } from "../(auth)/signin/components/create-account"
 import { DemoGithub } from "./components/github-card"
 import { DemoNotifications } from "./components/notifications"
 import { DemoPaymentMethod } from "./components/payment-method"
@@ -54,7 +54,7 @@ export default function CardsPage() {
       <div className="hidden items-start justify-center gap-6 rounded-lg p-8 md:grid lg:grid-cols-2 xl:grid-cols-3">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
-            <DemoCreateAccount />
+            <CreateAccount />
           </DemoContainer>
           <DemoContainer>
             <DemoPaymentMethod />
