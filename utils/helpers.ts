@@ -10,7 +10,7 @@ export const getURL = () => {
   // Make sure to include `https://` when not localhost.
   url = url.includes('http') ? url : `https://${url}`;
   // Make sure to including trailing `/`.
-  url = url.charAt(url.length - 1) === '/' ? url : `${url}/`;
+  url = url.endsWith('/') ? url : `${url}/`;
   return url;
 };
 
@@ -40,7 +40,7 @@ export const postData = async ({
 };
 
 export const toDateTime = (secs: number) => {
-  var t = new Date('1970-01-01T00:30:00Z'); // Unix epoch start.
+  const t = new Date('1970-01-01T00:30:00Z'); // Unix epoch start.
   t.setSeconds(secs);
   return t;
 };
