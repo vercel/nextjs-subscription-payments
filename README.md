@@ -137,6 +137,10 @@ Next, start local webhook forwarding:
 ```bash
 stripe listen --forward-to=localhost:3000/api/webhooks
 ```
+If you have `trailingSlash: true` in your next.config.js please adjust url, the 308 will prevent webhook working:
+```bash
+stripe listen --forward-to=localhost:3000/api/webhooks/
+```
 
 Running this Stripe command will print a webhook secret (such as, `whsec_***`) to the console. Set `STRIPE_WEBHOOK_SECRET` to this value in your `.env.local` file.
 
