@@ -70,6 +70,8 @@ We need to create a webhook in the `Developers` section of Stripe. Pictured in t
 1. Copy `Signing secret` as we'll need that in the next step.
 1. In addition to the `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` and the `STRIPE_SECRET_KEY` we've set earlier during deployment, we need to add the webhook secret as `STRIPE_WEBHOOK_SECRET` env var.
 
+**Note:**  Make sure that you've copied `endpointSecret` to `STRIPE_WEBHOOK_SECRET` from [Local listeners](https://dashboard.stripe.com/test/webhooks/create?endpoint_location=local) for local development instead of `Signing secret`.
+
 #### Redeploy with new env vars
 
 For the newly set environment variables to take effect and everything to work together correctly, we need to redeploy our app in Vercel. In your Vercel Dashboard, navigate to deployments, click the overflow menu button and select "Redeploy" (do NOT enable the "Use existing Build Cache" option). Once Vercel has rebuilt and redeployed your app, you're ready to set up your products and prices.
