@@ -58,7 +58,7 @@ export default function Footer() {
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/about"
                 className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 About
@@ -66,7 +66,7 @@ export default function Footer() {
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/#pricing"
                 className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 Pricing
@@ -74,7 +74,7 @@ export default function Footer() {
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/docs"
                 className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 Documentation
@@ -82,7 +82,7 @@ export default function Footer() {
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/faq"
                 className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 FAQ
@@ -99,7 +99,7 @@ export default function Footer() {
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/privacy-policy"
                 className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 Privacy Policy
@@ -107,7 +107,7 @@ export default function Footer() {
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/terms-of-use"
                 className="text-white transition duration-150 ease-in-out hover:text-logoColor"
               >
                 Terms of Use

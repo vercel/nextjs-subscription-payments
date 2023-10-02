@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Button/Button';
 import { postData } from '@/utils/helpers';
 import { Database, Json } from '@/types_db';
 import { Session, createClient } from '@supabase/supabase-js';

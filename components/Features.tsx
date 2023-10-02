@@ -55,11 +55,11 @@ const FeatureCard = ({ title, content }: Props) => (
           {title}
         </h4>
         {content.map(item => (
-            <div className="flex flex-row items-center">
+            <div key={`${item}123456`} className="flex flex-row items-center">
                 <div className='w-[34px] h-[34px] rounded-full flex justify-center items-center bg-[rgba(9, 151, 124, 0.1)]'>
                     <img src="/star.svg" alt="star" className="w-[50%] h-[50%] object-contain" />
                 </div>
-                <p key={`${item}123456`} className="font-semibold text-xl text-zinc-200 sm:text-2xl">
+                <p className="font-semibold text-xl text-zinc-200 sm:text-2xl">
                     {item}
                 </p>
             </div>
