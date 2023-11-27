@@ -1,11 +1,11 @@
-import { Database } from '@/types_db';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
 
-export const createServerSupabaseClient = cache(() =>
-  createServerComponentClient<Database>({ cookies })
-);
+export const createServerSupabaseClient = cache(() => {
+  const cookieStore = cookies();
+  return createClient(cookieStore);
+});
 
 export async function getSession() {
   const supabase = createServerSupabaseClient();

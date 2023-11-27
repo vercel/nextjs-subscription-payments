@@ -1,9 +1,8 @@
-import { cookies, headers } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 import { stripe } from '@/utils/stripe';
-import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
+import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
 import { getURL } from '@/utils/helpers';
-import { Database } from '@/types_db';
 
 export async function POST(req: Request) {
   if (req.method === 'POST') {
@@ -12,7 +11,8 @@ export async function POST(req: Request) {
 
     try {
       // 2. Get the user from Supabase auth
-      const supabase = createRouteHandlerClient<Database>({cookies});
+      const cookieStore = cookies();
+      const supabase = createClient(cookieStore);
       const {
         data: { user }
       } = await supabase.auth.getUser();
@@ -27,7 +27,6 @@ export async function POST(req: Request) {
       let session;
       if (price.type === 'recurring') {
         session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
           billing_address_collection: 'required',
           customer,
           customer_update: {
@@ -42,15 +41,12 @@ export async function POST(req: Request) {
           mode: 'subscription',
           allow_promotion_codes: true,
           subscription_data: {
-            trial_from_plan: true,
             metadata
           },
-          success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/`
+          success_url: `${getURL()}/account`
         });
       } else if (price.type === 'one_time') {
         session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
           billing_address_collection: 'required',
           customer,
           customer_update: {

@@ -1,5 +1,5 @@
-import { toDateTime } from './helpers';
-import { stripe } from './stripe';
+import { toDateTime } from '../helpers';
+import { stripe } from '../stripe';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import type { Database } from 'types_db';
@@ -47,6 +47,24 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
   const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
   if (error) throw error;
   console.log(`Price inserted/updated: ${price.id}`);
+};
+
+const deleteProductRecord = async (product: Stripe.Product) => {
+  const { error } = await supabaseAdmin
+    .from('products')
+    .delete()
+    .eq('id', product.id);
+  if (error) throw error;
+  console.log(`Product deleted: ${product.id}`);
+};
+
+const deletePriceRecord = async (price: Stripe.Price) => {
+  const { error } = await supabaseAdmin
+    .from('prices')
+    .delete()
+    .eq('id', price.id);
+  if (error) throw error;
+  console.log(`Price deleted: ${price.id}`);
 };
 
 const createOrRetrieveCustomer = async ({
@@ -180,6 +198,8 @@ const manageSubscriptionStatusChange = async (
 export {
   upsertProductRecord,
   upsertPriceRecord,
+  deleteProductRecord,
+  deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange
 };
