@@ -1,16 +1,22 @@
 import Link from 'next/link';
-import { createServerSupabaseClient } from '@/app/supabase-server-calls';
-
+import { cookies } from 'next/headers';
+import { createClient, getUser } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
-import SignOutButton from './SignOutButton';
 
 import s from './Navbar.module.css';
 
+const handleSignOut = async () => {
+  'use server';
+
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  await supabase.auth.signOut();
+  return redirect('/signin');
+};
+
 export default async function Navbar() {
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   return (
     <nav className={s.root}>
@@ -36,7 +42,9 @@ export default async function Navbar() {
           </div>
           <div className="flex justify-end flex-1 space-x-8">
             {user ? (
-              <SignOutButton />
+              <form action={handleSignOut}>
+                <button className={s.link}>Sign out</button>
+              </form>
             ) : (
               <Link href="/signin" className={s.link}>
                 Sign in

@@ -1,12 +1,11 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
-import {
-  getSession,
-  getUserDetails,
-  getSubscription
-} from '@/app/supabase-server-calls';
 import Button from '@/components/ui/Button';
-import { createClient } from '@/utils/supabase/server';
-import { revalidatePath } from 'next/cache';
+import {
+  createClient,
+  getSession,
+  getSubscription,
+  getUserDetails
+} from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -48,8 +47,17 @@ export default async function Account() {
       .eq('id', user.id);
     if (error) {
       console.log(error);
+      redirect(
+        `/account?error=${encodeURI(
+          'Hmm... Something went wrong.'
+        )}&message=${encodeURI('Your name could not be updated.')}`
+      );
     }
-    revalidatePath('/account');
+    redirect(
+      `/account?status=${encodeURI('Success!')}&message=${encodeURI(
+        'Your name has been updated.'
+      )}`
+    );
   };
 
   const updateEmail = async (formData: FormData) => {
@@ -61,8 +69,28 @@ export default async function Account() {
     const { error } = await supabase.auth.updateUser({ email: newEmail });
     if (error) {
       console.log(error);
+      console.log(error.message);
+      if (
+        error.message ===
+        'A user with this email address has already been registered'
+      ) {
+        return redirect(
+          `/account?error=${encodeURI('Oops!')}&message=${encodeURI(
+            'It looks like that email is already in use. Please try another one.'
+          )}`
+        );
+      }
+      redirect(
+        `/account?error=${encodeURI(
+          'Hmm... Something went wrong.'
+        )}&message=${encodeURI('Your email could not be updated.')}`
+      );
     }
-    revalidatePath('/account');
+    redirect(
+      `/account?status=${encodeURI('Email Sent')}&message=${encodeURI(
+        'Check your email to confirm the update.'
+      )}`
+    );
   };
 
   return (
@@ -101,13 +129,7 @@ export default async function Account() {
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
               <p className="pb-4 sm:pb-0">64 characters maximum</p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="nameForm"
-                disabled={true}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+              <Button variant="slim" type="submit" form="nameForm">
                 Update Name
               </Button>
             </div>
@@ -134,13 +156,7 @@ export default async function Account() {
               <p className="pb-4 sm:pb-0">
                 We will email you to verify the change.
               </p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="emailForm"
-                disabled={true}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+              <Button variant="slim" type="submit" form="emailForm">
                 Update Email
               </Button>
             </div>
