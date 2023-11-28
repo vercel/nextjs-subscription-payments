@@ -20,18 +20,19 @@ export function Toaster() {
 
   useEffect(() => {
     const status = searchParams.get('status');
+    const status_description = searchParams.get('status_description');
     const error = searchParams.get('error');
-    const message = searchParams.get('message');
+    const error_description = searchParams.get('error_description');
     if (error || status) {
       toast({
         title: error
           ? error ?? 'Hmm... Something went wrong.'
           : status ?? 'Alright!',
-        description: message,
+        description: error ? error_description : status_description,
         variant: error ? 'destructive' : undefined
       });
       // Clear the search params so that the toast doesn't show up again on refresh
-      router.replace(pathname, { replace: true, scroll: false });
+      router.replace(pathname, { scroll: false });
     }
   }, [searchParams]);
 

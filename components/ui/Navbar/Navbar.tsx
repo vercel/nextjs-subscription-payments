@@ -11,8 +11,16 @@ const handleSignOut = async () => {
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  await supabase.auth.signOut();
-  return redirect('/signin');
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.log(error);
+    redirect(
+      `/?error=${encodeURI(
+        'Hmm... Something went wrong.'
+      )}&error_description=${encodeURI('You could not be signed out.')}`
+    );
+  }
+  return;
 };
 
 export default async function Navbar() {

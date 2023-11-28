@@ -24,7 +24,9 @@ export default function SupabaseProvider({
     const {
       data: { subscription }
     } = supabase.auth.onAuthStateChange((event) => {
+      console.log('Supabase auth event: ', event);
       if (event === 'SIGNED_IN') router.refresh();
+      if (event === 'PASSWORD_RECOVERY') router.push('/account/reset-password');
     });
 
     return () => {

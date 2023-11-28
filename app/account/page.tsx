@@ -50,11 +50,11 @@ export default async function Account() {
       redirect(
         `/account?error=${encodeURI(
           'Hmm... Something went wrong.'
-        )}&message=${encodeURI('Your name could not be updated.')}`
+        )}&error_description=${encodeURI('Your name could not be updated.')}`
       );
     }
     redirect(
-      `/account?status=${encodeURI('Success!')}&message=${encodeURI(
+      `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
         'Your name has been updated.'
       )}`
     );
@@ -66,7 +66,18 @@ export default async function Account() {
     const newEmail = formData.get('email') as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
+    const { error } = await supabase.auth.updateUser(
+      { email: newEmail },
+      {
+        emailRedirectTo:
+          process.env.NEXT_PUBLIC_SITE_URL +
+          `/account?status=${encodeURI(
+            'Success!'
+          )}&status_description=${encodeURI(
+            `Your email has been successfully updated to ${newEmail}`
+          )}`
+      }
+    );
     if (error) {
       console.log(error);
       console.log(error.message);
@@ -75,7 +86,7 @@ export default async function Account() {
         'A user with this email address has already been registered'
       ) {
         return redirect(
-          `/account?error=${encodeURI('Oops!')}&message=${encodeURI(
+          `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
             'It looks like that email is already in use. Please try another one.'
           )}`
         );
@@ -83,12 +94,14 @@ export default async function Account() {
       redirect(
         `/account?error=${encodeURI(
           'Hmm... Something went wrong.'
-        )}&message=${encodeURI('Your email could not be updated.')}`
+        )}&error_description=${encodeURI('Your email could not be updated.')}`
       );
     }
     redirect(
-      `/account?status=${encodeURI('Email Sent')}&message=${encodeURI(
-        'Check your email to confirm the update.'
+      `/account?status=${encodeURI(
+        'Confirmation Emails Sent'
+      )}&error_description=${encodeURI(
+        `You will need to confirm the update by clicking the link sent to both ${user?.email} and ${newEmail}.`
       )}`
     );
   };
@@ -187,7 +200,7 @@ interface Props {
   children: ReactNode;
 }
 
-function Card({ title, description, footer, children }: Props) {
+export function Card({ title, description, footer, children }: Props) {
   return (
     <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-zinc-700">
       <div className="px-5 py-4">
