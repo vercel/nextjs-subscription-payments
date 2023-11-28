@@ -5,13 +5,13 @@ import {
   getSubscription
 } from '@/app/supabase-server';
 import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ReactNode } from 'react';
 
 export default async function Account() {
   const [session, userDetails, subscription] = await Promise.all([
@@ -159,27 +159,5 @@ export default async function Account() {
         </Card>
       </div>
     </section>
-  );
-}
-
-interface Props {
-  title: string;
-  description?: string;
-  footer?: ReactNode;
-  children: ReactNode;
-}
-
-function Card({ title, description, footer, children }: Props) {
-  return (
-    <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-zinc-700">
-      <div className="px-5 py-4">
-        <h3 className="mb-1 text-2xl font-medium">{title}</h3>
-        <p className="text-zinc-300">{description}</p>
-        {children}
-      </div>
-      <div className="p-4 border-t rounded-b-md border-zinc-700 bg-zinc-900 text-zinc-500">
-        {footer}
-      </div>
-    </div>
   );
 }
