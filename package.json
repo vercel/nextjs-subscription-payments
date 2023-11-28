@@ -16,7 +16,7 @@
     "@supabase/auth-ui-react": "^0.4.6",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.0.10",
-    "@supabase/supabase-js": "^2.38.5",
+    "@supabase/supabase-js": "^2.39.0",
     "classnames": "^2.3.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "@types/react": "^18.2.38",
+    "@types/react": "^18.2.39",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.54.0",
     "eslint-config-next": "14.0.3",

@@ -1,8 +1,8 @@
 import { createClient, getSession } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { Card } from '../page';
 import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 
 export default async function ResetPassword() {
   const session = await getSession();
