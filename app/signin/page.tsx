@@ -1,4 +1,4 @@
-import { getSession } from '@/app/supabase-server';
+import { getSession } from '@/app/supabase-server-calls';
 import AuthUI from './AuthUI';
 
 import { redirect } from 'next/navigation';

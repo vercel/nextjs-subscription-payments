@@ -1,8 +1,8 @@
 'use client';
 
 import type { Database } from '@/types_db';
-import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
-import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
 
@@ -17,7 +17,7 @@ export default function SupabaseProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [supabase] = useState(() => createPagesBrowserClient());
+  const [supabase] = useState(() => createClient());
   const router = useRouter();
 
   useEffect(() => {
