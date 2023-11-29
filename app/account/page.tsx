@@ -6,8 +6,6 @@ import {
   createClient
 } from '@/utils/supabase/server';
 import Button from '@/components/ui/Button';
-
-import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -47,10 +45,20 @@ export default async function Account() {
       .from('users')
       .update({ full_name: newName })
       .eq('id', user.id);
-    if (error) {
-      console.log(error);
-    }
-    revalidatePath('/account');
+      
+      if (error) {
+        console.log(error);
+        redirect(
+          `/account?error=${encodeURI(
+            'Hmm... Something went wrong.'
+          )}&message=${encodeURI('Your name could not be updated.')}`
+        );
+      }
+      redirect(
+        `/account?status=${encodeURI('Success!')}&message=${encodeURI(
+          'Your name has been updated.'
+        )}`
+      );
   };
 
   const updateEmail = async (formData: FormData) => {
@@ -60,10 +68,31 @@ export default async function Account() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { error } = await supabase.auth.updateUser({ email: newEmail });
+
     if (error) {
       console.log(error);
+      console.log(error.message);
+      if (
+        error.message ===
+        'A user with this email address has already been registered'
+      ) {
+        return redirect(
+          `/account?error=${encodeURI('Oops!')}&message=${encodeURI(
+            'It looks like that email is already in use. Please try another one.'
+          )}`
+        );
+      }
+      redirect(
+        `/account?error=${encodeURI(
+          'Hmm... Something went wrong.'
+        )}&message=${encodeURI('Your email could not be updated.')}`
+      );
     }
-    revalidatePath('/account');
+    redirect(
+      `/account?status=${encodeURI('Email Sent')}&message=${encodeURI(
+        'Check your email to confirm the update.'
+      )}`
+    );
   };
 
   return (
