@@ -2,10 +2,11 @@ import ManageSubscriptionButton from './ManageSubscriptionButton';
 import {
   getSession,
   getUserDetails,
-  getSubscription
-} from '@/app/supabase-server-calls';
+  getSubscription,
+  createClient
+} from '@/utils/supabase/server';
 import Button from '@/components/ui/Button';
-import { createClient } from '@/utils/supabase/server';
+
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -101,13 +102,7 @@ export default async function Account() {
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
               <p className="pb-4 sm:pb-0">64 characters maximum</p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="nameForm"
-                disabled={true}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+              <Button variant="slim" type="submit" form="nameForm">
                 Update Name
               </Button>
             </div>
@@ -134,13 +129,7 @@ export default async function Account() {
               <p className="pb-4 sm:pb-0">
                 We will email you to verify the change.
               </p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="emailForm"
-                disabled={true}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+              <Button variant="slim" type="submit" form="emailForm">
                 Update Email
               </Button>
             </div>
