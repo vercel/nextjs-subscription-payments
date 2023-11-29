@@ -1,13 +1,12 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
-import {
-  getSession,
-  getUserDetails,
-  getSubscription
-} from '@/app/supabase-server';
 import Button from '@/components/ui/Button';
-import { Database } from '@/types_db';
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
-import { revalidatePath } from 'next/cache';
+import Card from '@/components/ui/Card';
+import {
+  createClient,
+  getSession,
+  getSubscription,
+  getUserDetails
+} from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -38,29 +37,74 @@ export default async function Account() {
     'use server';
 
     const newName = formData.get('name') as string;
-    const supabase = createServerActionClient<Database>({ cookies });
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
     const session = await getSession();
-    const user = session?.user;
+    if (!session) return redirect('/signin');
+    const user = session.user;
     const { error } = await supabase
       .from('users')
       .update({ full_name: newName })
-      .eq('id', user?.id);
+      .eq('id', user.id);
     if (error) {
       console.log(error);
+      redirect(
+        `/account?error=${encodeURI(
+          'Hmm... Something went wrong.'
+        )}&error_description=${encodeURI('Your name could not be updated.')}`
+      );
     }
-    revalidatePath('/account');
+    redirect(
+      `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
+        'Your name has been updated.'
+      )}`
+    );
   };
 
   const updateEmail = async (formData: FormData) => {
     'use server';
 
     const newEmail = formData.get('email') as string;
-    const supabase = createServerActionClient<Database>({ cookies });
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { error } = await supabase.auth.updateUser(
+      { email: newEmail },
+      {
+        emailRedirectTo:
+          process.env.NEXT_PUBLIC_SITE_URL +
+          `/account?status=${encodeURI(
+            'Success!'
+          )}&status_description=${encodeURI(
+            `Your email has been successfully updated to ${newEmail}`
+          )}`
+      }
+    );
     if (error) {
       console.log(error);
+      console.log(error.message);
+      if (
+        error.message ===
+        'A user with this email address has already been registered'
+      ) {
+        return redirect(
+          `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
+            'It looks like that email is already in use. Please try another one.'
+          )}`
+        );
+      }
+      redirect(
+        `/account?error=${encodeURI(
+          'Hmm... Something went wrong.'
+        )}&error_description=${encodeURI('Your email could not be updated.')}`
+      );
     }
-    revalidatePath('/account');
+    redirect(
+      `/account?status=${encodeURI(
+        'Confirmation Emails Sent'
+      )}&error_description=${encodeURI(
+        `You will need to confirm the update by clicking the link sent to both ${user?.email} and ${newEmail}.`
+      )}`
+    );
   };
 
   return (
@@ -99,13 +143,7 @@ export default async function Account() {
           footer={
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
               <p className="pb-4 sm:pb-0">64 characters maximum</p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="nameForm"
-                disabled={true}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+              <Button variant="slim" type="submit" form="nameForm">
                 Update Name
               </Button>
             </div>
@@ -132,13 +170,7 @@ export default async function Account() {
               <p className="pb-4 sm:pb-0">
                 We will email you to verify the change.
               </p>
-              <Button
-                variant="slim"
-                type="submit"
-                form="emailForm"
-                disabled={true}
-              >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
+              <Button variant="slim" type="submit" form="emailForm">
                 Update Email
               </Button>
             </div>
@@ -159,27 +191,5 @@ export default async function Account() {
         </Card>
       </div>
     </section>
-  );
-}
-
-interface Props {
-  title: string;
-  description?: string;
-  footer?: ReactNode;
-  children: ReactNode;
-}
-
-function Card({ title, description, footer, children }: Props) {
-  return (
-    <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-zinc-700">
-      <div className="px-5 py-4">
-        <h3 className="mb-1 text-2xl font-medium">{title}</h3>
-        <p className="text-zinc-300">{description}</p>
-        {children}
-      </div>
-      <div className="p-4 border-t rounded-b-md border-zinc-700 bg-zinc-900 text-zinc-500">
-        {footer}
-      </div>
-    </div>
   );
 }

@@ -1,6 +1,7 @@
 import SupabaseProvider from './supabase-provider';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
+import { Toaster } from '@/components/ui/toaster';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 
@@ -10,7 +11,9 @@ const meta = {
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
-  url: 'https://subscription-starter.vercel.app',
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    'https://subscription-starter.vercel.app',
   type: 'website'
 };
 
@@ -22,6 +25,10 @@ export const metadata = {
   favicon: meta.favicon,
   url: meta.url,
   type: meta.type,
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      'https://subscription-payments.vercel.app'
+  ),
   openGraph: {
     url: meta.url,
     title: meta.title,
@@ -48,7 +55,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-black loading">
         <SupabaseProvider>
-          {/* @ts-expect-error */}
           <Navbar />
           <main
             id="skip"
@@ -58,6 +64,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </SupabaseProvider>
+        <Toaster />
       </body>
     </html>
   );
