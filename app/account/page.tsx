@@ -5,10 +5,9 @@ import {
   getSubscription,
   createClient
 } from '@/utils/supabase/server';
+import { getURL } from '@/utils/helpers';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-
-import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -47,10 +46,20 @@ export default async function Account() {
       .from('users')
       .update({ full_name: newName })
       .eq('id', user.id);
-    if (error) {
-      console.log(error);
-    }
-    revalidatePath('/account');
+      
+      if (error) {
+        console.log(error);
+        redirect(
+          `/account?error=${encodeURI(
+            'Hmm... Something went wrong.'
+          )}&error_description=${encodeURI('Your name could not be updated.')}`
+        );
+      }
+        redirect(
+        `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
+          'Your name has been updated.'
+        )}`
+      );
   };
 
   const updateEmail = async (formData: FormData) => {
@@ -59,11 +68,34 @@ export default async function Account() {
     const newEmail = formData.get('email') as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
+    const { error } = await supabase.auth.updateUser(
+      { email: newEmail },
+      {
+        emailRedirectTo:
+          getURL() +
+          `/account?status=${encodeURI(
+            'Success!'
+          )}&status_description=${encodeURI(
+            `Your email has been successfully updated to ${newEmail}`
+          )}`
+      }
+    );
+
     if (error) {
       console.log(error);
+      return redirect(
+        `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
+          error.message
+        )}`
+      );
     }
-    revalidatePath('/account');
+    redirect(
+      `/account?status=${encodeURI(
+        'Confirmation Emails Sent'
+      )}&status_description=${encodeURI(
+        `You will need to confirm the update by clicking the link sent to both ${user?.email} and ${newEmail}.`
+      )}`
+    );
   };
 
   return (

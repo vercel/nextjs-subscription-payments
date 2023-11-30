@@ -8,7 +8,7 @@
   box-sizing: inherit;
 }
 
-*:focus {
+*:focus:not(ol) {
   @apply outline-none ring-2 ring-pink-500 ring-opacity-50;
 }
 
