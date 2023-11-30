@@ -3,7 +3,7 @@ import {
   getSession,
   getSubscription,
   getActiveProductsWithPrices
-} from '@/app/supabase-server';
+} from '@/utils/supabase/server';
 
 export default async function PricingPage() {
   const [session, products, subscription] = await Promise.all([
