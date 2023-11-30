@@ -27,7 +27,6 @@ export async function POST(req: Request) {
       let session;
       if (price.type === 'recurring') {
         session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
           billing_address_collection: 'required',
           customer,
           customer_update: {
@@ -42,7 +41,7 @@ export async function POST(req: Request) {
           mode: 'subscription',
           allow_promotion_codes: true,
           subscription_data: {
-            trial_from_plan: true,
+            trial_period_days: price.trial_period_days,
             metadata
           },
           success_url: `${getURL()}/account`,
@@ -50,7 +49,6 @@ export async function POST(req: Request) {
         });
       } else if (price.type === 'one_time') {
         session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
           billing_address_collection: 'required',
           customer,
           customer_update: {
