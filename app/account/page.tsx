@@ -5,6 +5,7 @@ import {
   getSubscription,
   createClient
 } from '@/utils/supabase/server';
+import { getURL } from '@/utils/helpers';
 import Button from '@/components/ui/Button';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -54,7 +55,7 @@ export default async function Account() {
           )}&error_description=${encodeURI('Your name could not be updated.')}`
         );
       }
-      redirect(
+        redirect(
         `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
           'Your name has been updated.'
         )}`
@@ -71,7 +72,7 @@ export default async function Account() {
       { email: newEmail },
       {
         emailRedirectTo:
-          process.env.NEXT_PUBLIC_SITE_URL +
+          getURL() +
           `/account?status=${encodeURI(
             'Success!'
           )}&status_description=${encodeURI(
@@ -82,21 +83,10 @@ export default async function Account() {
 
     if (error) {
       console.log(error);
-      console.log(error.message);
-      if (
-        error.message ===
-        'A user with this email address has already been registered'
-      ) {
-        return redirect(
-          `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
-            'It looks like that email is already in use. Please try another one.'
-          )}`
-        );
-      }
-      redirect(
-        `/account?error=${encodeURI(
-          'Hmm... Something went wrong.'
-        )}&error_description=${encodeURI('Your email could not be updated.')}`
+      return redirect(
+        `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
+          error.message
+        )}`
       );
     }
     redirect(

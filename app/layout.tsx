@@ -1,7 +1,7 @@
 import SupabaseProvider from './supabase-provider';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 
