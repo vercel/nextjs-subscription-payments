@@ -29,6 +29,15 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   console.log(`Product inserted/updated: ${product.id}`);
 };
 
+const deleteProductRecord = async (product: Stripe.Product) => {
+  const { error } = await supabaseAdmin
+    .from('products')
+    .delete()
+    .eq('id', product.id);
+  if (error) throw error;
+  console.log(`Product deleted: ${product.id}`);
+};
+
 const upsertPriceRecord = async (price: Stripe.Price) => {
   const priceData: Price = {
     id: price.id,
@@ -47,6 +56,15 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
   const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
   if (error) throw error;
   console.log(`Price inserted/updated: ${price.id}`);
+};
+
+const deletePriceRecord = async (price: Stripe.Price) => {
+  const { error } = await supabaseAdmin
+    .from('prices')
+    .delete()
+    .eq('id', price.id);
+  if (error) throw error;
+  console.log(`Price deleted: ${price.id}`);
 };
 
 const createOrRetrieveCustomer = async ({
@@ -179,7 +197,9 @@ const manageSubscriptionStatusChange = async (
 
 export {
   upsertProductRecord,
+  deleteProductRecord,
   upsertPriceRecord,
+  deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange
 };
