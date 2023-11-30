@@ -12,13 +12,13 @@
   },
   "dependencies": {
     "@radix-ui/react-toast": "^1.1.5",
-    "@stripe/stripe-js": "^1.54.2",
+    "@stripe/stripe-js": "^2.2.0",
     "@supabase/auth-ui-react": "^0.4.6",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.0.10",
     "@supabase/supabase-js": "^2.39.0",
-    "classnames": "^2.3.2",
     "class-variance-authority": "^0.7.0",
+    "classnames": "^2.3.2",
     "clsx": "^2.0.0",
     "lucide-react": "0.293.0",
     "next": "14.0.3",
@@ -31,7 +31,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
+    "@types/node": "^20.10.1",
     "@types/react": "^18.2.39",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.54.0",
