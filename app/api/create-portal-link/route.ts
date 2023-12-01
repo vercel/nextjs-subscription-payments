@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     try {
       const cookieStore = cookies();
       const supabase = createClient(cookieStore);
+
       const {
         data: { user }
       } = await supabase.auth.getUser();

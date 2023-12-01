@@ -1,30 +1,37 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
-import { createClient, getUser } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
 
 import s from './Navbar.module.css';
 
-const handleSignOut = async () => {
-  'use server';
-
+export default async function Navbar() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.log(error);
-    redirect(
-      `/?error=${encodeURI(
-        'Hmm... Something went wrong.'
-      )}&error_description=${encodeURI('You could not be signed out.')}`
-    );
-  }
-  return;
-};
 
-export default async function Navbar() {
-  const user = await getUser();
+  const handleSignOut = async () => {
+    'use server';
+
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      return redirect(
+        `/?error=${encodeURI(
+          'Hmm... Something went wrong.'
+        )}&error_description=${encodeURI('You could not be signed out.')}`
+      );
+    }
+
+    return redirect('/');
+  };
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
   return (
     <nav className={s.root}>

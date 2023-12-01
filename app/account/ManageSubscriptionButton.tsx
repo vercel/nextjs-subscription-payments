@@ -3,14 +3,14 @@
 import Button from '@/components/ui/Button';
 import { postData } from '@/utils/helpers';
 
-import { Session } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
 interface Props {
-  session: Session;
+  user: User;
 }
 
-export default function ManageSubscriptionButton({ session }: Props) {
+export default function ManageSubscriptionButton({ user }: Props) {
   const router = useRouter();
   const redirectToCustomerPortal = async () => {
     try {
@@ -28,7 +28,7 @@ export default function ManageSubscriptionButton({ session }: Props) {
       <p className="pb-4 sm:pb-0">Manage your subscription on Stripe.</p>
       <Button
         variant="slim"
-        disabled={!session}
+        disabled={!user}
         onClick={redirectToCustomerPortal}
       >
         Open customer portal

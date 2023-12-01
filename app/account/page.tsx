@@ -1,27 +1,35 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import {
-  createClient,
-  getSession,
-  getSubscription,
-  getUserDetails
-} from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ReactNode } from 'react';
 
 export default async function Account() {
-  const [session, userDetails, subscription] = await Promise.all([
-    getSession(),
-    getUserDetails(),
-    getSubscription()
-  ]);
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
-  const user = session?.user;
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  const { data: userDetails } = await supabase
+    .from('users')
+    .select('*')
+    .single();
+
+  const { data: subscription, error } = await supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .in('status', ['trialing', 'active'])
+    .maybeSingle();
+
+  if (error) {
+    console.log(error);
+  }
+
+  if (!user) {
     return redirect('/signin');
   }
 
@@ -39,22 +47,27 @@ export default async function Account() {
     const newName = formData.get('name') as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const session = await getSession();
-    if (!session) return redirect('/signin');
-    const user = session.user;
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) return redirect('/signin');
+
     const { error } = await supabase
       .from('users')
       .update({ full_name: newName })
       .eq('id', user.id);
+
     if (error) {
-      console.log(error);
-      redirect(
+      return redirect(
         `/account?error=${encodeURI(
           'Hmm... Something went wrong.'
         )}&error_description=${encodeURI('Your name could not be updated.')}`
       );
     }
-    redirect(
+
+    return redirect(
       `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
         'Your name has been updated.'
       )}`
@@ -67,6 +80,7 @@ export default async function Account() {
     const newEmail = formData.get('email') as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
+
     const { error } = await supabase.auth.updateUser(
       { email: newEmail },
       {
@@ -79,9 +93,8 @@ export default async function Account() {
           )}`
       }
     );
+
     if (error) {
-      console.log(error);
-      console.log(error.message);
       if (
         error.message ===
         'A user with this email address has already been registered'
@@ -92,13 +105,15 @@ export default async function Account() {
           )}`
         );
       }
-      redirect(
+
+      return redirect(
         `/account?error=${encodeURI(
           'Hmm... Something went wrong.'
         )}&error_description=${encodeURI('Your email could not be updated.')}`
       );
     }
-    redirect(
+
+    return redirect(
       `/account?status=${encodeURI(
         'Confirmation Emails Sent'
       )}&error_description=${encodeURI(
@@ -127,7 +142,7 @@ export default async function Account() {
               ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
               : 'You are not currently subscribed to any plan.'
           }
-          footer={<ManageSubscriptionButton session={session} />}
+          footer={<ManageSubscriptionButton user={user} />}
         >
           <div className="mt-8 mb-4 text-xl font-semibold">
             {subscription ? (
