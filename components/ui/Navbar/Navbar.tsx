@@ -26,7 +26,7 @@ export default async function Navbar() {
       );
     }
 
-    return redirect('/');
+    return redirect('/signin');
   };
 
   const {

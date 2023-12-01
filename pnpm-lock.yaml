@@ -27,8 +27,8 @@ dependencies:
     specifier: ^2.0.0
     version: 2.0.0
   lucide-react:
-    specifier: 0.293.0
-    version: 0.293.0(react@18.2.0)
+    specifier: 0.294.0
+    version: 0.294.0(react@18.2.0)
   next:
     specifier: 14.0.3
     version: 14.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -42,8 +42,8 @@ dependencies:
     specifier: ^2.1.1
     version: 2.1.1
   stripe:
-    specifier: ^14.5.0
-    version: 14.5.0
+    specifier: ^14.7.0
+    version: 14.7.0
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
@@ -56,8 +56,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: ^20.10.0
-    version: 20.10.0
+    specifier: ^20.10.1
+    version: 20.10.1
   '@types/react':
     specifier: ^18.2.39
     version: 18.2.39
@@ -89,8 +89,8 @@ devDependencies:
     specifier: ^0.5.7
     version: 0.5.7(prettier@3.1.0)
   supabase:
-    specifier: ^1.113.3
-    version: 1.113.3
+    specifier: ^1.115.4
+    version: 1.115.4
   typescript:
     specifier: ^5.3.2
     version: 5.3.2
@@ -652,8 +652,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node@20.10.0:
-    resolution: {integrity: sha512-D0WfRmU9TQ8I9PFx9Yc+EBHw+vSpIub4IDvQivcp26PtPrdMGAq5SDcpXEo/epqa/DXotVpekHiLNTg3iaKXBQ==}
+  /@types/node@20.10.1:
+    resolution: {integrity: sha512-T2qwhjWwGH81vUEx4EXmBKsTJRXFXNZTL4v0gi01+zyBmCwzE6TyHszqX01m+QHTEq+EZNo13NeJIdEqf+Myrg==}
     dependencies:
       undici-types: 5.26.5
 
@@ -677,7 +677,7 @@ packages:
   /@types/websocket@1.0.10:
     resolution: {integrity: sha512-svjGZvPB7EzuYS94cI7a+qhwgGU1y89wUgjT6E2wVUfmAGIvRfT7obBvRtnhXCSsoMdlG4gBFGE7MfkIXZLoww==}
     dependencies:
-      '@types/node': 20.10.0
+      '@types/node': 20.10.1
     dev: false
 
   /@typescript-eslint/parser@6.13.0(eslint@8.54.0)(typescript@5.3.2):
@@ -2231,8 +2231,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucide-react@0.293.0(react@18.2.0):
-    resolution: {integrity: sha512-g3AN0EYITCpAjNgLHrKrFWvIJzZy0Y9OPBaonyKw1cM+nZE6piOM+TiuQdYfha7oa76TMiDaWXQHE44CEqsrzw==}
+  /lucide-react@0.294.0(react@18.2.0):
+    resolution: {integrity: sha512-V7o0/VECSGbLHn3/1O67FUgBwWB+hmzshrgDVRJQhMh8uj5D3HBuIvhuAmQTtlupILSplwIZg5FTc4tTKMA2SA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -2949,11 +2949,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe@14.5.0:
-    resolution: {integrity: sha512-MTt0P0VYDAj2VZyZMW41AxcXVs9s06EDFIHYat4UUkluJgnBHo4T4E2byPhnxoJCPvdzWBwBLnhWbSOg//VTpA==}
+  /stripe@14.7.0:
+    resolution: {integrity: sha512-A6XWH76K0K7IgEBz4odIVxjhkdPduSPafZju6ltAFU0oMbWJlfeaDyMTfRJ9vcYA9zqENfwRizExD/2nZ4rQ1A==}
     engines: {node: '>=12.*'}
     dependencies:
-      '@types/node': 20.10.0
+      '@types/node': 20.10.1
       qs: 6.11.2
     dev: false
 
@@ -2987,8 +2987,8 @@ packages:
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
 
-  /supabase@1.113.3:
-    resolution: {integrity: sha512-P0HElkYYkeMhCADc+yCPnb4rj0mxGl7dYJ9wK54O5yf2W+Y0HmvEosGv8A7TVO49NTpNeREjWFVVzhW9FtfyZg==}
+  /supabase@1.115.4:
+    resolution: {integrity: sha512-VXfz9riWHKEmbzv8ITJuqVCVl/92DLhKvUMiU9tVwCBylMWMqg0hOoh89VSZETektZOtxXk24jCQ9zrBqodzKQ==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
