@@ -1,4 +1,3 @@
-import SupabaseProvider from './supabase-provider';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/toaster';
@@ -54,7 +53,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-black loading">
-        <SupabaseProvider>
           <Navbar />
           <main
             id="skip"
@@ -63,7 +61,6 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-        </SupabaseProvider>
         <Toaster />
       </body>
     </html>

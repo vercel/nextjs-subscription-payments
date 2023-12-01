@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 import { Database } from '@/types_db';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
-import { Session, User } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -23,7 +23,6 @@ interface SubscriptionWithProduct extends Subscription {
 }
 
 interface Props {
-  session: Session | null;
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
@@ -31,16 +30,11 @@ interface Props {
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
 
-export default function Pricing({
-  session,
-  user,
-  products,
-  subscription
-}: Props) {
+export default function Pricing({ user, products, subscription }: Props) {
   const intervals = Array.from(
     new Set(
-      products.flatMap((product) =>
-        product?.prices?.map((price) => price?.interval)
+      products.flatMap(
+        (product) => product?.prices?.map((price) => price?.interval)
       )
     )
   );
@@ -241,7 +235,7 @@ export default function Pricing({
                   <Button
                     variant="slim"
                     type="button"
-                    disabled={!session}
+                    disabled={!user}
                     loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
                     className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
