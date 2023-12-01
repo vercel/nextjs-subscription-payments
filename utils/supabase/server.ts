@@ -73,7 +73,9 @@ export async function getSession() {
 export async function getUser() {
   const supabase = createCacheClient();
   try {
-    const { data: user } = await supabase.auth.getUser();
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
     return user;
   } catch (error) {
     console.error('Error:', error);

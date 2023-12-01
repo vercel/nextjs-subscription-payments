@@ -12,8 +12,9 @@ export default function AuthUI() {
       <Auth
         supabaseClient={supabase}
         providers={['github']}
-        redirectTo={`${getURL()}/auth/callback`}
-        magicLink={true}
+        redirectTo={`${getURL()}auth/callback`}
+        magicLink={false}
+        showLinks={false}
         appearance={{
           theme: ThemeSupa,
           variables: {
