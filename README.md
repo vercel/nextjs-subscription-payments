@@ -35,6 +35,8 @@ Should the automatic setup fail, please [create a Supabase account](https://app.
 
 ### Configure Auth
 
+Follow [this guide](https://supabase.com/docs/guides/auth/social-login/auth-github) to setup an OAuth app with GitHub and configure Supabase to use it as an auth provider.
+
 In your Supabase project, navigate to [auth > URL configuration](https://app.supabase.com/project/_/auth/url-configuration) and set your main production URL (e.g. https://your-deployment-url.vercel.app) as the site url.
 
 Next, in your Vercel deployment settings, add a new **Production** environment variable called `NEXT_PUBLIC_SITE_URL` and set it to the same URL. Make sure to deselect preview and development environments to make sure that preview branches and local development work correctly.
@@ -45,9 +47,11 @@ If you've deployed this template via the "Deploy to Vercel" button above, you ca
 
 Otherwise, for auth redirects (email confirmations, magic links, OAuth providers) to work correctly in deploy previews, navigate to the [auth settings](https://app.supabase.com/project/_/auth/url-configuration) and add the following wildcard URL to "Redirect URLs": `https://*-username.vercel.app/**`. You can read more about redirect wildcard patterns in the [docs](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
 
-#### [Optional] - Set up OAuth providers
+#### [Maybe Optional] - Set up database schema (not needed if you installed via the Deploy Button)
 
-You can use third-party login providers like GitHub or Google. Refer to the [docs](https://supabase.io/docs/guides/auth#third-party-logins) to learn how to configure these. Once configured, you can add them to the `provider` array of the [`Auth` component](./app/signin/AuthUI.tsx) page.
+If you've deployed this template via the "Deploy to Vercel" button above, you can skip this step. The Supabase Vercel Integration will have run database migrations for you. You can check this by going to [the Table Editor for your Supabase project](https://supabase.com/dashboard/project/_/editor), and confirming there are tables with seed data.
+
+Otherwise navigate to the [SQL Editor](https://supabase.com/dashboard/project/_/sql/new), paste the contents of [the Supabase migration file](./supabase/migrations/20230530034630_init.sql) and click RUN.
 
 #### [Maybe Optional] - Set up Supabase environment variables (not needed if you installed via the Deploy Button)
 

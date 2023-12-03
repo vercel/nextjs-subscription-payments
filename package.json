@@ -13,25 +13,23 @@
   "dependencies": {
     "@radix-ui/react-toast": "^1.1.5",
     "@stripe/stripe-js": "^2.2.0",
-    "@supabase/auth-ui-react": "^0.4.6",
-    "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.0.10",
     "@supabase/supabase-js": "^2.39.0",
-    "classnames": "^2.3.2",
     "class-variance-authority": "^0.7.0",
+    "classnames": "^2.3.2",
     "clsx": "^2.0.0",
-    "lucide-react": "0.293.0",
+    "lucide-react": "0.294.0",
     "next": "14.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-merge-refs": "^2.1.1",
-    "stripe": "^14.5.0",
+    "stripe": "^14.7.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss": "^3.3.5",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
+    "@types/node": "^20.10.1",
     "@types/react": "^18.2.39",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.54.0",
@@ -42,7 +40,7 @@
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
-    "supabase": "^1.113.3",
+    "supabase": "^1.115.4",
     "typescript": "^5.3.2"
   },
   "prettier": {
