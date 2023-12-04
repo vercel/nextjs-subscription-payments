@@ -5,7 +5,12 @@ import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import { requestPasswordUpdate } from '@/utils/auth-helpers';
 
-export default async function ForgotPassword() {
+// Define prop type with allowEmail boolean
+interface ForgotPasswordProps {
+  allowEmail: boolean;
+}
+
+export default async function ForgotPassword({ allowEmail }: ForgotPasswordProps) {
   const router = useRouter();
 
   async function handleForgotPasswordRequest(e: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -44,7 +49,7 @@ export default async function ForgotPassword() {
         </div>
       </form>
       <p><Link href="/signin/password_signin" className="font-light text-sm">Sign in with password</Link></p>
-      <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>
+      {allowEmail && <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>}
       <p><Link href="/signin/signup" className="font-light text-sm">Don't have an account? Sign up</Link></p>
     </div>
   )

@@ -5,7 +5,12 @@ import Button from '@/components/ui/Button';
 import Link from 'next/link'
 import { signInWithEmail } from '@/utils/auth-helpers';
 
-export default function EmailSignIn() {  
+// Define prop type with allowPassword boolean
+interface EmailSignInProps {
+  allowPassword: boolean;
+}
+
+export default function EmailSignIn({ allowPassword }: EmailSignInProps) {  
   const router = useRouter();
 
   async function handleEmailSignIn(e: React.FormEvent<HTMLFormElement>) {
@@ -43,8 +48,12 @@ export default function EmailSignIn() {
           </Button>
         </div>
       </form>
+      { allowPassword && 
+      <>
       <p><Link href="/signin/password_signin" className="font-light text-sm">Sign in with password</Link></p>
       <p><Link href="/signin/signup" className="font-light text-sm">Don't have an account? Sign up</Link></p>
+      </>
+      }
     </div>
   )
 };

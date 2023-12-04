@@ -5,6 +5,42 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getURL } from 'utils/helpers';
 
+const allowOauth = true;
+const allowEmail = true;
+const allowPassword = true;
+
+// Check that at least one of allowPassword and allowEmail is true
+if (!allowPassword && !allowEmail) {
+  console.error('At least one of allowPassword and allowEmail must be true');
+}
+
+export async function getAuthTypes() {
+  return { allowOauth, allowEmail, allowPassword };
+}
+
+export async function getViewTypes() {  
+  // Define the valid view types
+  let viewTypes: string[] = [];
+  if (allowEmail) {
+    viewTypes = [...viewTypes, "email_signin"];
+  }
+  if (allowPassword) {
+    viewTypes = [...viewTypes, "password_signin", "forgot_password", "update_password", "signup"];
+  }
+
+  return viewTypes;
+}
+
+export async function getDefaultSignInView() {
+  // Define the default sign in view
+  let defaultView = "email_signin";
+  if (allowPassword) {
+    defaultView = "password_signin";
+  }
+
+  return defaultView;
+}
+
 function isValidEmail(email: string) {
   var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   return regex.test(email);
@@ -45,7 +81,7 @@ export async function signInWithEmail (formData: FormData) {
   };
 
 export async function requestPasswordUpdate (formData: FormData) {
-  const redirectURL = `${getURL()}auth/password_reset`;
+  const redirectURL = `${getURL()}auth/reset_password`;
 
   // Get form data
   const email = String(formData.get('email'));

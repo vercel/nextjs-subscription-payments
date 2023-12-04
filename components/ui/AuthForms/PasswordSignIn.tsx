@@ -6,7 +6,12 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithPassword } from '@/utils/auth-helpers';
 
-export default function PasswordSignIn() {
+// Define prop type with allowEmail boolean
+interface PasswordSignInProps {
+  allowEmail: boolean;
+}
+
+export default function PasswordSignIn({ allowEmail }: PasswordSignInProps) {
   const router = useRouter();
   // Handle login with username and password
   async function handlePasswordSignIn(e: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -54,7 +59,7 @@ export default function PasswordSignIn() {
         </div>
       </form>
       <p><Link href="/signin/forgot_password" className="font-light text-sm">Forgot your password?</Link></p>
-      <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>
+      {allowEmail && <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>}
       <p><Link href="/signin/signup" className="font-light text-sm">Don't have an account? Sign up</Link></p>
     </div>
   )

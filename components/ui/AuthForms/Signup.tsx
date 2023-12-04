@@ -6,7 +6,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signUp } from '@/utils/auth-helpers'
 
-export default function SignUp() {
+// Define prop type with allowEmail boolean
+interface SignUpProps {
+  allowEmail: boolean;
+}
+
+export default function SignUp({ allowEmail }: SignUpProps) {
   const router = useRouter();
   
   // Handle signup with username and password
@@ -67,7 +72,7 @@ export default function SignUp() {
       </form>
       <p>Already have an account?</p>
       <p><Link href="/signin/password_signin" className="font-light text-sm">Sign in with password</Link></p>
-      <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>
+      {allowEmail && <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>}
     </div>
   )
 };
