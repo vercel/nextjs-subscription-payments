@@ -1,7 +1,8 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
+import { createClient } from '@/utils/supabase/server';
+import { getURL } from '@/utils/helpers';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -13,7 +14,7 @@ export default async function Account() {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-
+  
   const { data: userDetails } = await supabase
     .from('users')
     .select('*')
@@ -47,7 +48,7 @@ export default async function Account() {
     const newName = formData.get('name') as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-
+    
     const {
       data: { user }
     } = await supabase.auth.getUser();
@@ -58,20 +59,19 @@ export default async function Account() {
       .from('users')
       .update({ full_name: newName })
       .eq('id', user.id);
-
-    if (error) {
-      return redirect(
-        `/account?error=${encodeURI(
-          'Hmm... Something went wrong.'
-        )}&error_description=${encodeURI('Your name could not be updated.')}`
+      
+      if (error) {
+        return redirect(
+          `/account?error=${encodeURI(
+            'Hmm... Something went wrong.'
+          )}&error_description=${encodeURI('Your name could not be updated.')}`
+        );
+      }
+        return redirect(
+        `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
+          'Your name has been updated.'
+        )}`
       );
-    }
-
-    return redirect(
-      `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
-        'Your name has been updated.'
-      )}`
-    );
   };
 
   const updateEmail = async (formData: FormData) => {
@@ -80,12 +80,12 @@ export default async function Account() {
     const newEmail = formData.get('email') as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-
+    
     const { error } = await supabase.auth.updateUser(
       { email: newEmail },
       {
         emailRedirectTo:
-          process.env.NEXT_PUBLIC_SITE_URL +
+          getURL() +
           `/account?status=${encodeURI(
             'Success!'
           )}&status_description=${encodeURI(
@@ -95,28 +95,16 @@ export default async function Account() {
     );
 
     if (error) {
-      if (
-        error.message ===
-        'A user with this email address has already been registered'
-      ) {
-        return redirect(
-          `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
-            'It looks like that email is already in use. Please try another one.'
-          )}`
-        );
-      }
-
       return redirect(
-        `/account?error=${encodeURI(
-          'Hmm... Something went wrong.'
-        )}&error_description=${encodeURI('Your email could not be updated.')}`
+        `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
+          error.message
+        )}`
       );
     }
-
     return redirect(
       `/account?status=${encodeURI(
         'Confirmation Emails Sent'
-      )}&error_description=${encodeURI(
+      )}&status_description=${encodeURI(
         `You will need to confirm the update by clicking the link sent to both ${user?.email} and ${newEmail}.`
       )}`
     );

@@ -42,6 +42,7 @@ export async function POST(req: Request) {
           mode: 'subscription',
           allow_promotion_codes: true,
           subscription_data: {
+            trial_period_days: price.trial_period_days,
             metadata
           },
           success_url: `${getURL()}/account`

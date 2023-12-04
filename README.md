@@ -35,7 +35,7 @@ Should the automatic setup fail, please [create a Supabase account](https://app.
 
 ### Configure Auth
 
-Follow [this guide](https://supabase.com/docs/guides/auth/social-login/auth-github) to setup an OAuth app with GitHub and configure Supabase to use it as an auth provider.
+Follow [this guide](https://supabase.com/docs/guides/auth/social-login/auth-github) to set up an OAuth app with GitHub and configure Supabase to use it as an auth provider.
 
 In your Supabase project, navigate to [auth > URL configuration](https://app.supabase.com/project/_/auth/url-configuration) and set your main production URL (e.g. https://your-deployment-url.vercel.app) as the site url.
 
@@ -47,11 +47,10 @@ If you've deployed this template via the "Deploy to Vercel" button above, you ca
 
 Otherwise, for auth redirects (email confirmations, magic links, OAuth providers) to work correctly in deploy previews, navigate to the [auth settings](https://app.supabase.com/project/_/auth/url-configuration) and add the following wildcard URL to "Redirect URLs": `https://*-username.vercel.app/**`. You can read more about redirect wildcard patterns in the [docs](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
 
-#### [Maybe Optional] - Set up database schema (not needed if you installed via the Deploy Button)
 
 If you've deployed this template via the "Deploy to Vercel" button above, you can skip this step. The Supabase Vercel Integration will have run database migrations for you. You can check this by going to [the Table Editor for your Supabase project](https://supabase.com/dashboard/project/_/editor), and confirming there are tables with seed data.
 
-Otherwise navigate to the [SQL Editor](https://supabase.com/dashboard/project/_/sql/new), paste the contents of [the Supabase migration file](./supabase/migrations/20230530034630_init.sql) and click RUN.
+Otherwise, navigate to the [SQL Editor](https://supabase.com/dashboard/project/_/sql/new), paste the contents of [the Supabase `schema.sql` file](./schema.sql), and click RUN to initialize the database.
 
 #### [Maybe Optional] - Set up Supabase environment variables (not needed if you installed via the Deploy Button)
 

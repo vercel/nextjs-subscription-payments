@@ -1,7 +1,8 @@
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren } from 'react';
+import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 
 const meta = {
@@ -25,8 +26,7 @@ export const metadata = {
   url: meta.url,
   type: meta.type,
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ??
-      'https://subscription-payments.vercel.app'
+    getURL() ?? 'https://subscription-payments.vercel.app'
   ),
   openGraph: {
     url: meta.url,
