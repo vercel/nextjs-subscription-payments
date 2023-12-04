@@ -82,9 +82,9 @@ export default function SignUp() {
             className="w-full p-3 rounded-md bg-zinc-800"
           />
           <Button
-          variant="slim"
-          formAction={handleSignUp}
-          className="mt-1"
+            variant="slim"
+            formAction={handleSignUp}
+            className="mt-1"
           >
             Sign up
           </Button>

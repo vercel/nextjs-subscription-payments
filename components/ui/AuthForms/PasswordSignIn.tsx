@@ -57,9 +57,9 @@ export default function PasswordSignIn() {
             className="w-full p-3 rounded-md bg-zinc-800"
           />
           <Button
-          variant="slim"
-          formAction={handlePasswordSignIn}
-          className="mt-1"
+            variant="slim"
+            formAction={handlePasswordSignIn}
+            className="mt-1"
           >
             Sign in with Password
           </Button>

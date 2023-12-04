@@ -62,9 +62,9 @@ export default async function ForgotPassword() {
             />
           </div>
           <Button
-          variant="slim"
-          formAction={handleForgotPasswordRequest}
-          className="mt-1"
+            variant="slim"
+            formAction={handleForgotPasswordRequest}
+            className="mt-1"
           >
             Send Email
           </Button>

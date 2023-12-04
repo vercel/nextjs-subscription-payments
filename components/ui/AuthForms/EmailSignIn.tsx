@@ -65,9 +65,9 @@ export default async function EmailSignIn() {
             />
           </div>
           <Button
-          variant="slim"
-          formAction={handleEmailSignIn}
-          className="mt-1"
+            variant="slim"
+            formAction={handleEmailSignIn}
+            className="mt-1"
           >
             Sign in with Email
           </Button>

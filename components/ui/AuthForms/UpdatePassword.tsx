@@ -68,9 +68,9 @@ export default function UpdatePassword() {
             />
           </div>
           <Button
-          variant="slim"
-          formAction={handlePasswordUpdate}
-          className="mt-1"
+            variant="slim"
+            formAction={handlePasswordUpdate}
+            className="mt-1"
           >
             Update Password
           </Button>
