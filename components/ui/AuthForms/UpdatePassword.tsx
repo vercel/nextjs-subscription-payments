@@ -1,51 +1,68 @@
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+'use client';
+
 import Button from '@/components/ui/Button';
+import React from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function UpdatePassword() {  
-  // Handle login with username and password
-  const handlePasswordUpdate = async (formData: FormData) => {
-    'use server';
+  const router = useRouter();
+  
+  async function handlePasswordUpdate(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    // Prevent default form submission refresh
+    e.preventDefault();
+    console.log('handlePasswordUpdate');
 
+    // Get form data
+    const formData = new FormData(e.currentTarget);
     const password = String(formData.get('password'));
     const passwordConfirm = String(formData.get('passwordConfirm'));
 
+    // Check that the password and confirmation match
     if (password !== passwordConfirm) {
-      return redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/signin?error=${encodeURI(
-          'Passwords do not match.'
-        )}&error_description=${encodeURI('Your password could not be updated.')}`
+      router.push(
+        `/signin/update_password?error=${encodeURI(
+          'Your password could not be updated.'
+        )}&error_description=${encodeURI('Passwords do not match.')}`
       );
     }
 
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { error, data } = await supabase.auth.updateUser({
-        password
-    }
-    );
+    // Call email_signin API route with the form data
+    const response = await fetch('/api/update_password', {
+      method: 'POST',
+      body: JSON.stringify({
+        password: formData.get('password')
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    if (error) {
-      return redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/signin?error=${encodeURI(
-          'Hmm... Something went wrong.'
-        )}&error_description=${encodeURI('Your password could not be updated.')}`
-      );
-    } else if (data) {
-      redirect(
-      `/signin?status=${encodeURI('Success!')}&status_description=${encodeURI(
-        'Your password has been updated successfully.'
-      )}`
-      );
+    if (response.headers.get('Content-Type')?.includes('application/json')) {
+      const result = await response.json();
+      // Display success toast if password was updated
+      if (result.success) {
+        router.push(
+          `/signin?status=${encodeURI('Success!')}&status_description=${encodeURI(
+            'Your password has been updated successfully.'
+          )}`
+        );
+      } else if (result.error) {
+        router.push(
+          `/signin?error=${encodeURI(
+            'Hmm... Something went wrong.'
+          )}&error_description=${encodeURI('Your password could not be updated.')}`
+        );
+        
+      }
+    } else {
+      // Handle non-JSON response
+      console.log(`API error: Response is not JSON: ${response.statusText}`)
     }
-
-    redirect('/');
   };
 
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4">
+      <form noValidate={true} className="mb-4" onSubmit={handlePasswordUpdate}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="password">New Password</label>
@@ -68,9 +85,9 @@ export default function UpdatePassword() {
             />
           </div>
           <Button
-          variant="slim"
-          formAction={handlePasswordUpdate}
-          className="mt-1"
+            variant="slim"
+            type="submit"
+            className="mt-1"
           >
             Update Password
           </Button>

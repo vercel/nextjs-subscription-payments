@@ -1,10 +1,11 @@
-import { createClient } from '@/utils/supabase/server';
+'use client';
+
 import { Github } from 'lucide-react';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/client';
 import { type Provider } from '@supabase/supabase-js';
 import { getURL } from '@/utils/helpers';
-import { redirect } from 'next/navigation';
 import Button from '@/components/ui/Button';
+import { useRouter } from 'next/navigation';
 
 type OAuthProviders = {
   name: Provider;
@@ -16,15 +17,24 @@ const oAuthProviders: OAuthProviders[] = [
   /* Add desired OAuth providers here */
 ];
 
-export default function OauthSignIn() {
-  const redirectURL = `${getURL()}auth/callback`;
+type Props = {
+  view: string;
+};
 
-  const handleOAuthSignIn = async (formData: FormData) => {
-    'use server';
+export default function OauthSignIn({ view }: Props) {
+  const router = useRouter();
 
+  async function handleOAuthSignIn(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    // Prevent default form submission refresh
+    e.preventDefault();
+    
+    // Get form data
+    const formData = new FormData(e.currentTarget);
     const provider = String(formData.get('provider')) as Provider;
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    
+    // Create client-side supabase client and call signInWithOAuth
+    const supabase = createClient();
+    const redirectURL = `${getURL()}auth/callback`;
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
@@ -33,24 +43,24 @@ export default function OauthSignIn() {
     });
 
     if (error) {
-      return redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/signin?error=${encodeURI(
+      return router.push(
+        `/signin/${view}?error=${encodeURI(
           'Hmm... Something went wrong.'
         )}&error_description=${encodeURI('You could not be signed in.')}`
       );
     }
 
-    redirect(data.url);
+    router.push('/account');
   };
 
   return (
     <div className="mt-8">
       {oAuthProviders.map((provider) => (
-        <form key={provider.name} className="pb-2">
+        <form key={provider.name} className="pb-2" onSubmit={handleOAuthSignIn}>
           <input type="hidden" name="provider" value={provider.name} />
           <Button
             variant="slim"
-            formAction={handleOAuthSignIn}
+            type="submit"
             className="w-full"
           >
             <span className="mr-2">{provider.icon}</span>
