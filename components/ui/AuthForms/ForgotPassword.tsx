@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
+import { requestPasswordUpdate } from '@/utils/auth-helpers';
 
 export default async function ForgotPassword() {
   const router = useRouter();
@@ -10,52 +11,11 @@ export default async function ForgotPassword() {
   async function handleForgotPasswordRequest(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     // Prevent default form submission refresh
     e.preventDefault();
-
-    // Get form data
+    
     const formData = new FormData(e.currentTarget);
-    const email = String(formData.get('email'));
-    
-    // Check that the email entered is valid
-    function isValidEmail(email: string) {
-      var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      return regex.test(email);
-    }
-    
-    if (!isValidEmail(email)) {
-      router.push(
-      `/signin/email_signin?error=${encodeURIComponent(
-        'Invalid email address.'
-      )}&error_description=${encodeURIComponent('Please try again.')}`
-      );
-    }
-
-    // Call email_signin API route with the form data
-    const response = await fetch('/api/forgot_password', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: formData.get('email')
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.headers.get('Content-Type')?.includes('application/json')) {
-      const result = await response.json();
-      // Display success toast if email was sent
-      if (result.success) {
-        return router.push(`/signin/forgot_password?status=${encodeURI('Success!')}&status_description=${encodeURI(
-          'Please check your email for a magic link. You may now close this tab.')}`);
-      } else if (result.error) {
-        // Else display an error toast
-        return router.push(`/signin/forgot_password?error=${encodeURI("Hmm... Something went wrong.")}&error_description=${encodeURI(
-          result.message)}`);
-      }
-    } else {
-      // Handle non-JSON response
-      console.log(`API error: Response is not JSON: ${response.statusText}`)
-    }
-  };
+    const redirectURL = await requestPasswordUpdate(formData);
+    return router.push(redirectURL);
+  }
 
   return (
     <div className="my-8">

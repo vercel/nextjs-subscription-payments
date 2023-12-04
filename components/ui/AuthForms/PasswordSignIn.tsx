@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button';
 import Link from 'next/link'
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { signInWithPassword } from '@/utils/auth-helpers';
 
 export default function PasswordSignIn() {
   const router = useRouter();
@@ -12,35 +13,10 @@ export default function PasswordSignIn() {
     // Prevent default form submission refresh
     e.preventDefault();
     
-    // Get form data
     const formData = new FormData(e.currentTarget);
-
-    // Call password_signin API route with the form data
-    const response = await fetch('/api/password_signin', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: formData.get('email'),
-        password: formData.get('password'),
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.headers.get('Content-Type')?.includes('application/json')) {
-      const result = await response.json();
-      // Redirect to the account page if successfully logged in
-      if (result.success) {
-        router.push('/account');
-      } else if (result.error) {
-        // Redirect to the sign-in page if there was an error
-        router.push(`/signin?error=${encodeURI("Sign in failed.")}&error_description=${encodeURI(result.message)}`);
-      }
-    } else {
-      // Handle non-JSON response
-      console.log(`API error: Response is not JSON: ${response.statusText}`)
-    }
-  };
+    const redirectURL = await signInWithPassword(formData);
+    return router.push(redirectURL);
+  }
 
   return (
     <div className="my-8">

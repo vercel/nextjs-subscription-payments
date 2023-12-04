@@ -44,8 +44,7 @@ export default function OauthSignIn({ view }: Props) {
 
     if (error) {
       return router.push(
-        `/signin/${view}?error=${encodeURI(
-          'Hmm... Something went wrong.'
+        `/signin/${view}?error=${encodeURI('Hmm... Something went wrong.'
         )}&error_description=${encodeURI('You could not be signed in.')}`
       );
     }
