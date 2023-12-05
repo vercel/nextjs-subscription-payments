@@ -1,52 +1,27 @@
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+'use client';
+
 import Button from '@/components/ui/Button';
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getURL } from '@/utils/helpers';
+import { signUp } from '@/utils/auth-helpers'
 
 export default function SignUp() {
+  const router = useRouter();
+  
   // Handle signup with username and password
-  const handleSignUp = async (formData: FormData) => {
-    'use server';
-
-    const fullName = String(formData.get('fullName'));
-    const email = String(formData.get('email'));
-    const password = String(formData.get('password'));
+  async function handleSignUp(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    // Prevent default form submission refresh
+    e.preventDefault();
     
-    const redirectURL = `${getURL()}auth/callback`;
-
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { error, data } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectURL,
-        data: {full_name: fullName}
-      }
-    });
-
-    if (error) {
-      return redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/signup?error=${encodeURI(
-          'You could not be signed up.'
-        )}&error_description=${encodeURI(error.message)}`
-      );
-    } else if (data) {
-      return redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/account?status=${encodeURI(
-          'Success!'
-        )}&status_description=${encodeURI(
-          'Please check your email for a magic link. You may now close this tab.'
-        )}`
-      );
-    }
-  };
+    const formData = new FormData(e.currentTarget);
+    const redirectURL = await signUp(formData);
+    return router.push(redirectURL);
+  }
 
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4">
+      <form noValidate={true} className="mb-4" onSubmit={handleSignUp}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="fullName">Full Name</label>
@@ -71,19 +46,19 @@ export default function SignUp() {
               autoCorrect="off"
               className="w-full p-3 rounded-md bg-zinc-800"
             />
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              placeholder="Password"
+              type="password"
+              name="password"
+              autoComplete="current-password"
+              className="w-full p-3 rounded-md bg-zinc-800"
+            />
           </div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            placeholder="Password"
-            type="password"
-            name="password"
-            autoComplete="current-password"
-            className="w-full p-3 rounded-md bg-zinc-800"
-          />
           <Button
             variant="slim"
-            formAction={handleSignUp}
+            type="submit"
             className="mt-1"
           >
             Sign up

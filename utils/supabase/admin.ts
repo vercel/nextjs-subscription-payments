@@ -29,15 +29,6 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   console.log(`Product inserted/updated: ${product.id}`);
 };
 
-const deleteProductRecord = async (product: Stripe.Product) => {
-  const { error } = await supabaseAdmin
-    .from('products')
-    .delete()
-    .eq('id', product.id);
-  if (error) throw error;
-  console.log(`Product deleted: ${product.id}`);
-};
-
 const upsertPriceRecord = async (price: Stripe.Price) => {
   const priceData: Price = {
     id: price.id,
@@ -58,6 +49,15 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
   console.log(`Price inserted/updated: ${price.id}`);
 };
 
+const deleteProductRecord = async (product: Stripe.Product) => {
+  const { error } = await supabaseAdmin
+    .from('products')
+    .delete()
+    .eq('id', product.id);
+  if (error) throw error;
+  console.log(`Product deleted: ${product.id}`);
+};
+
 const deletePriceRecord = async (price: Stripe.Price) => {
   const { error } = await supabaseAdmin
     .from('prices')
@@ -75,17 +75,21 @@ const createOrRetrieveCustomer = async ({
   uuid: string;
 }) => {
   // Check if the customer already exists in Supabase
-  const { data: existingSupabaseCustomer, error: supabaseQueryError } = await supabaseAdmin
-    .from('customers')
-    .select('stripe_customer_id')
-    .eq('id', uuid)
-    .single();
+  const { data: existingSupabaseCustomer, error: supabaseQueryError } =
+    await supabaseAdmin
+      .from('customers')
+      .select('stripe_customer_id')
+      .eq('id', uuid)
+      .single();
 
-  if (supabaseQueryError) throw supabaseQueryError;
+  if (supabaseQueryError) console.error(supabaseQueryError); // Log error but continue
 
   // Check if the customer already exists in Stripe
   const existingStripeCustomer = await stripe.customers.list({ email: email });
-  const stripeCustomerId = existingStripeCustomer.data.length > 0 ? existingStripeCustomer.data[0].id : null;
+  const stripeCustomerId =
+    existingStripeCustomer.data.length > 0
+      ? existingStripeCustomer.data[0].id
+      : null;
 
   // Reconcile and update records as needed
   if (existingSupabaseCustomer && stripeCustomerId) {
@@ -97,7 +101,9 @@ const createOrRetrieveCustomer = async ({
         .eq('id', uuid);
 
       if (updateError) throw updateError;
-      console.log(`Supabase customer record updated with Stripe ID: ${stripeCustomerId}`);
+      console.log(
+        `Supabase customer record updated with Stripe ID: ${stripeCustomerId}`
+      );
     }
     return stripeCustomerId;
   } else if (!existingSupabaseCustomer && stripeCustomerId) {
@@ -113,26 +119,29 @@ const createOrRetrieveCustomer = async ({
     // Customer does not exist in Stripe, create a new customer in Stripe
     const customerData = { metadata: { supabaseUUID: uuid }, email: email };
     const newCustomer = await stripe.customers.create(customerData);
-  
     if (existingSupabaseCustomer) {
       // Update any existing Supabase record with the new Stripe customer ID
       const { error: updateError } = await supabaseAdmin
         .from('customers')
         .update({ stripe_customer_id: newCustomer.id })
         .eq('id', uuid);
-  
+
       if (updateError) throw updateError;
-      console.log(`Existing Supabase customer record updated with new Stripe ID: ${newCustomer.id}.`);
+      console.log(
+        `Existing Supabase customer record updated with new Stripe ID: ${newCustomer.id}.`
+      );
     } else {
       // Insert a new record in Supabase if no existing record is found
       const { error: supabaseInsertError } = await supabaseAdmin
         .from('customers')
         .insert([{ id: uuid, stripe_customer_id: newCustomer.id }]);
       if (supabaseInsertError) throw supabaseInsertError;
-  
-      console.log(`New customer created in Stripe and inserted into Supabase for ${uuid}.`);
+
+      console.log(
+        `New customer created in Stripe and inserted into Supabase for ${uuid}.`
+      );
     }
-  
+
     return newCustomer.id;
   }
 
@@ -236,8 +245,8 @@ const manageSubscriptionStatusChange = async (
 
 export {
   upsertProductRecord,
-  deleteProductRecord,
   upsertPriceRecord,
+  deleteProductRecord,
   deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange

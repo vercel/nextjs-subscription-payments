@@ -1,13 +1,13 @@
-'use server'
+'use server';
 
 import Logo from '@/components/icons/Logo';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Card from '@/components/ui/Card';
+import PasswordSignIn from '@/components/ui/AuthForms/PasswordSignIn';
 import EmailSignIn from '@/components/ui/AuthForms/EmailSignIn';
 import Separator from '@/components/ui/AuthForms/Separator';
-import PasswordSignIn from '@/components/ui/AuthForms/PasswordSignIn';
 import OauthSignIn from '@/components/ui/AuthForms/OauthSignIn';
 import ForgotPassword from '@/components/ui/AuthForms/ForgotPassword';
 import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword';
@@ -25,9 +25,9 @@ export default async function SignIn({ params }: { params: { id: string } }) {
     viewProp = params.id;
   }
   
+  // Check if the user is already logged in and redirect to the account page if so
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-
   const {
     data: { session }
   } = await supabase.auth.getSession();
@@ -58,7 +58,7 @@ export default async function SignIn({ params }: { params: { id: string } }) {
           {viewProp !== 'update_password' && viewProp !== 'signup' && (
             <>
             <Separator text="Third-party sign-in" />
-            <OauthSignIn />
+            <OauthSignIn view={viewProp} />
             </>
           )}
         </Card>

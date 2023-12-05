@@ -1,51 +1,25 @@
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+'use client';
+
 import Button from '@/components/ui/Button';
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { updatePassword } from '@/utils/auth-helpers';
 
 export default function UpdatePassword() {  
-  // Handle login with username and password
-  const handlePasswordUpdate = async (formData: FormData) => {
-    'use server';
-
-    const password = String(formData.get('password'));
-    const passwordConfirm = String(formData.get('passwordConfirm'));
-
-    if (password !== passwordConfirm) {
-      return redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/signin?error=${encodeURI(
-          'Passwords do not match.'
-        )}&error_description=${encodeURI('Your password could not be updated.')}`
-      );
-    }
-
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { error, data } = await supabase.auth.updateUser({
-        password
-    }
-    );
-
-    if (error) {
-      return redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/signin?error=${encodeURI(
-          'Hmm... Something went wrong.'
-        )}&error_description=${encodeURI('Your password could not be updated.')}`
-      );
-    } else if (data) {
-      redirect(
-      `/signin?status=${encodeURI('Success!')}&status_description=${encodeURI(
-        'Your password has been updated successfully.'
-      )}`
-      );
-    }
-
-    redirect('/');
-  };
+  const router = useRouter();
+  
+  async function handlePasswordUpdate(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    // Prevent default form submission refresh
+    e.preventDefault();
+    
+    const formData = new FormData(e.currentTarget);
+    const redirectURL = await updatePassword(formData);
+    return router.push(redirectURL);
+  }
 
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4">
+      <form noValidate={true} className="mb-4" onSubmit={handlePasswordUpdate}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="password">New Password</label>
@@ -69,7 +43,7 @@ export default function UpdatePassword() {
           </div>
           <Button
             variant="slim"
-            formAction={handlePasswordUpdate}
+            type="submit"
             className="mt-1"
           >
             Update Password

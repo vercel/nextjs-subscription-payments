@@ -1,52 +1,25 @@
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { getURL } from 'utils/helpers';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
+import { requestPasswordUpdate } from '@/utils/auth-helpers';
 
 export default async function ForgotPassword() {
-  const redirectURL = `${getURL()}auth/password_reset`;
+  const router = useRouter();
 
-  const handleForgotPasswordRequest = async (formData: FormData) => {
-  'use server';
-
-  const email = String(formData.get('email'));
-  // Check that the email entered is valid
-  function isValidEmail(email: string) {
-    var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return regex.test(email);
+  async function handleForgotPasswordRequest(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    // Prevent default form submission refresh
+    e.preventDefault();
+    
+    const formData = new FormData(e.currentTarget);
+    const redirectURL = await requestPasswordUpdate(formData);
+    return router.push(redirectURL);
   }
-  if (!isValidEmail(email)) {
-    redirect(
-    `/signin/forgot_password?error=${encodeURIComponent(
-      'Invalid email address.'
-    )}&error_description=${encodeURIComponent('Please try again.')}`
-    );
-  }
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: redirectURL
-  });
-  if (error) {
-    return redirect(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/signin/forgot_password?error=${encodeURI(
-      'Hmm... Something went wrong.'
-    )}&error_description=${encodeURI('You could not be signed in.')}`
-    );
-  } else if (data) {
-    redirect(
-    `/signin/forgot_password?status=${encodeURI('Success!')}&status_description=${encodeURI(
-      'Please check your email for a magic link. You may now close this tab.'
-    )}`
-    );
-  }
-  };
 
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4">
+      <form noValidate={true} className="mb-4" onSubmit={handleForgotPasswordRequest}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>
@@ -63,7 +36,7 @@ export default async function ForgotPassword() {
           </div>
           <Button
             variant="slim"
-            formAction={handleForgotPasswordRequest}
+            type="submit"
             className="mt-1"
           >
             Send Email

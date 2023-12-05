@@ -13,7 +13,6 @@ export async function POST(req: Request) {
       // 2. Get the user from Supabase auth
       const cookieStore = cookies();
       const supabase = createClient(cookieStore);
-      
       const {
         data: { user }
       } = await supabase.auth.getUser();
@@ -45,8 +44,7 @@ export async function POST(req: Request) {
             trial_period_days: price.trial_period_days,
             metadata
           },
-          success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/`
+          success_url: `${getURL()}/account`
         });
       } else if (price.type === 'one_time') {
         session = await stripe.checkout.sessions.create({

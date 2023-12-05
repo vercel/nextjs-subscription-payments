@@ -2,6 +2,7 @@ import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren } from 'react';
+import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 
 const meta = {
@@ -10,7 +11,9 @@ const meta = {
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
-  url: 'https://subscription-starter.vercel.app',
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    'https://subscription-starter.vercel.app',
   type: 'website'
 };
 
@@ -22,6 +25,9 @@ export const metadata = {
   favicon: meta.favicon,
   url: meta.url,
   type: meta.type,
+  metadataBase: new URL(
+    getURL() ?? 'https://subscription-payments.vercel.app'
+  ),
   openGraph: {
     url: meta.url,
     title: meta.title,
