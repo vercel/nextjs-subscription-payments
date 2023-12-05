@@ -10,9 +10,9 @@ const allowEmail = true;
 const allowPassword = true;
 
 // Check that at least one of allowPassword and allowEmail is true
-if (!allowPassword && !allowEmail) {
-  console.error('At least one of allowPassword and allowEmail must be true');
-}
+if (!allowPassword && !allowEmail) throw new Error(
+  'At least one of allowPassword and allowEmail must be true'
+);
 
 export async function getAuthTypes() {
   return { allowOauth, allowEmail, allowPassword };
