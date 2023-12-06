@@ -62,13 +62,13 @@ export default async function Account() {
       
       if (error) {
         return redirect(
-          `/account?error=${encodeURI(
+          `/account?error=${encodeURIComponent(
             'Hmm... Something went wrong.'
-          )}&error_description=${encodeURI('Your name could not be updated.')}`
+          )}&error_description=${encodeURIComponent('Your name could not be updated.')}`
         );
       }
         return redirect(
-        `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
+        `/account?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
           'Your name has been updated.'
         )}`
       );
@@ -85,26 +85,25 @@ export default async function Account() {
       { email: newEmail },
       {
         emailRedirectTo:
-          getURL() +
-          `/account?status=${encodeURI(
+          getURL(`/account?status=${encodeURIComponent(
             'Success!'
-          )}&status_description=${encodeURI(
+          )}&status_description=${encodeURIComponent(
             `Your email has been successfully updated to ${newEmail}`
-          )}`
+          )}`)
       }
     );
 
     if (error) {
       return redirect(
-        `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
+        `/account?error=${encodeURIComponent('Oops!')}&error_description=${encodeURIComponent(
           error.message
         )}`
       );
     }
     return redirect(
-      `/account?status=${encodeURI(
+      `/account?status=${encodeURIComponent(
         'Confirmation Emails Sent'
-      )}&status_description=${encodeURI(
+      )}&status_description=${encodeURIComponent(
         `You will need to confirm the update by clicking the link sent to both ${user?.email} and ${newEmail}.`
       )}`
     );

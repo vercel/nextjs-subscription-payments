@@ -47,7 +47,7 @@ function isValidEmail(email: string) {
 }
 
 export async function signInWithEmail (formData: FormData) {
-  const redirectURL = `${getURL()}auth/callback`;
+  const redirectURL = getURL('/auth/callback');
   
   const email = String(formData.get('email'));
   
@@ -69,19 +69,19 @@ export async function signInWithEmail (formData: FormData) {
   });
 
   if (data) {
-    return `/signin/email_signin?status=${encodeURI('Success!')}&status_description=${encodeURI(
+    return `/signin/email_signin?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Please check your email for a magic link. You may now close this tab.')}`;
   } else if (error) {
-    return `/signin/email_signin?error=${encodeURI('You could not be signed in.'
-      )}&error_description=${encodeURI(error.message)}`;
+    return `/signin/email_signin?error=${encodeURIComponent('You could not be signed in.'
+      )}&error_description=${encodeURIComponent(error.message)}`;
   } else {
-    return `/signin/email_signin?error=${encodeURI('Hmm... Something went wrong.'
-      )}&error_description=${encodeURI('You could not be signed in.')}`;
+    return `/signin/email_signin?error=${encodeURIComponent('Hmm... Something went wrong.'
+      )}&error_description=${encodeURIComponent('You could not be signed in.')}`;
   }
   };
 
 export async function requestPasswordUpdate (formData: FormData) {
-  const redirectURL = `${getURL()}auth/reset_password`;
+  const redirectURL = getURL('/auth/reset_password');
 
   // Get form data
   const email = String(formData.get('email'));
@@ -102,11 +102,11 @@ export async function requestPasswordUpdate (formData: FormData) {
     return `/signin/forgot_password?error=${encodeURIComponent(error.message)
       }&error_description=${encodeURIComponent('Please try again.')}`;
   } else if (data) {
-    return `/signin/forgot_password?status=${encodeURI('Success!')}&status_description=${encodeURI(
+    return `/signin/forgot_password?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Please check your email for a password reset link. You may now close this tab.')}`;
   } else {
-    return `/signin/forgot_password?error=${encodeURI('Hmm... Something went wrong.'
-      )}&error_description=${encodeURI('Password reset email could not be sent.')}`;
+    return `/signin/forgot_password?error=${encodeURIComponent('Hmm... Something went wrong.'
+      )}&error_description=${encodeURIComponent('Password reset email could not be sent.')}`;
   }
 };
 
@@ -125,16 +125,16 @@ export async function signInWithPassword(formData: FormData) {
     return `/signin/password_signin?error=${encodeURIComponent('Sign in failed.')
       }&error_description=${encodeURIComponent(error.message)}`;
   } else if (data) {
-    return `/signin/password_signin?status=${encodeURI('Success!')}&status_description=${encodeURI(
+    return `/signin/password_signin?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'You are now signed in.')}`;
   } else {
-    return `/signin/password_signin?error=${encodeURI('Hmm... Something went wrong.'
-      )}&error_description=${encodeURI('You could not be signed in.')}`;
+    return `/signin/password_signin?error=${encodeURIComponent('Hmm... Something went wrong.'
+      )}&error_description=${encodeURIComponent('You could not be signed in.')}`;
   }
 }
 
 export async function signUp(formData: FormData) {
-  const redirectURL = `${getURL()}auth/callback`;
+  const redirectURL = getURL('/auth/callback');
   
   const fullName = String(formData.get('fullName'));
   const email = String(formData.get('email'));
@@ -160,11 +160,11 @@ export async function signUp(formData: FormData) {
     return `/signin/signup?error=${encodeURIComponent('Sign up failed.')
       }&error_description=${encodeURIComponent(error.message)}`;
   } else if (data) {
-    return `/signin/signup?status=${encodeURI('Success!')}&status_description=${encodeURI(
+    return `/signin/signup?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Please check your email for a confirmation link. You may now close this tab.')}`;
   } else {
-    return `/signin/signup?error=${encodeURI('Hmm... Something went wrong.'
-      )}&error_description=${encodeURI('You could not be signed up.')}`;
+    return `/signin/signup?error=${encodeURIComponent('Hmm... Something went wrong.'
+      )}&error_description=${encodeURIComponent('You could not be signed up.')}`;
   }
 }
 
@@ -174,8 +174,8 @@ export async function updatePassword(formData: FormData) {
 
   // Check that the password and confirmation match
   if (password !== passwordConfirm) {
-      return `/signin/update_password?error=${encodeURI('Your password could not be updated.'
-        )}&error_description=${encodeURI('Passwords do not match.')}`
+      return `/signin/update_password?error=${encodeURIComponent('Your password could not be updated.'
+        )}&error_description=${encodeURIComponent('Passwords do not match.')}`
     }
 
   const cookieStore = cookies();
@@ -190,10 +190,10 @@ export async function updatePassword(formData: FormData) {
         )}&error_description=${encodeURIComponent(error.message)}`;
     } else if (data) {
     // Handle successful authentication...
-    return `/signin/update_password?status=${encodeURI('Success!')}&status_description=${encodeURI(
+    return `/?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Your password has been updated.')}`;
     } else {
-      return `/signin/update_password?error=${encodeURI('Hmm... Something went wrong.'
-        )}&error_description=${encodeURI('Your password could not be updated.')}`;
+      return `/signin/update_password?error=${encodeURIComponent('Hmm... Something went wrong.'
+        )}&error_description=${encodeURIComponent('Your password could not be updated.')}`;
     }
 }

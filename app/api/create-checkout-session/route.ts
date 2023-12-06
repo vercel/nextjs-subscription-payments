@@ -45,7 +45,7 @@ export async function POST(req: Request) {
             trial_period_days: price.trial_period_days,
             metadata
           },
-          success_url: `${getURL()}/account`
+          success_url: getURL('/account')
         });
       } else if (price.type === 'one_time') {
         session = await stripe.checkout.sessions.create({
@@ -62,8 +62,8 @@ export async function POST(req: Request) {
           ],
           mode: 'payment',
           allow_promotion_codes: true,
-          success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/`
+          success_url: getURL('/account'),
+          cancel_url: getURL()
         });
       }
 

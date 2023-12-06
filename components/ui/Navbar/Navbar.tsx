@@ -20,9 +20,9 @@ export default async function Navbar() {
 
     if (error) {
       return redirect(
-        `/?error=${encodeURI(
+        `/?error=${encodeURIComponent(
           'Hmm... Something went wrong.'
-        )}&error_description=${encodeURI('You could not be signed out.')}`
+        )}&error_description=${encodeURIComponent('You could not be signed out.')}`
       );
     }
 

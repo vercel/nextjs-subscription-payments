@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     
     if (error) {
       return NextResponse.redirect(
-        `${requestUrl.origin}/signin/forgot_password?error=${encodeURI(error.name)}&error_description=${encodeURI(
+        `${requestUrl.origin}/signin/forgot_password?error=${encodeURIComponent(error.name)}&error_description=${encodeURIComponent(
           "Sorry, we weren't able to log you in. Please try again."
         )}`
       );
