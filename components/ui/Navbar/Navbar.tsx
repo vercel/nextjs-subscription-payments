@@ -9,6 +9,9 @@ import s from './Navbar.module.css';
 export default async function Navbar() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
   const handleSignOut = async () => {
     'use server';
@@ -29,9 +32,12 @@ export default async function Navbar() {
     return redirect('/signin');
   };
 
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+  // We make this a server function to enforce rehydration on magic link sign in
+  const handleSignIn = async () => {
+    'use server';
+    
+    return redirect('/signin');
+  };
 
   return (
     <nav className={s.root}>
@@ -61,9 +67,9 @@ export default async function Navbar() {
                 <button className={s.link}>Sign out</button>
               </form>
             ) : (
-              <Link href="/signin" className={s.link}>
-                Sign in
-              </Link>
+              <form action={handleSignIn}>
+                <button className={s.link}>Sign in</button>
+              </form>
             )}
           </div>
         </div>

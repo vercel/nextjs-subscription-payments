@@ -14,6 +14,7 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
+// TODO: Throw errors and handle in webhook rather than here
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,
@@ -25,8 +26,11 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   };
 
   const { error } = await supabaseAdmin.from('products').upsert([productData]);
-  if (error) throw error;
-  console.log(`Product inserted/updated: ${product.id}`);
+  if (error) {
+    console.log(`Product insert/update failed: ${error}`);
+  } else {
+    console.log(`Product inserted/updated: ${product.id}`);
+  }
 };
 
 const upsertPriceRecord = async (price: Stripe.Price) => {
@@ -45,8 +49,16 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
   };
 
   const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
-  if (error) throw error;
-  console.log(`Price inserted/updated: ${price.id}`);
+  if (error?.message.includes('foreign key constraint')) {
+    // To handle race conditions where price is inserted
+    // before product, wait 2 seconds and retry
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await upsertPriceRecord(price);
+  } else if (error) {
+    console.log(`Price insert/update failed: ${error}`);
+  } else {
+    console.log(`Price inserted/updated: ${price.id}`);
+  }
 };
 
 const deleteProductRecord = async (product: Stripe.Product) => {
@@ -101,9 +113,6 @@ const createOrRetrieveCustomer = async ({
       .eq('id', uuid)
       .single();
 
-  if (supabaseQueryError) throw supabaseQueryError;
-  console.log('Supabase customer record retrieved successfully.');
-
   // Check if the customer already exists in Stripe
   // TODO: Handle case where multiple customers with same email exist in Stripe
   const existingStripeCustomer = await stripe.customers.list({ email: email });
@@ -132,10 +141,9 @@ const createOrRetrieveCustomer = async ({
     const stripeIdToInsert = stripeCustomerId ? stripeCustomerId : await createCustomerInStripe(uuid, email)
 
     // Upsert Stripe customer ID to Supabase customers table
-    const upsertedCustomer = await upsertCustomerToSupabase(uuid, stripeIdToInsert)
-    console.log(`Stripe customer ID upserted to the Supabase customers table.`);
+    const upsertedStripeCustomer = await upsertCustomerToSupabase(uuid, stripeIdToInsert)
 
-    return upsertedCustomer;
+    return upsertedStripeCustomer;
   }
 };
 
