@@ -60,7 +60,7 @@ export default function Pricing({ user, products, subscription }: Props) {
       const stripe = await getStripe();
       stripe?.redirectToCheckout({ sessionId });
     } catch (error) {
-      return alert((error as Error)?.message);
+      return router.push((error as Error)?.message);
     } finally {
       setPriceIdLoading(undefined);
     }

@@ -50,7 +50,7 @@ export async function signInWithEmail (formData: FormData) {
   const redirectURL = getURL('/auth/callback');
   
   const email = String(formData.get('email'));
-  
+
   if (!isValidEmail(email)) {
     redirect(
     `/signin/email_signin?error=${encodeURIComponent(
@@ -68,12 +68,12 @@ export async function signInWithEmail (formData: FormData) {
     }
   });
 
-  if (data) {
-    return `/signin/email_signin?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
-      'Please check your email for a magic link. You may now close this tab.')}`;
-  } else if (error) {
+  if (error) {
     return `/signin/email_signin?error=${encodeURIComponent('You could not be signed in.'
       )}&error_description=${encodeURIComponent(error.message)}`;
+  } else if (data.user) {
+    return `/signin/email_signin?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
+      'Please check your email for a magic link. You may now close this tab.')}`;
   } else {
     return `/signin/email_signin?error=${encodeURIComponent('Hmm... Something went wrong.'
       )}&error_description=${encodeURIComponent('You could not be signed in.')}`;
@@ -124,8 +124,8 @@ export async function signInWithPassword(formData: FormData) {
   if (error) {
     return `/signin/password_signin?error=${encodeURIComponent('Sign in failed.')
       }&error_description=${encodeURIComponent(error.message)}`;
-  } else if (data) {
-    return `/signin/password_signin?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
+  } else if (data.user) {
+    return `/?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'You are now signed in.')}`;
   } else {
     return `/signin/password_signin?error=${encodeURIComponent('Hmm... Something went wrong.'
@@ -159,7 +159,7 @@ export async function signUp(formData: FormData) {
   if (error) {
     return `/signin/signup?error=${encodeURIComponent('Sign up failed.')
       }&error_description=${encodeURIComponent(error.message)}`;
-  } else if (data) {
+  } else if (data.user) {
     return `/signin/signup?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Please check your email for a confirmation link. You may now close this tab.')}`;
   } else {
@@ -188,8 +188,7 @@ export async function updatePassword(formData: FormData) {
   if (error) {
       return `/signin/update_password?error=${encodeURIComponent('Your password could not be updated.'
         )}&error_description=${encodeURIComponent(error.message)}`;
-    } else if (data) {
-    // Handle successful authentication...
+    } else if (data.user) {
     return `/?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Your password has been updated.')}`;
     } else {

@@ -6,6 +6,10 @@ import { getURL } from '@/utils/helpers';
 
 export async function POST(req: Request) {
   if (req.method === 'POST') {
+    // Get basePath from request URL for constructing toast redirects
+    const requestUrl = new URL(req.url);
+    const basePath = requestUrl.pathname.endsWith('/') ? requestUrl.pathname : requestUrl.pathname + '/';
+    
     // 1. Destructure the price and quantity from the POST body
     const { price, quantity = 1, metadata = {} } = await req.json();
 
@@ -13,16 +17,43 @@ export async function POST(req: Request) {
       // 2. Get the user from Supabase auth
       const cookieStore = cookies();
       const supabase = createClient(cookieStore);
-
       const {
         data: { user }
       } = await supabase.auth.getUser();
 
+      if (!user) return new Response(
+        JSON.stringify({
+          error: { 
+            statusCode: 500, 
+            message: `${basePath}?error=${encodeURIComponent(
+              'Could not get user session')}&error_description=${encodeURIComponent(
+            'Please log out and log back in and try again.')}`
+          }
+        }),
+        { status: 500 }
+      );
+
       // 3. Retrieve or create the customer in Stripe
-      const customer = await createOrRetrieveCustomer({
-        uuid: user?.id || '',
-        email: user?.email || ''
-      });
+      let customer: string;
+      try {
+        customer = await createOrRetrieveCustomer({
+          uuid: user?.id || '',
+          email: user?.email || ''
+        });
+      } catch (err: any) {
+        console.error(err);
+        return new Response(
+          JSON.stringify({
+            error: { 
+              statusCode: 500, 
+              message: `${basePath}?error=${encodeURIComponent(
+                err.name)}&error_description=${encodeURIComponent(
+              'Unable to access customer record. Please contact a system administrator.')}`
+            }
+          }),
+          { status: 500 }
+        );
+      }
 
       // 4. Create a checkout session in Stripe
       let session;
@@ -68,20 +99,38 @@ export async function POST(req: Request) {
       }
 
       if (session) {
-        return new Response(JSON.stringify({ sessionId: session.id }), {
-          status: 200
-        });
+        return new Response(
+          JSON.stringify({
+            sessionId: session.id
+          }),
+          { status: 200 }
+        );
       } else {
         return new Response(
           JSON.stringify({
-            error: { statusCode: 500, message: 'Session is not defined' }
+            error: {
+              statusCode: 500,
+              message: `${basePath}?error=${encodeURIComponent(
+                'Checkout error.')}&error_description=${encodeURIComponent(
+              'Unable to create a checkout session. Please contact a system administrator.')}`
+            }
           }),
           { status: 500 }
         );
       }
     } catch (err: any) {
       console.log(err);
-      return new Response(JSON.stringify(err), { status: 500 });
+      return new Response(
+        JSON.stringify({
+          error: {
+            statusCode: 500,
+            message: `${basePath}?error=${encodeURIComponent(
+              'Hmm... Something went wrong.')}&error_description=${encodeURIComponent(
+            'Unable to create a checkout session. Please contact a system administrator.')}`
+          }
+        }),
+        { status: 500 }
+      );
     }
   } else {
     return new Response('Method Not Allowed', {

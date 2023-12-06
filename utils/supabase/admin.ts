@@ -85,7 +85,6 @@ const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
     .upsert([{ id: uuid, stripe_customer_id: customerId }]);
 
   if (upsertError) throw upsertError;
-  console.log(`Stripe customer ID upserted to the Supabase customers table.`);
 
   return customerId
 }
@@ -106,24 +105,34 @@ const createOrRetrieveCustomer = async ({
   uuid: string;
 }) => {
   // Check if the customer already exists in Supabase
-  const { data: existingSupabaseCustomer, error: supabaseQueryError } =
+  const { data: existingSupabaseCustomer, error: supabaseError } =
     await supabaseAdmin
       .from('customers')
-      .select('stripe_customer_id')
+      .select('*')
       .eq('id', uuid)
       .single();
 
-  // Check if the customer already exists in Stripe
-  // TODO: Handle case where multiple customers with same email exist in Stripe
-  const existingStripeCustomer = await stripe.customers.list({ email: email });
-  const stripeCustomerId =
-    existingStripeCustomer.data.length > 0
-      ? existingStripeCustomer.data[0].id
-      : null;
+  if (supabaseError && !supabaseError.details.includes("0 rows")) throw supabaseError;
+  
+  // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
+  let stripeCustomerId: string | undefined;
+  if(existingSupabaseCustomer?.stripe_customer_id) {
+    const existingStripeCustomer = await stripe.customers.retrieve(
+      existingSupabaseCustomer.stripe_customer_id
+    );
+    stripeCustomerId = existingStripeCustomer.id;
+  } else {
+    // If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
+    const stripeCustomers = await stripe.customers.list({ email: email });
+    stripeCustomerId = stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined;
+  }
 
-  // Reconcile and update records as needed
+  // If still no stripeCustomerId, create a new customer in Stripe
+  const stripeIdToInsert = stripeCustomerId ? stripeCustomerId : await createCustomerInStripe(uuid, email)
+  if (!stripeIdToInsert) throw new Error('Stripe customer creation failed.');
+
   if (existingSupabaseCustomer && stripeCustomerId) {
-    // If Stripe customerIDs in Supabase doesn't match Stripe, update Supabase record
+    // If Supabase has a record but doesn't match Stripe, update Supabase record
     if (existingSupabaseCustomer.stripe_customer_id !== stripeCustomerId) {
       const { error: updateError } = await supabaseAdmin
         .from('customers')
@@ -131,18 +140,21 @@ const createOrRetrieveCustomer = async ({
         .eq('id', uuid);
 
       if (updateError) throw updateError;
-      console.log(
-        `Supabase customer record updated with Stripe ID.`
+      console.warn(
+        `Supabase customer record mismatched Stripe ID. Supabase record updated.`
       );
     }
+    // If Supabase has a record and matches Stripe, return Stripe customer ID
     return stripeCustomerId;
   } else {
-    // If no stripeCustomerId, create a new customer in Stripe
-    const stripeIdToInsert = stripeCustomerId ? stripeCustomerId : await createCustomerInStripe(uuid, email)
-
-    // Upsert Stripe customer ID to Supabase customers table
+    console.warn(
+      `Supabase customer record was missing. A new record was created.`
+    );
+    
+    // If Supabase has no record, create a new record and return Stripe customer ID
     const upsertedStripeCustomer = await upsertCustomerToSupabase(uuid, stripeIdToInsert)
-
+    if (!upsertedStripeCustomer) throw new Error('Supabase customer record creation failed.');
+    
     return upsertedStripeCustomer;
   }
 };
