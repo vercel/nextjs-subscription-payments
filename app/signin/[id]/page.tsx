@@ -21,14 +21,16 @@ import SignUp from '@/components/ui/AuthForms/Signup';
 export default async function SignIn({ params }: { params: { id: string } }) {  
   const {allowOauth, allowEmail, allowPassword } = await getAuthTypes();
   const viewTypes = await getViewTypes();
-  const defaultView = await getDefaultSignInView();
   
   // Declare 'viewProp' and initialize with the default value
-  let viewProp = defaultView
+  let viewProp: string
 
   // Assign url id to 'viewProp' if it's a valid string and ViewTypes includes it
   if (typeof params.id === 'string' && viewTypes.includes(params.id)) {
     viewProp = params.id;
+  } else {
+    viewProp = await getDefaultSignInView();
+    return redirect(`/signin/${viewProp}`);
   }
   
   // Check if the user is already logged in and redirect to the account page if so

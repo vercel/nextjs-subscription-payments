@@ -33,12 +33,9 @@ export async function getViewTypes() {
 
 export async function getDefaultSignInView() {
   // Define the default sign in view
-  let defaultView = "email_signin";
-  if (allowPassword) {
-    defaultView = "password_signin";
-  }
+  let defaultView = allowPassword ? "password_signin" : "email_signin";
   const preferredSignInView = cookies().get('preferredSignInView')?.value || null;
-  if (preferredSignInView) {
+  if (preferredSignInView && (await getViewTypes()).includes(preferredSignInView)) {
     defaultView = preferredSignInView;
   }
 
