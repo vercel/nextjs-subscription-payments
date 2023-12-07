@@ -1,4 +1,3 @@
-// TODO: Manage preferred signin method with a cookie
 import { redirect } from 'next/navigation';
 import { getDefaultSignInView } from '@/utils/auth-helpers';
 

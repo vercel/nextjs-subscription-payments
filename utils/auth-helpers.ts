@@ -37,6 +37,10 @@ export async function getDefaultSignInView() {
   if (allowPassword) {
     defaultView = "password_signin";
   }
+  const preferredSignInView = cookies().get('preferredSignInView')?.value || null;
+  if (preferredSignInView) {
+    defaultView = preferredSignInView;
+  }
 
   return defaultView;
 }
@@ -74,7 +78,8 @@ export async function signInWithEmail (formData: FormData) {
   if (error) {
     return `/signin/email_signin?error=${encodeURIComponent('You could not be signed in.'
       )}&error_description=${encodeURIComponent(error.message)}`;
-  } else if (data.user) {
+  } else if (data) {
+      cookies().set('preferredSignInView', 'email_signin', { path: '/' });
     return `/signin/email_signin?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Please check your email for a magic link. You may now close this tab.')}`;
   } else {
@@ -128,6 +133,7 @@ export async function signInWithPassword(formData: FormData) {
     return `/signin/password_signin?error=${encodeURIComponent('Sign in failed.')
       }&error_description=${encodeURIComponent(error.message)}`;
   } else if (data.user) {
+    cookies().set('preferredSignInView', 'password_signin', { path: '/' });
     return `/?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'You are now signed in.')}`;
   } else {
