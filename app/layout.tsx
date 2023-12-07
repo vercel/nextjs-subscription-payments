@@ -1,7 +1,7 @@
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 
@@ -61,7 +61,9 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-        <Toaster />
+          <Suspense>
+            <Toaster />
+          </Suspense>
       </body>
     </html>
   );

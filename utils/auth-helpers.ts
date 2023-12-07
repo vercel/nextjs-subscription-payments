@@ -162,9 +162,12 @@ export async function signUp(formData: FormData) {
   if (error) {
     return `/signin/signup?error=${encodeURIComponent('Sign up failed.')
       }&error_description=${encodeURIComponent(error.message)}`;
+  } else if (data.session) {
+    return `/?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
+      'You are now signed in.')}`;
   } else if (data.user && data.user.identities && data.user.identities.length == 0) {
     return `/signin/signup?error=${encodeURIComponent('Sign up failed.')
-      }&error_description=${encodeURIComponent('There is already an account associated with this email address.')}`;
+      }&error_description=${encodeURIComponent('There is already an account associated with this email address. Try resetting your password.')}`;
   } else if (data.user) { 
     return `/signin/signup?status=${encodeURIComponent('Success!')}
     &status_description=${encodeURIComponent('Please check your email for a confirmation link. You may now close this tab.')}`;
