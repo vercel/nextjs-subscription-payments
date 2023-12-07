@@ -51,17 +51,17 @@ export default function Pricing({ user, products, subscription }: Props) {
     if (subscription) {
       return router.push('/account');
     }
-    try {
-      const { sessionId } = await postData({
-        url: '/api/create-checkout-session',
-        data: { price }
-      });
+    const { error, sessionId } = await postData({
+      url: '/api/create-checkout-session',
+      data: { price }
+    });
 
+    if (error) {
+      router.push(error.message);
+      setPriceIdLoading(undefined);
+    } else {
       const stripe = await getStripe();
       stripe?.redirectToCheckout({ sessionId });
-    } catch (error) {
-      return router.push((error as Error)?.message);
-    } finally {
       setPriceIdLoading(undefined);
     }
   };

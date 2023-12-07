@@ -103,7 +103,7 @@ const createOrRetrieveCustomer = async ({
 }: {
   email: string;
   uuid: string;
-}) => {
+}) => { 
   // Check if the customer already exists in Supabase
   const { data: existingSupabaseCustomer, error: supabaseError } =
     await supabaseAdmin

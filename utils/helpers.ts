@@ -38,12 +38,6 @@ export const postData = async ({
     body: JSON.stringify(data)
   });
 
-  if (!res.ok) {
-    console.log('Error in postData', { url, data, res });
-
-    throw Error(res.statusText);
-  }
-
   return res.json();
 };
 

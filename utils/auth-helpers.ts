@@ -61,11 +61,14 @@ export async function signInWithEmail (formData: FormData) {
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+  let options = {
+    emailRedirectTo: redirectURL,
+    shouldCreateUser: true
+  };
+  if (allowPassword) options.shouldCreateUser = false;
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
-    options: {
-      emailRedirectTo: redirectURL
-    }
+    options: options
   });
 
   if (error) {
@@ -159,9 +162,12 @@ export async function signUp(formData: FormData) {
   if (error) {
     return `/signin/signup?error=${encodeURIComponent('Sign up failed.')
       }&error_description=${encodeURIComponent(error.message)}`;
-  } else if (data.user) {
-    return `/signin/signup?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
-      'Please check your email for a confirmation link. You may now close this tab.')}`;
+  } else if (data.user && data.user.identities && data.user.identities.length == 0) {
+    return `/signin/signup?error=${encodeURIComponent('Sign up failed.')
+      }&error_description=${encodeURIComponent('There is already an account associated with this email address.')}`;
+  } else if (data.user) { 
+    return `/signin/signup?status=${encodeURIComponent('Success!')}
+    &status_description=${encodeURIComponent('Please check your email for a confirmation link. You may now close this tab.')}`;
   } else {
     return `/signin/signup?error=${encodeURIComponent('Hmm... Something went wrong.'
       )}&error_description=${encodeURIComponent('You could not be signed up.')}`;
@@ -189,7 +195,7 @@ export async function updatePassword(formData: FormData) {
       return `/signin/update_password?error=${encodeURIComponent('Your password could not be updated.'
         )}&error_description=${encodeURIComponent(error.message)}`;
     } else if (data.user) {
-    return `/?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
+      return `/?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
       'Your password has been updated.')}`;
     } else {
       return `/signin/update_password?error=${encodeURIComponent('Hmm... Something went wrong.'

@@ -6,10 +6,6 @@ import { getURL } from '@/utils/helpers';
 
 export async function POST(req: Request) {
   if (req.method === 'POST') {
-    // Get basePath from request URL for constructing toast redirects
-    const requestUrl = new URL(req.url);
-    const basePath = requestUrl.pathname.endsWith('/') ? requestUrl.pathname : requestUrl.pathname + '/';
-    
     try {
       const cookieStore = cookies();
       const supabase = createClient(cookieStore);
@@ -21,7 +17,7 @@ export async function POST(req: Request) {
         JSON.stringify({
           error: { 
             statusCode: 500, 
-            message: `${basePath}?error=${encodeURIComponent(
+            message: `/account?error=${encodeURIComponent(
               'Could not get user session')}&error_description=${encodeURIComponent(
             'Please log out and log back in and try again.')}`
           }
@@ -41,7 +37,7 @@ export async function POST(req: Request) {
           JSON.stringify({
             error: { 
               statusCode: 500, 
-              message: `${basePath}?error=${encodeURIComponent(
+              message: `/account?error=${encodeURIComponent(
                 err.name)}&error_description=${encodeURIComponent(
               'Unable to access customer record. Please contact a system administrator.')}`
             }
@@ -63,7 +59,7 @@ export async function POST(req: Request) {
         JSON.stringify({
           error: {
             statusCode: 500,
-            message: `${basePath}?error=${encodeURIComponent(
+            message: `/account?error=${encodeURIComponent(
               'Hmm... Something went wrong.')}&error_description=${encodeURIComponent(
             'Unable to create a billing portal. Please contact a system administrator.')}`
           }
