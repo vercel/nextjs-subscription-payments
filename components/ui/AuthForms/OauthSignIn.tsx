@@ -35,21 +35,12 @@ export default function OauthSignIn({ view }: Props) {
     // Create client-side supabase client and call signInWithOAuth
     const supabase = createClient();
     const redirectURL = getURL('/auth/callback');
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
         redirectTo: redirectURL
       }
     });
-
-    if (error) {
-      return router.push(
-        `/signin/${view}?error=${encodeURIComponent('Hmm... Something went wrong.'
-        )}&error_description=${encodeURIComponent('You could not be signed in.')}`
-      );
-    }
-
-    router.push('/account');
   };
 
   return (

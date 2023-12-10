@@ -16,7 +16,7 @@ if (!allowPassword && !allowEmail) throw new Error(
 
 export async function getAuthTypes() {
   return { allowOauth, allowEmail, allowPassword };
-}
+};
 
 export async function getViewTypes() {  
   // Define the valid view types
@@ -29,7 +29,7 @@ export async function getViewTypes() {
   }
 
   return viewTypes;
-}
+};
 
 export async function getDefaultSignInView() {
   // Define the default sign in view
@@ -40,12 +40,12 @@ export async function getDefaultSignInView() {
   }
 
   return defaultView;
-}
+};
 
 function isValidEmail(email: string) {
   var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   return regex.test(email);
-}
+};
 
 export async function signInWithEmail (formData: FormData) {
   const redirectURL = getURL('/auth/callback');
@@ -83,7 +83,7 @@ export async function signInWithEmail (formData: FormData) {
     return `/signin/email_signin?error=${encodeURIComponent('Hmm... Something went wrong.'
       )}&error_description=${encodeURIComponent('You could not be signed in.')}`;
   }
-  };
+};
 
 export async function requestPasswordUpdate (formData: FormData) {
   const redirectURL = getURL('/auth/reset_password');
@@ -137,7 +137,7 @@ export async function signInWithPassword(formData: FormData) {
     return `/signin/password_signin?error=${encodeURIComponent('Hmm... Something went wrong.'
       )}&error_description=${encodeURIComponent('You could not be signed in.')}`;
   }
-}
+};
 
 export async function signUp(formData: FormData) {
   const redirectURL = getURL('/auth/callback');
@@ -178,7 +178,7 @@ export async function signUp(formData: FormData) {
     return `/signin/signup?error=${encodeURIComponent('Hmm... Something went wrong.'
       )}&error_description=${encodeURIComponent('You could not be signed up.')}`;
   }
-}
+};
 
 export async function updatePassword(formData: FormData) {
   const password = String(formData.get('password'));
@@ -207,4 +207,4 @@ export async function updatePassword(formData: FormData) {
       return `/signin/update_password?error=${encodeURIComponent('Hmm... Something went wrong.'
         )}&error_description=${encodeURIComponent('Your password could not be updated.')}`;
     }
-}
+};

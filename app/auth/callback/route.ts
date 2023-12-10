@@ -25,5 +25,7 @@ export async function GET(request: NextRequest) {
   }
 
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect(`${requestUrl.origin}/account`);
+  return NextResponse.redirect(
+    `${requestUrl.origin}/account?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent(
+      'You are now signed in.')}`);
 }
