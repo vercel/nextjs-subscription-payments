@@ -19,7 +19,7 @@ import ForgotPassword from '@/components/ui/AuthForms/ForgotPassword';
 import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword';
 import SignUp from '@/components/ui/AuthForms/Signup';
 
-export default async function SignIn({ params }: { params: { id: string } }) {  
+export default async function SignIn({ params,  searchParams }: { params: { id: string }, searchParams: { disable_button: boolean } }) {
   const {allowOauth, allowEmail, allowPassword } = getAuthTypes();
   const viewTypes = getViewTypes();
   const redirectMethod = getRedirectMethod();
@@ -62,10 +62,10 @@ export default async function SignIn({ params }: { params: { id: string } }) {
           'Sign In'
         }>
           {viewProp === 'password_signin' && <PasswordSignIn allowEmail={allowEmail} redirectMethod={redirectMethod} />}
-          {viewProp === 'email_signin' && <EmailSignIn allowPassword={allowPassword} redirectMethod={redirectMethod} />}
-          {viewProp === 'forgot_password' && <ForgotPassword allowEmail={allowEmail} redirectMethod={redirectMethod} />}
+          {viewProp === 'email_signin' && <EmailSignIn allowPassword={allowPassword} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
+          {viewProp === 'forgot_password' && <ForgotPassword allowEmail={allowEmail} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
           {viewProp === 'update_password' && <UpdatePassword redirectMethod={redirectMethod} />}
-          {viewProp === 'signup' && <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} />}
+          {viewProp === 'signup' && <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
           {viewProp !== 'update_password' && viewProp !== 'signup' && allowOauth && (
             <>
             <Separator text="Third-party sign-in" />

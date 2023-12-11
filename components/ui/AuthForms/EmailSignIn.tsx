@@ -10,9 +10,10 @@ import { useRouter } from 'next/navigation';
 interface EmailSignInProps {
   allowPassword: boolean;
   redirectMethod: string;
+  disableButton?: boolean;
 }
 
-export default function EmailSignIn({ allowPassword, redirectMethod }: EmailSignInProps) {  
+export default function EmailSignIn({ allowPassword, redirectMethod, disableButton }: EmailSignInProps) {  
   const router = redirectMethod === 'client' ? useRouter() : null;
   
   return (
@@ -36,6 +37,7 @@ export default function EmailSignIn({ allowPassword, redirectMethod }: EmailSign
             variant="slim"
             type="submit"
             className="mt-1"
+            disabled={disableButton ? true : false}
           >
             Sign in with Email
           </Button>

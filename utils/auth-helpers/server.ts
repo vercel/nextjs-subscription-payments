@@ -47,7 +47,7 @@ export async function signInWithEmail (formData: FormData) {
   } else if (data) {
     cookies().set('preferredSignInView', 'email_signin', { path: '/' });
     redirectPath = getStatusRedirect('/signin/email_signin', 'Success!',
-    'Please check your email for a magic link. You may now close this tab.');
+    'Please check your email for a magic link. You may now close this tab.', true);
   } else {
     redirectPath = getErrorRedirect('/signin/email_signin', 'Hmm... Something went wrong.',
       'You could not be signed in.');
@@ -80,7 +80,7 @@ export async function requestPasswordUpdate (formData: FormData) {
     redirectPath = getErrorRedirect('/signin/forgot_password', error.message, 'Please try again.');
   } else if (data) {
     redirectPath = getStatusRedirect('/signin/forgot_password', 'Success!',
-      'Please check your email for a password reset link. You may now close this tab.');
+      'Please check your email for a password reset link. You may now close this tab.', true);
   } else {
     redirectPath = getErrorRedirect('/signin/forgot_password', 'Hmm... Something went wrong.',
       'Password reset email could not be sent.');
@@ -148,7 +148,7 @@ export async function signUp(formData: FormData) {
       'There is already an account associated with this email address. Try resetting your password.');
   } else if (data.user) { 
     redirectPath = getStatusRedirect('/signin/signup', 'Success!',
-      'Please check your email for a confirmation link. You may now close this tab.');
+      'Please check your email for a confirmation link. You may now close this tab.', true);
   } else {
     redirectPath = getErrorRedirect('/signin/signup', 'Hmm... Something went wrong.',
       'You could not be signed up.');

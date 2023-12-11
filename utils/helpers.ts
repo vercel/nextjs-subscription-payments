@@ -47,34 +47,33 @@ export const toDateTime = (secs: number) => {
   return t;
 };
 
+const toastKeyMap: { [key: string]: string[] } = {
+  status: ['status', 'status_description'],
+  error: ['error', 'error_description'],
+};
+
 const getToastRedirect = (
   path: string,
   toastType: string,
   toastName: string,
-  toastDescription: string = ''
-) => {
-  let redirectPath = path;
-  let nameKey = '';
-  let descriptionKey = '';
+  toastDescription: string = '',
+  disableButton: boolean = false,
+  arbitraryParams: string = ''
+): string => {
+  const [nameKey, descriptionKey] = toastKeyMap[toastType];
 
-  if (toastType === 'status') {
-    nameKey = 'status';
-    descriptionKey = 'status_description';
-  } else if (toastType === 'error') {
-    nameKey = 'error';
-    descriptionKey = 'error_description';
-  } else if (toastType !== '') {
-    console.error('Invalid toast type');;
-  }
-
-  if (toastName) {
-    redirectPath += `?${nameKey}=${encodeURIComponent(toastName)}`;
-  } else {
-    console.error('Toast name is required');
-  }
+  let redirectPath = `${path}?${nameKey}=${encodeURIComponent(toastName)}`;
 
   if (toastDescription) {
     redirectPath += `&${descriptionKey}=${encodeURIComponent(toastDescription)}`;
+  }
+
+  if (disableButton) {
+    redirectPath += `&disable_button=true`;
+  }
+
+  if (arbitraryParams) {
+    redirectPath += `&${arbitraryParams}`;
   }
 
   return redirectPath;
@@ -83,11 +82,15 @@ const getToastRedirect = (
 export const getStatusRedirect = (
   path: string,
   statusName: string,
-  statusDescription: string = ''
-) => getToastRedirect(path, 'status', statusName, statusDescription);
+  statusDescription: string = '',
+  disableButton: boolean = false,
+  arbitraryParams: string = ''
+) => getToastRedirect(path, 'status', statusName, statusDescription, disableButton, arbitraryParams);
 
 export const getErrorRedirect = (
   path: string,
   errorName: string,
-  errorDescription: string = ''
-) => getToastRedirect(path, 'error', errorName, errorDescription);
+  errorDescription: string = '',
+  disableButton: boolean = false,
+  arbitraryParams: string = ''
+) => getToastRedirect(path, 'error', errorName, errorDescription, disableButton, arbitraryParams);

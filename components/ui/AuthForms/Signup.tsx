@@ -9,11 +9,12 @@ import { useRouter } from 'next/navigation';
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
-  allowEmail: boolean,
-  redirectMethod: string
+  allowEmail: boolean;
+  redirectMethod: string;
+  disableButton?: boolean;
 }
 
-export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
+export default function SignUp({ allowEmail, redirectMethod, disableButton }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
 
   return (
@@ -57,6 +58,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
             variant="slim"
             type="submit"
             className="mt-1"
+            disabled={disableButton ? true : false}
           >
             Sign up
           </Button>

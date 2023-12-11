@@ -110,9 +110,9 @@ const createOrRetrieveCustomer = async ({
       .from('customers')
       .select('*')
       .eq('id', uuid)
-      .single();
+      .maybeSingle();
 
-  if (queryError && !queryError.details.includes("0 rows")) {
+  if (queryError) {
     throw new Error(`Supabase customer lookup failed: ${queryError}`);
   }
   
@@ -195,6 +195,7 @@ const manageSubscriptionStatusChange = async (
     .select('id')
     .eq('stripe_customer_id', customerId)
     .single();
+
   if (noCustomerError) throw new Error(`Customer lookup failed: ${noCustomerError}`);
 
   const { id: uuid } = customerData!;

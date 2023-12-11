@@ -10,9 +10,10 @@ import { useRouter } from 'next/navigation';
 interface ForgotPasswordProps {
   allowEmail: boolean;
   redirectMethod: string;
+  disableButton?: boolean;
 }
 
-export default async function ForgotPassword({ allowEmail, redirectMethod }: ForgotPasswordProps) {
+export default async function ForgotPassword({ allowEmail, redirectMethod, disableButton }: ForgotPasswordProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
   
   return (
@@ -36,6 +37,7 @@ export default async function ForgotPassword({ allowEmail, redirectMethod }: For
             variant="slim"
             type="submit"
             className="mt-1"
+            disabled={disableButton ? true : false}
           >
             Send Email
           </Button>

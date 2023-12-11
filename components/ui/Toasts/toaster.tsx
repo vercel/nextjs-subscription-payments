@@ -31,8 +31,17 @@ export function Toaster() {
         description: error ? error_description : status_description,
         variant: error ? 'destructive' : undefined
       });
-      // Clear the search params so that the toast doesn't show up again on refresh
-      router.replace(pathname, { scroll: false });
+      // Clear any 'error', 'status', 'status_description', and 'error_description' search params
+      // so that the toast doesn't show up again on refresh, but leave any other search params
+      // intact.
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      const paramsToRemove = ['error', 'status', 'status_description', 'error_description'];
+      paramsToRemove.forEach(param => newSearchParams.delete(param));
+      const redirectPath = `${pathname}?${newSearchParams.toString()}`;
+      router.replace(
+        redirectPath,
+        { scroll: false }
+      );
     }
   }, [searchParams]);
 
