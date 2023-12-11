@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import { stripe } from '@/utils/stripe';
 import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
-import { getURL } from '@/utils/helpers';
+import { getURL, getErrorRedirect } from '@/utils/helpers';
 
 export async function POST(req: Request) {
   if (req.method === 'POST') {    
@@ -21,9 +21,7 @@ export async function POST(req: Request) {
         JSON.stringify({
           error: { 
             statusCode: 500, 
-            message: `/?error=${encodeURIComponent(
-              'Could not get user session')}&error_description=${encodeURIComponent(
-            'Please log out and log back in and try again.')}`
+            message: getErrorRedirect('/', 'Could not get user session', 'Please log out and log back in and try again.')
           }
         }),
         { status: 500 }
@@ -42,9 +40,7 @@ export async function POST(req: Request) {
           JSON.stringify({
             error: { 
               statusCode: 500, 
-              message: `/?error=${encodeURIComponent(
-                err.name)}&error_description=${encodeURIComponent(
-              'Unable to access customer record. Please contact a system administrator.')}`
+              message: getErrorRedirect('/', err.name, 'Unable to access customer record. Please contact a system administrator.')
             }
           }),
           { status: 500 }
@@ -106,9 +102,7 @@ export async function POST(req: Request) {
           JSON.stringify({
             error: {
               statusCode: 500,
-              message: `/?error=${encodeURIComponent(
-                'Checkout error.')}&error_description=${encodeURIComponent(
-              'Unable to create a checkout session. Please contact a system administrator.')}`
+              message: getErrorRedirect('/', 'Could not create a checkout session.', 'Please contact a system administrator.')
             }
           }),
           { status: 500 }
@@ -120,9 +114,7 @@ export async function POST(req: Request) {
         JSON.stringify({
           error: {
             statusCode: 500,
-            message: `/?error=${encodeURIComponent(
-              'Hmm... Something went wrong.')}&error_description=${encodeURIComponent(
-            'Unable to create a checkout session. Please contact a system administrator.')}`
+            message: getErrorRedirect('/', 'Hmm... Something went wrong.', 'Unable to create a checkout session. Please contact a system administrator.')
           }
         }),
         { status: 500 }

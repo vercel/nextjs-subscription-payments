@@ -1,30 +1,23 @@
 'use client'
 
-import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Link from 'next/link'
-import { signInWithEmail } from '@/utils/auth-helpers';
+import { signInWithEmail } from '@/utils/auth-helpers/server';
+import { handleRequest } from '@/utils/auth-helpers/client';
+import { useRouter } from 'next/navigation';
 
 // Define prop type with allowPassword boolean
 interface EmailSignInProps {
   allowPassword: boolean;
+  redirectMethod: string;
 }
 
-export default function EmailSignIn({ allowPassword }: EmailSignInProps) {  
-  const router = useRouter();
-
-  async function handleEmailSignIn(e: React.FormEvent<HTMLFormElement>) {
-    // Prevent default form submission refresh
-    e.preventDefault();
-    
-    const formData = new FormData(e.currentTarget);
-    const redirectURL = await signInWithEmail(formData);
-    return router.push(redirectURL);
-  }
-
+export default function EmailSignIn({ allowPassword, redirectMethod }: EmailSignInProps) {  
+  const router = redirectMethod === 'client' ? useRouter() : null;
+  
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={handleEmailSignIn}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, signInWithEmail, router)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>

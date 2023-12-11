@@ -7,8 +7,9 @@ import { redirect } from 'next/navigation';
 import { 
   getAuthTypes,
   getViewTypes,
-  getDefaultSignInView 
-} from '@/utils/auth-helpers';
+  getDefaultSignInView,
+  getRedirectMethod
+} from '@/utils/auth-helpers/settings';
 import Card from '@/components/ui/Card';
 import PasswordSignIn from '@/components/ui/AuthForms/PasswordSignIn';
 import EmailSignIn from '@/components/ui/AuthForms/EmailSignIn';
@@ -19,8 +20,9 @@ import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword';
 import SignUp from '@/components/ui/AuthForms/Signup';
 
 export default async function SignIn({ params }: { params: { id: string } }) {  
-  const {allowOauth, allowEmail, allowPassword } = await getAuthTypes();
-  const viewTypes = await getViewTypes();
+  const {allowOauth, allowEmail, allowPassword } = getAuthTypes();
+  const viewTypes = getViewTypes();
+  const redirectMethod = getRedirectMethod();
   
   // Declare 'viewProp' and initialize with the default value
   let viewProp: string
@@ -29,7 +31,8 @@ export default async function SignIn({ params }: { params: { id: string } }) {
   if (typeof params.id === 'string' && viewTypes.includes(params.id)) {
     viewProp = params.id;
   } else {
-    viewProp = await getDefaultSignInView();
+    const preferredSignInView = cookies().get('preferredSignInView')?.value || null;
+    viewProp = getDefaultSignInView(preferredSignInView);
     return redirect(`/signin/${viewProp}`);
   }
   
@@ -58,15 +61,15 @@ export default async function SignIn({ params }: { params: { id: string } }) {
           viewProp === 'update_password' ? 'Update Password' :
           'Sign In'
         }>
-          {viewProp === 'password_signin' && <PasswordSignIn allowEmail={allowEmail} />}
-          {viewProp === 'email_signin' && <EmailSignIn allowPassword={allowPassword} />}
-          {viewProp === 'forgot_password' && <ForgotPassword allowEmail={allowEmail} />}
-          {viewProp === 'update_password' && <UpdatePassword />}
-          {viewProp === 'signup' && <SignUp allowEmail={allowEmail} />}
+          {viewProp === 'password_signin' && <PasswordSignIn allowEmail={allowEmail} redirectMethod={redirectMethod} />}
+          {viewProp === 'email_signin' && <EmailSignIn allowPassword={allowPassword} redirectMethod={redirectMethod} />}
+          {viewProp === 'forgot_password' && <ForgotPassword allowEmail={allowEmail} redirectMethod={redirectMethod} />}
+          {viewProp === 'update_password' && <UpdatePassword redirectMethod={redirectMethod} />}
+          {viewProp === 'signup' && <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} />}
           {viewProp !== 'update_password' && viewProp !== 'signup' && allowOauth && (
             <>
             <Separator text="Third-party sign-in" />
-            <OauthSignIn view={viewProp} />
+            <OauthSignIn />
             </>
           )}
         </Card>

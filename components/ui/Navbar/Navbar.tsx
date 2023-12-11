@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
+import { getErrorRedirect } from '@/utils/helpers';
 
 import s from './Navbar.module.css';
 
@@ -23,9 +24,7 @@ export default async function Navbar() {
 
     if (error) {
       return redirect(
-        `/?error=${encodeURIComponent(
-          'Hmm... Something went wrong.'
-        )}&error_description=${encodeURIComponent('You could not be signed out.')}`
+        getErrorRedirect(usePathname(), 'Hmm... Something went wrong.', 'You could not be signed out.')
       );
     }
 

@@ -2,31 +2,23 @@
 
 import Button from '@/components/ui/Button';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signUp } from '@/utils/auth-helpers'
+import { signUp } from '@/utils/auth-helpers/server'
+import { handleRequest } from '@/utils/auth-helpers/client';
+import { useRouter } from 'next/navigation';
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
-  allowEmail: boolean;
+  allowEmail: boolean,
+  redirectMethod: string
 }
 
-export default function SignUp({ allowEmail }: SignUpProps) {
-  const router = useRouter();
-  
-  // Handle signup with username and password
-  async function handleSignUp(e: React.FormEvent<HTMLFormElement>): Promise<void> {
-    // Prevent default form submission refresh
-    e.preventDefault();
-    
-    const formData = new FormData(e.currentTarget);
-    const redirectURL = await signUp(formData);
-    return router.push(redirectURL);
-  }
+export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
+  const router = redirectMethod === 'client' ? useRouter() : null;
 
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={handleSignUp}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, signUp, router)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="fullName">Full Name</label>

@@ -46,3 +46,48 @@ export const toDateTime = (secs: number) => {
   t.setSeconds(secs);
   return t;
 };
+
+const getToastRedirect = (
+  path: string,
+  toastType: string,
+  toastName: string,
+  toastDescription: string = ''
+) => {
+  let redirectPath = path;
+  let nameKey = '';
+  let descriptionKey = '';
+
+  if (toastType === 'status') {
+    nameKey = 'status';
+    descriptionKey = 'status_description';
+  } else if (toastType === 'error') {
+    nameKey = 'error';
+    descriptionKey = 'error_description';
+  } else if (toastType !== '') {
+    console.error('Invalid toast type');;
+  }
+
+  if (toastName) {
+    redirectPath += `?${nameKey}=${encodeURIComponent(toastName)}`;
+  } else {
+    console.error('Toast name is required');
+  }
+
+  if (toastDescription) {
+    redirectPath += `&${descriptionKey}=${encodeURIComponent(toastDescription)}`;
+  }
+
+  return redirectPath;
+}
+
+export const getStatusRedirect = (
+  path: string,
+  statusName: string,
+  statusDescription: string = ''
+) => getToastRedirect(path, 'status', statusName, statusDescription);
+
+export const getErrorRedirect = (
+  path: string,
+  errorName: string,
+  errorDescription: string = ''
+) => getToastRedirect(path, 'error', errorName, errorDescription);

@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import { stripe } from '@/utils/stripe';
 import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
-import { getURL } from '@/utils/helpers';
+import { getURL, getErrorRedirect } from '@/utils/helpers';
 
 export async function POST(req: Request) {
   if (req.method === 'POST') {
@@ -17,9 +17,8 @@ export async function POST(req: Request) {
         JSON.stringify({
           error: { 
             statusCode: 500, 
-            message: `/account?error=${encodeURIComponent(
-              'Could not get user session')}&error_description=${encodeURIComponent(
-            'Please log out and log back in and try again.')}`
+            message: getErrorRedirect('/', 'Could not get user session',
+            'Please log out and log back in and try again.')
           }
         }),
         { status: 500 }
@@ -37,9 +36,8 @@ export async function POST(req: Request) {
           JSON.stringify({
             error: { 
               statusCode: 500, 
-              message: `/account?error=${encodeURIComponent(
-                err.name)}&error_description=${encodeURIComponent(
-              'Unable to access customer record. Please contact a system administrator.')}`
+              message: getErrorRedirect('/', 'Unable to access customer record.',
+              'Please try again later or contact a system administrator.')
             }
           }),
           { status: 500 }
@@ -59,9 +57,8 @@ export async function POST(req: Request) {
         JSON.stringify({
           error: {
             statusCode: 500,
-            message: `/account?error=${encodeURIComponent(
-              'Hmm... Something went wrong.')}&error_description=${encodeURIComponent(
-            'Unable to create a billing portal. Please contact a system administrator.')}`
+            message: getErrorRedirect('/', 'Could not create billing portal',
+            'Please try again later or contact a system administrator.'),
           }
         }),
         { status: 500 }
