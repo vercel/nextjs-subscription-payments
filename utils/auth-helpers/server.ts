@@ -15,10 +15,6 @@ export async function redirectToPath(path: string) {
   return redirect(path);
 };
 
-export async function redirectToSignIn() {  
-  return redirect('/signin');
-};
-
 export async function SignOut (formData: FormData) {
   const pathName = String(formData.get('pathName'));
   
@@ -27,12 +23,12 @@ export async function SignOut (formData: FormData) {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    return redirect(
-      getErrorRedirect(pathName, 'Hmm... Something went wrong.', 'You could not be signed out.')
-    );
+    return getErrorRedirect(
+        pathName, 'Hmm... Something went wrong.', 'You could not be signed out.'
+      )
   }
 
-  return redirect('/signin');
+  return '/signin';
 };
 
 export async function signInWithEmail (formData: FormData) {

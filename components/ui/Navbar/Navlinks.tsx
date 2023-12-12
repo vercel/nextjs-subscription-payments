@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { SignOut, redirectToSignIn } from '@/utils/auth-helpers/server'
+import { SignOut } from '@/utils/auth-helpers/server';
+import { handleRequest } from '@/utils/auth-helpers/client';
 import Logo from '@/components/icons/Logo';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { getRedirectMethod } from '@/utils/auth-helpers/settings';
 import s from './Navbar.module.css';
 
 interface NavlinksProps {
@@ -11,7 +13,9 @@ interface NavlinksProps {
 }
 
 export default function Navlinks({ user }: NavlinksProps) {
-    return (
+  const router = getRedirectMethod() === 'client' ? useRouter() : null;  
+  
+  return (
         <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
           <div className="flex items-center flex-1">
             <Link href="/" className={s.logo} aria-label="Logo">
@@ -30,14 +34,14 @@ export default function Navlinks({ user }: NavlinksProps) {
           </div>
           <div className="flex justify-end flex-1 space-x-8">
             {user ? (
-              <form action={SignOut}>
+              <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
                 <input type="hidden" name="pathName" value={usePathname()} />
-                <button className={s.link}>Sign out</button>
+                <button type='submit' className={s.link}>Sign out</button>
               </form>
             ) : (
-              <form action={redirectToSignIn}>
-                <button className={s.link}>Sign in</button>
-              </form>
+              <Link href="/signin" className={s.link}>
+                Sign In
+              </Link>
             )}
           </div>
         </div>
