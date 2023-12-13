@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
-import { stripe } from '@/utils/stripe';
+import { stripe } from '@/utils/stripe/server';
 import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
 import { getURL, getErrorRedirect } from '@/utils/helpers';
 

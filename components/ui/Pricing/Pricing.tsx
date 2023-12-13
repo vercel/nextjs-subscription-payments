@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import type { Tables } from '@/types_db';
 import { postData } from '@/utils/helpers';
-import { getStripe } from '@/utils/stripe-client';
+import { getStripe } from '@/utils/stripe/client';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
