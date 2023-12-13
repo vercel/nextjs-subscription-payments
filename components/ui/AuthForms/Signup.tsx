@@ -2,26 +2,24 @@
 
 import Button from '@/components/ui/Button';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signUp } from '@/utils/auth-helpers'
+import { signUp } from '@/utils/auth-helpers/server'
+import { handleRequest } from '@/utils/auth-helpers/client';
+import { useRouter } from 'next/navigation';
 
-export default function SignUp() {
-  const router = useRouter();
-  
-  // Handle signup with username and password
-  async function handleSignUp(e: React.FormEvent<HTMLFormElement>): Promise<void> {
-    // Prevent default form submission refresh
-    e.preventDefault();
-    
-    const formData = new FormData(e.currentTarget);
-    const redirectURL = await signUp(formData);
-    return router.push(redirectURL);
-  }
+// Define prop type with allowEmail boolean
+interface SignUpProps {
+  allowEmail: boolean;
+  redirectMethod: string;
+  disableButton?: boolean;
+}
+
+export default function SignUp({ allowEmail, redirectMethod, disableButton }: SignUpProps) {
+  const router = redirectMethod === 'client' ? useRouter() : null;
 
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={handleSignUp}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, signUp, router)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="fullName">Full Name</label>
@@ -60,6 +58,7 @@ export default function SignUp() {
             variant="slim"
             type="submit"
             className="mt-1"
+            disabled={disableButton ? true : false}
           >
             Sign up
           </Button>
@@ -67,7 +66,7 @@ export default function SignUp() {
       </form>
       <p>Already have an account?</p>
       <p><Link href="/signin/password_signin" className="font-light text-sm">Sign in with password</Link></p>
-      <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>
+      {allowEmail && <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>}
     </div>
   )
 };

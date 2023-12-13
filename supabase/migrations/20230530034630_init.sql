@@ -4,7 +4,7 @@
 */
 create table users (
   -- UUID from auth.users
-  id uuid references auth.users not null primary key,
+  id uuid references auth.users on delete cascade not null primary key,
   full_name text,
   avatar_url text,
   -- The customer's billing address, stored in JSON format.
@@ -37,7 +37,7 @@ create trigger on_auth_user_created
 */
 create table customers (
   -- UUID from auth.users
-  id uuid references auth.users not null primary key,
+  id uuid references auth.users on delete cascade not null primary key,
   -- The user's customer ID in Stripe. User must not be able to update this.
   stripe_customer_id text
 );
@@ -106,7 +106,7 @@ create type subscription_status as enum ('trialing', 'active', 'canceled', 'inco
 create table subscriptions (
   -- Subscription ID from Stripe, e.g. sub_1234.
   id text primary key,
-  user_id uuid references auth.users not null,
+  user_id uuid references auth.users on delete cascade not null,
   -- The status of the subscription object, one of subscription_status type above.
   status subscription_status,
   -- Set of key-value pairs, used to store additional information about the object in a structured format.

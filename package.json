@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
+    "stripe:fixtures": "stripe fixtures fixtures/stripe-fixtures.json --project-name=saas-starter",
     "generate-types": "npx supabase gen types typescript --project-id YOUR_PROJECT_ID --schema public > types_db.ts"
   },
   "dependencies": {

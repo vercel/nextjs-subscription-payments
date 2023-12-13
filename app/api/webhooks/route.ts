@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { stripe } from '@/utils/stripe';
+import { stripe } from '@/utils/stripe/server';
 import {
   upsertProductRecord,
   upsertPriceRecord,
@@ -15,7 +15,6 @@ const relevantEvents = new Set([
   'price.created',
   'price.updated',
   'price.deleted',
-  'product.deleted',
   'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
@@ -82,7 +81,7 @@ export async function POST(req: Request) {
     } catch (error) {
       console.log(error);
       return new Response(
-        'Webhook handler failed. View your nextjs function logs.',
+        'Webhook handler failed. View your NextJS function logs.',
         {
           status: 400
         }

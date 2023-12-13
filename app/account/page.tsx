@@ -1,6 +1,6 @@
 import ManageSubscriptionButton from './ManageSubscriptionButton';
 import { createClient } from '@/utils/supabase/server';
-import { getURL } from '@/utils/helpers';
+import { getURL, getErrorRedirect, getStatusRedirect } from '@/utils/helpers';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { cookies } from 'next/headers';
@@ -59,19 +59,17 @@ export default async function Account() {
       .from('users')
       .update({ full_name: newName })
       .eq('id', user.id);
-      
-      if (error) {
-        return redirect(
-          `/account?error=${encodeURI(
-            'Hmm... Something went wrong.'
-          )}&error_description=${encodeURI('Your name could not be updated.')}`
-        );
-      }
-        return redirect(
-        `/account?status=${encodeURI('Success!')}&status_description=${encodeURI(
-          'Your name has been updated.'
-        )}`
-      );
+    
+    let redirectUrl: string;
+    if (error) {
+      redirectUrl = getErrorRedirect(
+          '/account', 'Hmm... Something went wrong.', 'Your name could not be updated.'
+        )
+    } else {
+      redirectUrl = getStatusRedirect('/account', 'Success!', 'Your name has been updated.')
+    }
+    
+    return redirectUrl
   };
 
   const updateEmail = async (formData: FormData) => {
@@ -80,34 +78,28 @@ export default async function Account() {
     const newEmail = formData.get('email') as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    
+    const callbackUrl = getURL(getStatusRedirect(
+      '/account', 'Success!', `Your email has been updated.`
+      ));
+
     const { error } = await supabase.auth.updateUser(
       { email: newEmail },
       {
-        emailRedirectTo:
-          getURL() +
-          `/account?status=${encodeURI(
-            'Success!'
-          )}&status_description=${encodeURI(
-            `Your email has been successfully updated to ${newEmail}`
-          )}`
+        emailRedirectTo: callbackUrl
       }
     );
 
+    let redirectUrl: string;
     if (error) {
-      return redirect(
-        `/account?error=${encodeURI('Oops!')}&error_description=${encodeURI(
-          error.message
-        )}`
-      );
+      redirectUrl = getErrorRedirect(
+          '/account', 'Your email could not be updated.', error.message
+        )
+    } else {
+      redirectUrl = getStatusRedirect('/account', 'Confirmation emails sent.',
+      `You will need to confirm the update by clicking the links sent to both ${user?.email} and ${newEmail}`)
     }
-    return redirect(
-      `/account?status=${encodeURI(
-        'Confirmation Emails Sent'
-      )}&status_description=${encodeURI(
-        `You will need to confirm the update by clicking the link sent to both ${user?.email} and ${newEmail}.`
-      )}`
-    );
+    
+    return redirectUrl;
   };
 
   return (

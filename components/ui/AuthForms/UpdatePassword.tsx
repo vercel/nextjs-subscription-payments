@@ -2,24 +2,20 @@
 
 import Button from '@/components/ui/Button';
 import React from 'react';
+import { updatePassword } from '@/utils/auth-helpers/server';
+import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
-import { updatePassword } from '@/utils/auth-helpers';
 
-export default function UpdatePassword() {  
-  const router = useRouter();
+interface UpdatePasswordProps {
+  redirectMethod: string
+}
+
+export default function UpdatePassword({redirectMethod}: UpdatePasswordProps) {
+  const router = redirectMethod === 'client' ? useRouter() : null;
   
-  async function handlePasswordUpdate(e: React.FormEvent<HTMLFormElement>): Promise<void> {
-    // Prevent default form submission refresh
-    e.preventDefault();
-    
-    const formData = new FormData(e.currentTarget);
-    const redirectURL = await updatePassword(formData);
-    return router.push(redirectURL);
-  }
-
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={handlePasswordUpdate}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, updatePassword, router)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="password">New Password</label>

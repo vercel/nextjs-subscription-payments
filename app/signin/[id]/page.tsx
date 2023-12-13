@@ -4,6 +4,12 @@ import Logo from '@/components/icons/Logo';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { 
+  getAuthTypes,
+  getViewTypes,
+  getDefaultSignInView,
+  getRedirectMethod
+} from '@/utils/auth-helpers/settings';
 import Card from '@/components/ui/Card';
 import PasswordSignIn from '@/components/ui/AuthForms/PasswordSignIn';
 import EmailSignIn from '@/components/ui/AuthForms/EmailSignIn';
@@ -13,16 +19,21 @@ import ForgotPassword from '@/components/ui/AuthForms/ForgotPassword';
 import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword';
 import SignUp from '@/components/ui/AuthForms/Signup';
 
-export default async function SignIn({ params }: { params: { id: string } }) {  
-  // Define the valid view types
-  const ViewTypes = ["password_signin", "email_signin", "forgot_password", "update_password", "signup"];
+export default async function SignIn({ params,  searchParams }: { params: { id: string }, searchParams: { disable_button: boolean } }) {
+  const {allowOauth, allowEmail, allowPassword } = getAuthTypes();
+  const viewTypes = getViewTypes();
+  const redirectMethod = getRedirectMethod();
   
-  // Declare 'viewProp' and initialize with a default value
-  let viewProp = 'password_signin';
+  // Declare 'viewProp' and initialize with the default value
+  let viewProp: string
 
-  // Assign 'view' to 'viewProp' if it's a valid string and ViewTypes includes it
-  if (typeof params.id === 'string' && ViewTypes.includes(params.id)) {
+  // Assign url id to 'viewProp' if it's a valid string and ViewTypes includes it
+  if (typeof params.id === 'string' && viewTypes.includes(params.id)) {
     viewProp = params.id;
+  } else {
+    const preferredSignInView = cookies().get('preferredSignInView')?.value || null;
+    viewProp = getDefaultSignInView(preferredSignInView);
+    return redirect(`/signin/${viewProp}`);
   }
   
   // Check if the user is already logged in and redirect to the account page if so
@@ -46,19 +57,19 @@ export default async function SignIn({ params }: { params: { id: string } }) {
         </div>
         <Card title={
           viewProp === 'signup' ? 'Sign Up' :
-          viewProp === 'forgot_password' ? 'Forgot Password' :
+          viewProp === 'forgot_password' ? 'Reset Password' :
           viewProp === 'update_password' ? 'Update Password' :
           'Sign In'
         }>
-          {viewProp === 'password_signin' && <PasswordSignIn />}
-          {viewProp === 'email_signin' && <EmailSignIn />}
-          {viewProp === 'forgot_password' && <ForgotPassword />}
-          {viewProp === 'update_password' && <UpdatePassword />}
-          {viewProp === 'signup' && <SignUp />}
-          {viewProp !== 'update_password' && viewProp !== 'signup' && (
+          {viewProp === 'password_signin' && <PasswordSignIn allowEmail={allowEmail} redirectMethod={redirectMethod} />}
+          {viewProp === 'email_signin' && <EmailSignIn allowPassword={allowPassword} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
+          {viewProp === 'forgot_password' && <ForgotPassword allowEmail={allowEmail} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
+          {viewProp === 'update_password' && <UpdatePassword redirectMethod={redirectMethod} />}
+          {viewProp === 'signup' && <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
+          {viewProp !== 'update_password' && viewProp !== 'signup' && allowOauth && (
             <>
             <Separator text="Third-party sign-in" />
-            <OauthSignIn view={viewProp} />
+            <OauthSignIn />
             </>
           )}
         </Card>

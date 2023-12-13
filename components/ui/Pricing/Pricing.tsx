@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import type { Tables } from '@/types_db';
 import { postData } from '@/utils/helpers';
-import { getStripe } from '@/utils/stripe-client';
+import { getStripe } from '@/utils/stripe/client';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
@@ -51,17 +51,17 @@ export default function Pricing({ user, products, subscription }: Props) {
     if (subscription) {
       return router.push('/account');
     }
-    try {
-      const { sessionId } = await postData({
-        url: '/api/create-checkout-session',
-        data: { price }
-      });
+    const { error, sessionId } = await postData({
+      url: '/api/create-checkout-session',
+      data: { price }
+    });
 
+    if (error) {
+      router.push(error.message);
+      setPriceIdLoading(undefined);
+    } else {
       const stripe = await getStripe();
       stripe?.redirectToCheckout({ sessionId });
-    } catch (error) {
-      return alert((error as Error)?.message);
-    } finally {
       setPriceIdLoading(undefined);
     }
   };

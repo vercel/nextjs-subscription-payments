@@ -1,25 +1,24 @@
 'use client'
 
-import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Link from 'next/link'
-import { signInWithEmail } from '@/utils/auth-helpers';
+import { signInWithEmail } from '@/utils/auth-helpers/server';
+import { handleRequest } from '@/utils/auth-helpers/client';
+import { useRouter } from 'next/navigation';
 
-export default function EmailSignIn() {  
-  const router = useRouter();
+// Define prop type with allowPassword boolean
+interface EmailSignInProps {
+  allowPassword: boolean;
+  redirectMethod: string;
+  disableButton?: boolean;
+}
 
-  async function handleEmailSignIn(e: React.FormEvent<HTMLFormElement>) {
-    // Prevent default form submission refresh
-    e.preventDefault();
-    
-    const formData = new FormData(e.currentTarget);
-    const redirectURL = await signInWithEmail(formData);
-    return router.push(redirectURL);
-  }
-
+export default function EmailSignIn({ allowPassword, redirectMethod, disableButton }: EmailSignInProps) {  
+  const router = redirectMethod === 'client' ? useRouter() : null;
+  
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={handleEmailSignIn}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, signInWithEmail, router)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>
@@ -38,13 +37,18 @@ export default function EmailSignIn() {
             variant="slim"
             type="submit"
             className="mt-1"
+            disabled={disableButton ? true : false}
           >
             Sign in with Email
           </Button>
         </div>
       </form>
+      { allowPassword && 
+      <>
       <p><Link href="/signin/password_signin" className="font-light text-sm">Sign in with password</Link></p>
       <p><Link href="/signin/signup" className="font-light text-sm">Don't have an account? Sign up</Link></p>
+      </>
+      }
     </div>
   )
 };

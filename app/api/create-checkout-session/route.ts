@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
-import { stripe } from '@/utils/stripe';
+import { stripe } from '@/utils/stripe/server';
 import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
-import { getURL } from '@/utils/helpers';
+import { getURL, getErrorRedirect } from '@/utils/helpers';
 
 export async function POST(req: Request) {
-  if (req.method === 'POST') {
+  if (req.method === 'POST') {    
     // 1. Destructure the price and quantity from the POST body
     const { price, quantity = 1, metadata = {} } = await req.json();
 
@@ -17,11 +17,35 @@ export async function POST(req: Request) {
         data: { user }
       } = await supabase.auth.getUser();
 
+      if (!user) return new Response(
+        JSON.stringify({
+          error: { 
+            statusCode: 500, 
+            message: getErrorRedirect('/', 'Could not get user session', 'Please log out and log back in and try again.')
+          }
+        }),
+        { status: 500 }
+      );
+
       // 3. Retrieve or create the customer in Stripe
-      const customer = await createOrRetrieveCustomer({
-        uuid: user?.id || '',
-        email: user?.email || ''
-      });
+      let customer: string;
+      try {
+        customer = await createOrRetrieveCustomer({
+          uuid: user?.id || '',
+          email: user?.email || ''
+        });
+      } catch (err: any) {
+        console.error(err);
+        return new Response(
+          JSON.stringify({
+            error: { 
+              statusCode: 500, 
+              message: getErrorRedirect('/', err.name, 'Unable to access customer record. Please contact a system administrator.')
+            }
+          }),
+          { status: 500 }
+        );
+      }
 
       // 4. Create a checkout session in Stripe
       let session;
@@ -41,10 +65,10 @@ export async function POST(req: Request) {
           mode: 'subscription',
           allow_promotion_codes: true,
           subscription_data: {
-            trial_period_days: price.trial_period_days,
+            trial_end: price.recurring?.trial_period_days && 'now',
             metadata
           },
-          success_url: `${getURL()}/account`
+          success_url: getURL('/account')
         });
       } else if (price.type === 'one_time') {
         session = await stripe.checkout.sessions.create({
@@ -61,26 +85,40 @@ export async function POST(req: Request) {
           ],
           mode: 'payment',
           allow_promotion_codes: true,
-          success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/`
+          success_url: getURL('/account'),
+          cancel_url: getURL()
         });
       }
 
       if (session) {
-        return new Response(JSON.stringify({ sessionId: session.id }), {
-          status: 200
-        });
+        return new Response(
+          JSON.stringify({
+            sessionId: session.id
+          }),
+          { status: 200 }
+        );
       } else {
         return new Response(
           JSON.stringify({
-            error: { statusCode: 500, message: 'Session is not defined' }
+            error: {
+              statusCode: 500,
+              message: getErrorRedirect('/', 'Could not create a checkout session.', 'Please contact a system administrator.')
+            }
           }),
           { status: 500 }
         );
       }
     } catch (err: any) {
       console.log(err);
-      return new Response(JSON.stringify(err), { status: 500 });
+      return new Response(
+        JSON.stringify({
+          error: {
+            statusCode: 500,
+            message: getErrorRedirect('/', 'Hmm... Something went wrong.', 'Unable to create a checkout session. Please contact a system administrator.')
+          }
+        }),
+        { status: 500 }
+      );
     }
   } else {
     return new Response('Method Not Allowed', {

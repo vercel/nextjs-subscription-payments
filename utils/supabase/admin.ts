@@ -1,5 +1,5 @@
 import { toDateTime } from '../helpers';
-import { stripe } from '../stripe';
+import { stripe } from '../stripe/server';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
@@ -24,12 +24,12 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     metadata: product.metadata
   };
 
-  const { error } = await supabaseAdmin.from('products').upsert([productData]);
-  if (error) throw error;
+  const { error: upsertError } = await supabaseAdmin.from('products').upsert([productData]);
+  if (upsertError) throw new Error(`Product insert/update failed: ${upsertError}`);
   console.log(`Product inserted/updated: ${product.id}`);
 };
 
-const upsertPriceRecord = async (price: Stripe.Price) => {
+const upsertPriceRecord = async (price: Stripe.Price, retryCount = 0, maxRetries = 3) => {
   const priceData: Price = {
     id: price.id,
     product_id: typeof price.product === 'string' ? price.product : '',
@@ -44,28 +44,58 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
     metadata: price.metadata
   };
 
-  const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
-  if (error) throw error;
-  console.log(`Price inserted/updated: ${price.id}`);
+  const { error: upsertError } = await supabaseAdmin.from('prices').upsert([priceData]);
+
+  if (upsertError?.message.includes('foreign key constraint')) {
+    if (retryCount < maxRetries) {
+      console.log(`Retry attempt ${retryCount + 1} for price ID: ${price.id}`);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await upsertPriceRecord(price, retryCount + 1, maxRetries);
+    } else {
+      throw new Error(`Price insert/update failed after ${maxRetries} retries: ${upsertError}`);
+    }
+  } else if (upsertError) {
+    throw new Error(`Price insert/update failed: ${upsertError}`);
+  } else {
+    console.log(`Price inserted/updated: ${price.id}`);
+  }
 };
 
 const deleteProductRecord = async (product: Stripe.Product) => {
-  const { error } = await supabaseAdmin
+  const { error: deletionError } = await supabaseAdmin
     .from('products')
     .delete()
     .eq('id', product.id);
-  if (error) throw error;
+  if (deletionError) throw new Error(`Product deletion failed: ${deletionError}`);
   console.log(`Product deleted: ${product.id}`);
 };
 
 const deletePriceRecord = async (price: Stripe.Price) => {
-  const { error } = await supabaseAdmin
+  const { error: deletionError } = await supabaseAdmin
     .from('prices')
     .delete()
     .eq('id', price.id);
-  if (error) throw error;
+  if (deletionError) throw new Error(`Price deletion failed: ${deletionError}`);
   console.log(`Price deleted: ${price.id}`);
 };
+
+const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
+  const { error: upsertError } = await supabaseAdmin
+    .from('customers')
+    .upsert([{ id: uuid, stripe_customer_id: customerId }]);
+
+  if (upsertError) throw new Error(`Supabase customer record creation failed: ${upsertError}`);
+
+  return customerId
+}
+
+const createCustomerInStripe = async (uuid: string, email: string) => {
+  const customerData = { metadata: { supabaseUUID: uuid }, email: email };
+  const newCustomer = await stripe.customers.create(customerData);
+  if (!newCustomer) throw new Error('Stripe customer creation failed.');
+
+  return newCustomer.id
+}
 
 const createOrRetrieveCustomer = async ({
   email,
@@ -73,80 +103,62 @@ const createOrRetrieveCustomer = async ({
 }: {
   email: string;
   uuid: string;
-}) => {
+}) => { 
   // Check if the customer already exists in Supabase
-  const { data: existingSupabaseCustomer, error: supabaseQueryError } =
+  const { data: existingSupabaseCustomer, error: queryError } =
     await supabaseAdmin
       .from('customers')
-      .select('stripe_customer_id')
+      .select('*')
       .eq('id', uuid)
-      .single();
+      .maybeSingle();
 
-  if (supabaseQueryError) console.error(supabaseQueryError); // Log error but continue
+  if (queryError) {
+    throw new Error(`Supabase customer lookup failed: ${queryError}`);
+  }
+  
+  // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
+  let stripeCustomerId: string | undefined;
+  if(existingSupabaseCustomer?.stripe_customer_id) {
+    const existingStripeCustomer = await stripe.customers.retrieve(
+      existingSupabaseCustomer.stripe_customer_id
+    );
+    stripeCustomerId = existingStripeCustomer.id;
+  } else {
+    // If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
+    const stripeCustomers = await stripe.customers.list({ email: email });
+    stripeCustomerId = stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined;
+  }
 
-  // Check if the customer already exists in Stripe
-  const existingStripeCustomer = await stripe.customers.list({ email: email });
-  const stripeCustomerId =
-    existingStripeCustomer.data.length > 0
-      ? existingStripeCustomer.data[0].id
-      : null;
+  // If still no stripeCustomerId, create a new customer in Stripe
+  const stripeIdToInsert = stripeCustomerId ? stripeCustomerId : await createCustomerInStripe(uuid, email)
+  if (!stripeIdToInsert) throw new Error('Stripe customer creation failed.');
 
-  // Reconcile and update records as needed
   if (existingSupabaseCustomer && stripeCustomerId) {
-    // If customer IDs do not match, update Supabase record
+    // If Supabase has a record but doesn't match Stripe, update Supabase record
     if (existingSupabaseCustomer.stripe_customer_id !== stripeCustomerId) {
       const { error: updateError } = await supabaseAdmin
         .from('customers')
         .update({ stripe_customer_id: stripeCustomerId })
         .eq('id', uuid);
 
-      if (updateError) throw updateError;
-      console.log(
-        `Supabase customer record updated with Stripe ID: ${stripeCustomerId}`
+      if (updateError) throw new Error(`Supabase customer record update failed: ${updateError}`);
+      console.warn(
+        `Supabase customer record mismatched Stripe ID. Supabase record updated.`
       );
     }
+    // If Supabase has a record and matches Stripe, return Stripe customer ID
     return stripeCustomerId;
-  } else if (!existingSupabaseCustomer && stripeCustomerId) {
-    // Customer exists in Stripe but not in Supabase, insert into Supabase
-    const { error: insertError } = await supabaseAdmin
-      .from('customers')
-      .insert([{ id: uuid, stripe_customer_id: stripeCustomerId }]);
-
-    if (insertError) throw insertError;
-    console.log(`Customer ID inserted into the Supabase customers table.`);
-    return stripeCustomerId;
-  } else if (!stripeCustomerId) {
-    // Customer does not exist in Stripe, create a new customer in Stripe
-    const customerData = { metadata: { supabaseUUID: uuid }, email: email };
-    const newCustomer = await stripe.customers.create(customerData);
-    if (existingSupabaseCustomer) {
-      // Update any existing Supabase record with the new Stripe customer ID
-      const { error: updateError } = await supabaseAdmin
-        .from('customers')
-        .update({ stripe_customer_id: newCustomer.id })
-        .eq('id', uuid);
-
-      if (updateError) throw updateError;
-      console.log(
-        `Existing Supabase customer record updated with new Stripe ID: ${newCustomer.id}.`
-      );
-    } else {
-      // Insert a new record in Supabase if no existing record is found
-      const { error: supabaseInsertError } = await supabaseAdmin
-        .from('customers')
-        .insert([{ id: uuid, stripe_customer_id: newCustomer.id }]);
-      if (supabaseInsertError) throw supabaseInsertError;
-
-      console.log(
-        `New customer created in Stripe and inserted into Supabase for ${uuid}.`
-      );
-    }
-
-    return newCustomer.id;
+  } else {
+    console.warn(
+      `Supabase customer record was missing. A new record was created.`
+    );
+    
+    // If Supabase has no record, create a new record and return Stripe customer ID
+    const upsertedStripeCustomer = await upsertCustomerToSupabase(uuid, stripeIdToInsert)
+    if (!upsertedStripeCustomer) throw new Error('Supabase customer record creation failed.');
+    
+    return upsertedStripeCustomer;
   }
-
-  // Fallback in case of unforeseen scenarios
-  throw new Error('Unhandled scenario in createOrRetrieveCustomer function');
 };
 
 /**
@@ -162,14 +174,14 @@ const copyBillingDetailsToCustomer = async (
   if (!name || !phone || !address) return;
   //@ts-ignore
   await stripe.customers.update(customer, { name, phone, address });
-  const { error } = await supabaseAdmin
+  const { error: updateError } = await supabaseAdmin
     .from('users')
     .update({
       billing_address: { ...address },
       payment_method: { ...payment_method[payment_method.type] }
     })
     .eq('id', uuid);
-  if (error) throw error;
+  if (updateError) throw new Error(`Customer update failed: ${updateError}`);
 };
 
 const manageSubscriptionStatusChange = async (
@@ -183,7 +195,8 @@ const manageSubscriptionStatusChange = async (
     .select('id')
     .eq('stripe_customer_id', customerId)
     .single();
-  if (noCustomerError) throw noCustomerError;
+
+  if (noCustomerError) throw new Error(`Customer lookup failed: ${noCustomerError}`);
 
   const { id: uuid } = customerData!;
 
@@ -225,10 +238,10 @@ const manageSubscriptionStatusChange = async (
       : null
   };
 
-  const { error } = await supabaseAdmin
+  const { error: upsertError } = await supabaseAdmin
     .from('subscriptions')
     .upsert([subscriptionData]);
-  if (error) throw error;
+  if (upsertError) throw new Error(`Subscription insert/update failed: ${upsertError}`);
   console.log(
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   );

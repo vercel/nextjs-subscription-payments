@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
-import { stripe } from '@/utils/stripe';
+import { stripe } from '@/utils/stripe/server';
 import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
-import { getURL } from '@/utils/helpers';
+import { getURL, getErrorRedirect } from '@/utils/helpers';
 
 export async function POST(req: Request) {
   if (req.method === 'POST') {
@@ -13,16 +13,40 @@ export async function POST(req: Request) {
         data: { user }
       } = await supabase.auth.getUser();
 
-      if (!user) throw Error('Could not get user');
-      const customer = await createOrRetrieveCustomer({
-        uuid: user.id || '',
-        email: user.email || ''
-      });
+      if (!user) return new Response(
+        JSON.stringify({
+          error: { 
+            statusCode: 500, 
+            message: getErrorRedirect('/', 'Could not get user session',
+            'Please log out and log back in and try again.')
+          }
+        }),
+        { status: 500 }
+      );
 
-      if (!customer) throw Error('Could not get customer');
+      let customer: string;
+      try {
+        customer = await createOrRetrieveCustomer({
+          uuid: user.id || '',
+          email: user.email || ''
+        });
+      } catch (err: any) {
+        console.error(err);
+        return new Response(
+          JSON.stringify({
+            error: { 
+              statusCode: 500, 
+              message: getErrorRedirect('/', 'Unable to access customer record.',
+              'Please try again later or contact a system administrator.')
+            }
+          }),
+          { status: 500 }
+        );
+      }
+
       const { url } = await stripe.billingPortal.sessions.create({
         customer,
-        return_url: `${getURL()}/account`
+        return_url: getURL('/account')
       });
       return new Response(JSON.stringify({ url }), {
         status: 200
@@ -30,10 +54,14 @@ export async function POST(req: Request) {
     } catch (err: any) {
       console.log(err);
       return new Response(
-        JSON.stringify({ error: { statusCode: 500, message: err.message } }),
-        {
-          status: 500
-        }
+        JSON.stringify({
+          error: {
+            statusCode: 500,
+            message: getErrorRedirect('/', 'Could not create billing portal',
+            'Please try again later or contact a system administrator.'),
+          }
+        }),
+        { status: 500 }
       );
     }
   } else {
