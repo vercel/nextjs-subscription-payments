@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { stripe } from '@/utils/stripe/server';
+import { stripe } from '@/utils/stripe/config';
 import {
   upsertProductRecord,
   upsertPriceRecord,

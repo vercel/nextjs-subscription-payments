@@ -2,11 +2,12 @@
 
 import Button from '@/components/ui/Button';
 import type { Tables } from '@/types_db';
-import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe/client';
+import { stripeCheckout } from '@/utils/stripe/server';
+import { getErrorRedirect } from '@/utils/helpers';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 type Subscription = Tables<'subscriptions'>;
@@ -42,8 +43,9 @@ export default function Pricing({ user, products, subscription }: Props) {
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
+  const currentPath = usePathname();
 
-  const handleCheckout = async (price: Price) => {
+  const handleCheckoutwithServerAction = async (price: Price) => {
     setPriceIdLoading(price.id);
     if (!user) {
       return router.push('/signin');
@@ -51,17 +53,17 @@ export default function Pricing({ user, products, subscription }: Props) {
     if (subscription) {
       return router.push('/account');
     }
-    const { error, sessionId } = await postData({
-      url: '/api/create-checkout-session',
-      data: { price }
-    });
-
-    if (error) {
-      router.push(error.message);
-      setPriceIdLoading(undefined);
-    } else {
+    try {
+      const sessionId = await stripeCheckout(price, currentPath);
       const stripe = await getStripe();
       stripe?.redirectToCheckout({ sessionId });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        router.push(getErrorRedirect(currentPath, 'Failed to open checkout.', error.message));
+      } else {
+        router.push(getErrorRedirect(currentPath, 'Failed to open checkout.', 'Unknown error. Try again later.'));
+      }
+    } finally {
       setPriceIdLoading(undefined);
     }
   };
@@ -137,7 +139,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                         type="button"
                         disabled={false}
                         loading={priceIdLoading === price.id}
-                        onClick={() => handleCheckout(price)}
+                        onClick={() => handleCheckoutwithServerAction(price)}
                         className="block w-full py-2 mt-12 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900 "
                       >
                         {products[0].name ===
@@ -237,7 +239,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                     type="button"
                     disabled={!user}
                     loading={priceIdLoading === price.id}
-                    onClick={() => handleCheckout(price)}
+                    onClick={() => handleCheckoutwithServerAction(price)}
                     className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                   >
                     {subscription ? 'Manage' : 'Subscribe'}
