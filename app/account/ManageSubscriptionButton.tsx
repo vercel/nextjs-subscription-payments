@@ -1,10 +1,10 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import { postData } from '@/utils/helpers';
-
 import { User } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { getErrorRedirect } from '@/utils/helpers';
+import { createStripePortal } from '@/utils/stripe/server';
 
 interface Props {
   user: User;
@@ -12,14 +12,18 @@ interface Props {
 
 export default function ManageSubscriptionButton({ user }: Props) {
   const router = useRouter();
-  const redirectToCustomerPortal = async () => {
-    const { error, url } = await postData({
-      url: '/api/create-portal-link'
-    });
-    if (error) {
-      return router.push(error.message);
-    } else {
+  const currentPath = usePathname();
+
+  const handleStripePortalRequest = async () => {
+    try {
+      const url = await createStripePortal();
       return router.push(url);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return router.push(getErrorRedirect(currentPath, error.message, 'Please try again later or contact a system administrator.'));
+      } else {
+        return router.push(getErrorRedirect(currentPath, 'An unknown error occurred.', 'Please try again later or contact a system administrator.'));
+      }
     }
   };
 
@@ -29,7 +33,7 @@ export default function ManageSubscriptionButton({ user }: Props) {
       <Button
         variant="slim"
         disabled={!user}
-        onClick={redirectToCustomerPortal}
+        onClick={handleStripePortalRequest}
       >
         Open customer portal
       </Button>
