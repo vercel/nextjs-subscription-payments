@@ -2,10 +2,10 @@
 
 import Button from '@/components/ui/Button';
 import Link from 'next/link'
-import React from 'react';
 import { signInWithPassword } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -15,10 +15,17 @@ interface PasswordSignInProps {
 
 export default function PasswordSignIn({ allowEmail, redirectMethod }: PasswordSignInProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsSubmitting(true); // Disable the button while the request is being handled
+    await handleRequest(e, signInWithPassword, router);
+    setIsSubmitting(false);
+  };
   
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, signInWithPassword, router)}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleSubmit(e)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>
@@ -46,6 +53,7 @@ export default function PasswordSignIn({ allowEmail, redirectMethod }: PasswordS
             variant="slim"
             type="submit"
             className="mt-1"
+            disabled={isSubmitting}
           >
             Sign in with Password
           </Button>

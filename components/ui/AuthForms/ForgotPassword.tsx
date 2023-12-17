@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { requestPasswordUpdate } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 // Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
@@ -13,12 +14,19 @@ interface ForgotPasswordProps {
   disableButton?: boolean;
 }
 
-export default async function ForgotPassword({ allowEmail, redirectMethod, disableButton }: ForgotPasswordProps) {
+export default function ForgotPassword({ allowEmail, redirectMethod, disableButton }: ForgotPasswordProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsSubmitting(true); // Disable the button while the request is being handled
+    await handleRequest(e, requestPasswordUpdate, router);
+    setIsSubmitting(false);
+  };
   
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, requestPasswordUpdate, router)}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleSubmit(e)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>
@@ -37,7 +45,7 @@ export default async function ForgotPassword({ allowEmail, redirectMethod, disab
             variant="slim"
             type="submit"
             className="mt-1"
-            disabled={disableButton ? true : false}
+            disabled={disableButton || isSubmitting}
           >
             Send Email
           </Button>

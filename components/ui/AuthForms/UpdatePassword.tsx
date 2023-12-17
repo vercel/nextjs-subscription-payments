@@ -1,10 +1,10 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import React from 'react';
 import { updatePassword } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 interface UpdatePasswordProps {
   redirectMethod: string
@@ -12,10 +12,17 @@ interface UpdatePasswordProps {
 
 export default function UpdatePassword({redirectMethod}: UpdatePasswordProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsSubmitting(true); // Disable the button while the request is being handled
+    await handleRequest(e, updatePassword, router);
+    setIsSubmitting(false);
+  };
   
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={(e) => handleRequest(e, updatePassword, router)}>
+      <form noValidate={true} className="mb-4" onSubmit={(e) => handleSubmit(e)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="password">New Password</label>
@@ -41,6 +48,7 @@ export default function UpdatePassword({redirectMethod}: UpdatePasswordProps) {
             variant="slim"
             type="submit"
             className="mt-1"
+            disabled={isSubmitting}
           >
             Update Password
           </Button>
