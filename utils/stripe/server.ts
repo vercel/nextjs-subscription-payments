@@ -10,7 +10,7 @@ import { Tables } from '@/types_db';
 
 type Price = Tables<'prices'>;
 
-export async function checkoutWithStripe(price: Price, redirectPath: string) {
+export async function checkoutWithStripe(price: Price, redirectPath: string = '/account') {
   // Get the user from Supabase auth
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
@@ -49,7 +49,7 @@ export async function checkoutWithStripe(price: Price, redirectPath: string) {
       }
     ],
     cancel_url: getURL(),
-    success_url: getURL('/account')
+    success_url: getURL(redirectPath)
   }
 
   if (price.type === 'recurring') {

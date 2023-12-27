@@ -160,7 +160,7 @@ export async function signUp(formData: FormData) {
   } else if (data.session) {
     redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.');
   } else if (data.user && data.user.identities && data.user.identities.length == 0) {
-    redirectPath = getErrorRedirect('signin/signup', 'Sign up failed.', 
+    redirectPath = getErrorRedirect('/signin/signup', 'Sign up failed.', 
       'There is already an account associated with this email address. Try resetting your password.');
   } else if (data.user) { 
     redirectPath = getStatusRedirect('/signin/signup', 'Success!',
@@ -169,8 +169,6 @@ export async function signUp(formData: FormData) {
     redirectPath = getErrorRedirect('/signin/signup', 'Hmm... Something went wrong.',
       'You could not be signed up.');
   }
-
-  return redirectPath;
 };
 
 export async function updatePassword(formData: FormData) {
