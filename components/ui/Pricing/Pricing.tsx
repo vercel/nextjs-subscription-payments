@@ -50,22 +50,21 @@ export default function Pricing({ user, products, subscription }: Props) {
     if (!user) {
       return router.push('/signin');
     }
-    if (subscription) {
-      return router.push('/account');
+    
+    const { errorRedirect, sessionId } = await checkoutWithStripe(price, currentPath);
+
+    if (errorRedirect) {
+      return router.push(errorRedirect);
     }
-    try {
-      const sessionId = await checkoutWithStripe(price, currentPath);
-      const stripe = await getStripe();
-      stripe?.redirectToCheckout({ sessionId });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        router.push(getErrorRedirect(currentPath, error.message, 'Please try again later or contact a system administrator.'));
-      } else {
-        router.push(getErrorRedirect(currentPath, 'An unknown error occurred.', 'Please try again later or contact a system administrator.'));
-      }
-    } finally {
-      setPriceIdLoading(undefined);
+
+    if (!sessionId) {
+      return router.push(getErrorRedirect(currentPath, 'An unknown error occurred.', 'Please try again later or contact a system administrator.'));
     }
+    
+    const stripe = await getStripe();
+    stripe?.redirectToCheckout({ sessionId });
+
+    setPriceIdLoading(undefined);
   };
 
   if (!products.length)
