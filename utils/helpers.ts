@@ -54,7 +54,7 @@ export const calculateTrialEndUnixTimestamp = (trialPeriodDays: number | null | 
   }
 
   const currentDate = new Date(); // Current date and time
-  const trialEnd = new Date(currentDate.getTime() + trialPeriodDays * 24 * 60 * 60 * 1000); // Add trial days
+  const trialEnd = new Date(currentDate.getTime() + (trialPeriodDays + 1) * 24 * 60 * 60 * 1000); // Add trial days
   return Math.floor(trialEnd.getTime() / 1000); // Convert to Unix timestamp in seconds
 }
 

@@ -7,6 +7,9 @@ import type { Database, Tables, TablesInsert } from 'types_db';
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
 
+// Set default trial period
+export const defaultTrialPeriodDays = 0;
+
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
 const supabaseAdmin = createClient<Database>(
@@ -40,7 +43,7 @@ const upsertPriceRecord = async (price: Stripe.Price, retryCount = 0, maxRetries
     unit_amount: price.unit_amount ?? null,
     interval: price.recurring?.interval ?? null,
     interval_count: price.recurring?.interval_count ?? null,
-    trial_period_days: price.recurring?.trial_period_days ?? null,
+    trial_period_days: price.recurring?.trial_period_days ?? defaultTrialPeriodDays,
     metadata: price.metadata
   };
 
