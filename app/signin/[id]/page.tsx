@@ -65,7 +65,7 @@ export default async function SignIn({ params,  searchParams }: { params: { id: 
           {viewProp === 'email_signin' && <EmailSignIn allowPassword={allowPassword} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
           {viewProp === 'forgot_password' && <ForgotPassword allowEmail={allowEmail} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
           {viewProp === 'update_password' && <UpdatePassword redirectMethod={redirectMethod} />}
-          {viewProp === 'signup' && <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} disableButton={ searchParams.disable_button} />}
+          {viewProp === 'signup' && <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} />}
           {viewProp !== 'update_password' && viewProp !== 'signup' && allowOauth && (
             <>
             <Separator text="Third-party sign-in" />

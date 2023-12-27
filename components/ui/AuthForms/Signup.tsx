@@ -12,10 +12,9 @@ import { useState } from 'react';
 interface SignUpProps {
   allowEmail: boolean;
   redirectMethod: string;
-  disableButton?: boolean;
 }
 
-export default function SignUp({ allowEmail, redirectMethod, disableButton }: SignUpProps) {
+export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -66,7 +65,7 @@ export default function SignUp({ allowEmail, redirectMethod, disableButton }: Si
             variant="slim"
             type="submit"
             className="mt-1"
-            disabled={disableButton || isSubmitting}
+            disabled={isSubmitting}
           >
             Sign up
           </Button>

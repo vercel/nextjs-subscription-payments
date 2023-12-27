@@ -163,12 +163,14 @@ export async function signUp(formData: FormData) {
     redirectPath = getErrorRedirect('/signin/signup', 'Sign up failed.', 
       'There is already an account associated with this email address. Try resetting your password.');
   } else if (data.user) { 
-    redirectPath = getStatusRedirect('/signin/signup', 'Success!',
-      'Please check your email for a confirmation link. You may now close this tab.', true);
+    redirectPath = getStatusRedirect('/', 'Success!',
+      'Please check your email for a confirmation link. You may now close this tab.');
   } else {
     redirectPath = getErrorRedirect('/signin/signup', 'Hmm... Something went wrong.',
       'You could not be signed up.');
   }
+
+  return redirectPath;
 };
 
 export async function updatePassword(formData: FormData) {
