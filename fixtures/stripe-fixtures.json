@@ -9,7 +9,10 @@
             "method": "post",
             "params": {
                 "name": "Hobby",
-                "description": "Hobby product description"
+                "description": "Hobby product description",
+                "metadata": {
+                    "index": 0
+                }
             }
         },
         {
@@ -48,7 +51,10 @@
             "method": "post",
             "params": {
                 "name": "Freelancer",
-                "description": "Freelancer product description"
+                "description": "Freelancer product description",
+                "metadata": {
+                    "index": 1
+                }
             }
         },
         {
