@@ -30,7 +30,7 @@ export default async function SignIn() {
     return redirect('/');
   }
 
-  const redirectURL = `${getURL()}/auth/callback`;
+  const redirectURL = `${getURL()}auth/callback`;
 
   const handleOTPLogin = async (formData: FormData) => {
     'use server';
