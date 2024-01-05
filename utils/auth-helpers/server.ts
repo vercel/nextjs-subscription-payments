@@ -206,13 +206,7 @@ export async function updatePassword(formData: FormData) {
 
 export async function updateEmail(formData: FormData) {  
   // Get form data
-  let oldEmail = String(formData.get('oldEmail'));
   const newEmail = String(formData.get('newEmail'));
-  
-  // Check that the email is not empty and is not the same as the old email
-  if (!newEmail || oldEmail === newEmail) {
-    return ('/account');
-  }
 
   // Check that the email is valid
   if (!isValidEmail(newEmail)) {
@@ -223,18 +217,6 @@ export async function updateEmail(formData: FormData) {
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-
-  // If oldEmail is undefined, get the user from Supabase auth
-  if (!oldEmail) {
-    const { error, data: { user } } = await supabase.auth.getUser();
-
-    if (error || !user?.email) {
-      console.error(error);
-      return getErrorRedirect('/account', 'Your email could not be updated.', 'Current user email could not be retrieved.')
-    } else {
-      oldEmail = user.email;
-    }
-  }
 
   const callbackUrl = getURL(getStatusRedirect(
     '/account', 'Success!', `Your email has been updated.`
@@ -253,18 +235,13 @@ export async function updateEmail(formData: FormData) {
       )
   } else {
     return getStatusRedirect('/account', 'Confirmation emails sent.',
-    `You will need to confirm the update by clicking the links sent to both ${oldEmail} and ${newEmail}`)
+    `You will need to confirm the update by clicking the links sent to both the old and new email addresses.`)
   }
 }
 
 export async function updateName(formData: FormData) {
   // Get form data
   const fullName = String(formData.get('fullName'));
-
-  // Check that the name is not empty or the same as the old name
-  if (!fullName) {
-    return ('/account');
-  }
 
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);

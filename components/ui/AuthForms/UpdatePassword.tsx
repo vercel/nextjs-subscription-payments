@@ -48,7 +48,7 @@ export default function UpdatePassword({redirectMethod}: UpdatePasswordProps) {
             variant="slim"
             type="submit"
             className="mt-1"
-            disabled={isSubmitting}
+            loading={isSubmitting}
           >
             Update Password
           </Button>

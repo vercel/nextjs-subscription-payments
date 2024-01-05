@@ -45,7 +45,8 @@ export default function ForgotPassword({ allowEmail, redirectMethod, disableButt
             variant="slim"
             type="submit"
             className="mt-1"
-            disabled={disableButton || isSubmitting}
+            loading={isSubmitting}
+            disabled={disableButton}
           >
             Send Email
           </Button>

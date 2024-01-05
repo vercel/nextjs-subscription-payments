@@ -33,7 +33,7 @@ export default function OauthSignIn() {
             variant="slim"
             type="submit"
             className="w-full"
-            disabled={isSubmitting}
+            loading={isSubmitting}
           >
             <span className="mr-2">{provider.icon}</span>
             <span className="capitalize">{provider.name}</span>

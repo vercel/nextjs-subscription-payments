@@ -53,9 +53,9 @@ export default function PasswordSignIn({ allowEmail, redirectMethod }: PasswordS
             variant="slim"
             type="submit"
             className="mt-1"
-            disabled={isSubmitting}
+            loading={isSubmitting}
           >
-            Sign in with Password
+            Sign in
           </Button>
         </div>
       </form>

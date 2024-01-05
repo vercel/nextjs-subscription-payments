@@ -45,9 +45,10 @@ export default function EmailSignIn({ allowPassword, redirectMethod, disableButt
             variant="slim"
             type="submit"
             className="mt-1"
-            disabled={disableButton || isSubmitting}
+            loading={isSubmitting}
+            disabled={disableButton}
           >
-            Sign in with Email
+            Sign in
           </Button>
         </div>
       </form>

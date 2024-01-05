@@ -13,6 +13,12 @@ export default function EmailForm({ userEmail }: { userEmail: string | undefined
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {  
     setIsSubmitting(true);
+    // Check if the new email is the same as the old email
+    if (e.currentTarget.newEmail.value === userEmail) {
+      e.preventDefault();
+      setIsSubmitting(false);
+      return;
+    }
     handleRequest(e, updateEmail, router);
     setIsSubmitting(false);
   };
@@ -26,7 +32,7 @@ return (
         <p className="pb-4 sm:pb-0">
           We will email you to verify the change.
         </p>
-        <Button variant="slim" type="submit" form="emailForm" disabled={isSubmitting}>
+        <Button variant="slim" type="submit" form="emailForm" loading={isSubmitting}>
           Update Email
         </Button>
       </div>
@@ -34,7 +40,6 @@ return (
   >
     <div className="mt-8 mb-4 text-xl font-semibold">
       <form id="emailForm" onSubmit={(e) => handleSubmit(e)}>
-        <input type="hidden" name="oldEmail" value={userEmail ?? ''} />
         <input
           type="text"
           name="newEmail"

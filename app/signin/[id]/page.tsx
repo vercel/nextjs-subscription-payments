@@ -56,9 +56,9 @@ export default async function SignIn({ params,  searchParams }: { params: { id: 
           <Logo width="64px" height="64px" />
         </div>
         <Card title={
-          viewProp === 'signup' ? 'Sign Up' :
           viewProp === 'forgot_password' ? 'Reset Password' :
           viewProp === 'update_password' ? 'Update Password' :
+          viewProp === 'signup' ? 'Sign Up' :
           'Sign In'
         }>
           {viewProp === 'password_signin' && <PasswordSignIn allowEmail={allowEmail} redirectMethod={redirectMethod} />}

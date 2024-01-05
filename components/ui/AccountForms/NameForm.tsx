@@ -13,6 +13,12 @@ export default function NameForm({ userName }: { userName: string }) {
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {  
     setIsSubmitting(true);
+    // Check if the new name is the same as the old name
+    if (e.currentTarget.fullName.value === userName) {
+      e.preventDefault();
+      setIsSubmitting(false);
+      return;
+    }
     handleRequest(e, updateName, router);
     setIsSubmitting(false);
   };
@@ -24,7 +30,7 @@ export default function NameForm({ userName }: { userName: string }) {
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <p className="pb-4 sm:pb-0">64 characters maximum</p>
-          <Button variant="slim" type="submit" form="nameForm" disabled={isSubmitting}>
+          <Button variant="slim" type="submit" form="nameForm" loading={isSubmitting}>
             Update Name
           </Button>
         </div>
