@@ -9,7 +9,11 @@
     "lint": "next lint",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
     "stripe:fixtures": "stripe fixtures fixtures/stripe-fixtures.json --project-name=saas-starter",
-    "generate-types": "npx supabase gen types typescript --project-id YOUR_PROJECT_ID --schema public > types_db.ts"
+    "supabase:start": "npx supabase start",
+    "supabase:link": "node supabase/link.js",
+    "supabase:generate-types": "npx supabase gen types typescript --local --schema public > types_db.ts",
+    "supabase:generate-migration": "npx supabase db diff | npx supabase migration new update",
+    "supabase:migrate": "npx supabase migrate up"
   },
   "dependencies": {
     "@radix-ui/react-toast": "^1.1.5",
