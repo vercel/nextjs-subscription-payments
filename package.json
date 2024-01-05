@@ -13,7 +13,7 @@
     "supabase:link": "node supabase/link.js",
     "supabase:generate-types": "npx supabase gen types typescript --local --schema public > types_db.ts",
     "supabase:generate-migration": "npx supabase db diff | npx supabase migration new update",
-    "supabase:migrate": "npx supabase migrate up"
+    "supabase:migrate": "npx supabase migration up"
   },
   "dependencies": {
     "@radix-ui/react-toast": "^1.1.5",
@@ -23,6 +23,7 @@
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.4.0",
     "clsx": "^2.0.0",
+    "dotenv": "^16.3.1",
     "lucide-react": "0.302.0",
     "next": "14.0.4",
     "react": "^18.2.0",

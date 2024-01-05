@@ -7,7 +7,7 @@ require('dotenv').config({ path: './.env.local' });
 const { execSync } = require('child_process');
 
 // Define the actual command with sensitive data
-const command = `npx supabase link --project-ref ${process.env.SUPABASE_PROJECT_REF} --password ${process.env.SUPABASE_DB_PASSWORD}`;
+const command = `npx supabase link --project-ref "${process.env.SUPABASE_PROJECT_REF}" --password "${process.env.SUPABASE_DB_PASSWORD}"`;
 
 // Create a log-safe version of the command by replacing sensitive data
 const logSafeCommand = command.replace(process.env.SUPABASE_DB_PASSWORD, '[HIDDEN]');
