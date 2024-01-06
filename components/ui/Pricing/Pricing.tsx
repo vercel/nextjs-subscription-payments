@@ -48,17 +48,21 @@ export default function Pricing({ user, products, subscription }: Props) {
 
   const handleStripeCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
+    
     if (!user) {
-      return router.push('/signin');
+      setPriceIdLoading(undefined);
+      return router.push('/signin/signup');
     }
     
     const { errorRedirect, sessionId } = await checkoutWithStripe(price, currentPath);
 
     if (errorRedirect) {
+      setPriceIdLoading(undefined);
       return router.push(errorRedirect);
     }
 
     if (!sessionId) {
+      setPriceIdLoading(undefined);
       return router.push(getErrorRedirect(currentPath, 'An unknown error occurred.', 'Please try again later or contact a system administrator.'));
     }
     
@@ -171,7 +175,6 @@ export default function Pricing({ user, products, subscription }: Props) {
                     <Button
                       variant="slim"
                       type="button"
-                      disabled={!user}
                       loading={priceIdLoading === price.id}
                       onClick={() => handleStripeCheckout(price)}
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
