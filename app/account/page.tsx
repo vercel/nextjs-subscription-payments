@@ -44,7 +44,17 @@ export default async function Account() {
   const updateName = async (formData: FormData) => {
     'use server';
 
-    const newName = formData.get('name') as string;
+    const newName = (formData.get('name') as string).trim();
+
+    // If the name is the same as the current name, return an error
+    if (newName.trim() === userDetails?.full_name) {
+      return redirect(
+        `/account?error=${encodeURI(
+          'Please try again.'
+        )}&error_description=${encodeURI('No change in name detected.')}`
+      );
+    }
+
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
@@ -77,9 +87,24 @@ export default async function Account() {
   const updateEmail = async (formData: FormData) => {
     'use server';
 
-    const newEmail = formData.get('email') as string;
+    const newEmail = (formData.get('email') as string).trim();
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) return redirect('/signin');
+
+    //  If the email is the same as the current email, return an error
+    if (newEmail.trim() === user?.email) {
+      return redirect(
+        `/account?error=${encodeURI(
+          'Please try again.'
+        )}&error_description=${encodeURI('No change in email detected.')}`
+      );
+    }
 
     const { error } = await supabase.auth.updateUser(
       { email: newEmail },
@@ -116,7 +141,7 @@ export default async function Account() {
     return redirect(
       `/account?status=${encodeURI(
         'Confirmation Emails Sent'
-      )}&error_description=${encodeURI(
+      )}&status_description=${encodeURI(
         `You will need to confirm the update by clicking the link sent to both ${user?.email} and ${newEmail}.`
       )}`
     );
