@@ -18,13 +18,15 @@ export async function GET(request: NextRequest) {
     
     if (error) {
       return NextResponse.redirect(
-        getErrorRedirect(`${requestUrl.origin}/signin`, error.name, "Sorry, we weren't able to log you in. Please try again.")
+        getErrorRedirect(`${requestUrl.origin}/signin/forgot_password`, error.name,
+        "Sorry, we weren't able to log you in. Please try again.")
       );
     }
   }
 
   // URL to redirect to after sign in process completes
   return NextResponse.redirect(
-    getStatusRedirect(`${requestUrl.origin}/account`, 'Success!', 'You are now signed in.')
+    getStatusRedirect(`${requestUrl.origin}/signin/update_password`, 'You are now signed in.',
+    'Please enter a new password for your account.')
   );
 }
