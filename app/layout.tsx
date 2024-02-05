@@ -1,3 +1,6 @@
+'use server';
+
+import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
@@ -11,41 +14,41 @@ const meta = {
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
-  url:
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    'https://subscription-starter.vercel.app',
-  type: 'website'
+  url: getURL()
 };
 
-export const metadata = {
-  title: meta.title,
-  description: meta.description,
-  cardImage: meta.cardImage,
-  robots: meta.robots,
-  favicon: meta.favicon,
-  url: meta.url,
-  type: meta.type,
-  metadataBase: new URL(
-    getURL() ?? 'https://subscription-payments.vercel.app'
-  ),
-  openGraph: {
-    url: meta.url,
+export async function generateMetadata(): Promise<Metadata> {
+  return({
     title: meta.title,
     description: meta.description,
-    cardImage: meta.cardImage,
-    type: meta.type,
-    site_name: meta.title
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@vercel',
-    title: meta.title,
-    description: meta.description,
-    cardImage: meta.cardImage
-  }
+    referrer: 'origin-when-cross-origin',
+    keywords: ['Vercel', 'Supabase', 'Next.js', 'Stripe', 'Subscription'],
+    authors: [{ name: 'Vercel', url: 'https://vercel.com/' }],
+    creator: 'Vercel',
+    publisher: 'Vercel',
+    robots: meta.robots,
+    icons: {icon: meta.favicon},
+    metadataBase: new URL(meta.url),
+    openGraph: {
+      url: meta.url,
+      title: meta.title,
+      description: meta.description,
+      images: [meta.cardImage],
+      type: 'website',
+      siteName: meta.title
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@Vercel',
+      creator: '@Vercel',
+      title: meta.title,
+      description: meta.description,
+      images: [meta.cardImage]
+    }
+  });
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   // Layouts must accept a children prop.
   // This will be populated with nested layouts or pages
   children
