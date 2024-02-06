@@ -16,6 +16,8 @@
     "supabase:migrate": "npx supabase migration up --linked"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
     "@radix-ui/react-toast": "^1.1.5",
     "@stripe/stripe-js": "^2.2.2",
     "@supabase/ssr": "^0.0.10",
