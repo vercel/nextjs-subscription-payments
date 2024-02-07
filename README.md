@@ -219,3 +219,10 @@ To verify you are running in production mode, test checking out with the [Stripe
 
 ### Misc notes on development
 - [https://ui.shadcn.com/docs/installation/next](configured component library)
+
+### Stripe Test Credit Cards
+https://stripe.com/docs/testing
+
+Visa Credit Card
+4242424242424242
+any 3 digits, any future date
