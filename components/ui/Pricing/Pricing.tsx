@@ -35,8 +35,8 @@ type BillingInterval = 'lifetime' | 'year' | 'month';
 export default function Pricing({ user, products, subscription }: Props) {
   const intervals = Array.from(
     new Set(
-      products.flatMap(
-        (product) => product?.prices?.map((price) => price?.interval)
+      products.flatMap((product) =>
+        product?.prices?.map((price) => price?.interval)
       )
     )
   );
@@ -48,13 +48,16 @@ export default function Pricing({ user, products, subscription }: Props) {
 
   const handleStripeCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
-    
+
     if (!user) {
       setPriceIdLoading(undefined);
       return router.push('/signin/signup');
     }
-    
-    const { errorRedirect, sessionId } = await checkoutWithStripe(price, currentPath);
+
+    const { errorRedirect, sessionId } = await checkoutWithStripe(
+      price,
+      currentPath
+    );
 
     if (errorRedirect) {
       setPriceIdLoading(undefined);
@@ -63,16 +66,22 @@ export default function Pricing({ user, products, subscription }: Props) {
 
     if (!sessionId) {
       setPriceIdLoading(undefined);
-      return router.push(getErrorRedirect(currentPath, 'An unknown error occurred.', 'Please try again later or contact a system administrator.'));
+      return router.push(
+        getErrorRedirect(
+          currentPath,
+          'An unknown error occurred.',
+          'Please try again later or contact a system administrator.'
+        )
+      );
     }
-    
+
     const stripe = await getStripe();
     stripe?.redirectToCheckout({ sessionId });
 
     setPriceIdLoading(undefined);
   };
 
-  if (!products.length){
+  if (!products.length) {
     return (
       <section className="bg-black">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
@@ -92,8 +101,9 @@ export default function Pricing({ user, products, subscription }: Props) {
         </div>
         <LogoCloud />
       </section>
-    )} else {
-      return (
+    );
+  } else {
+    return (
       <section className="bg-black">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
@@ -189,6 +199,6 @@ export default function Pricing({ user, products, subscription }: Props) {
           <LogoCloud />
         </div>
       </section>
-    )
-  };
-};
+    );
+  }
+}

@@ -145,7 +145,7 @@ Next, run the following command to start a local Supabase instance and run the m
 pnpm run supabase:start
 ```
 
-The terminal output will provide you with values for the environment variables `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY`. Copy these into your `.env.local` file. 
+The terminal output will provide you with values for the environment variables `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY`. Copy these into your `.env.local` file.
 
 The terminal output will also provide you with a URL to access the local Supabase Studio, where you can make changes to your local database instance. (You can always find the Supabase Studio later by opening up a Docker window, navigating to `Containers` tab, and clicking the link in the `Ports` column for the corresponding container.)
 
