@@ -2,10 +2,13 @@
 
 import Stripe from 'stripe';
 import { stripe } from '@/utils/stripe/config';
-import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
-import { getURL, getErrorRedirect, calculateTrialEndUnixTimestamp } from '@/utils/helpers';
+import {
+  getURL,
+  getErrorRedirect,
+  calculateTrialEndUnixTimestamp
+} from '@/utils/helpers';
 import { Tables } from '@/types_db';
 
 type Price = Tables<'prices'>;
@@ -15,12 +18,17 @@ type CheckoutResponse = {
   sessionId?: string;
 };
 
-export async function checkoutWithStripe(price: Price, redirectPath: string = '/account'): Promise<CheckoutResponse> {
+export async function checkoutWithStripe(
+  price: Price,
+  redirectPath: string = '/account'
+): Promise<CheckoutResponse> {
   try {
     // Get the user from Supabase auth
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { error, data: { user } } = await supabase.auth.getUser();
+    const supabase = createClient();
+    const {
+      error,
+      data: { user }
+    } = await supabase.auth.getUser();
 
     if (error || !user) {
       console.error(error);
@@ -49,14 +57,17 @@ export async function checkoutWithStripe(price: Price, redirectPath: string = '/
       line_items: [
         {
           price: price.id,
-          quantity: 1,
+          quantity: 1
         }
       ],
       cancel_url: getURL(),
       success_url: getURL(redirectPath)
-    }
+    };
 
-    console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days));
+    console.log(
+      'Trial end:',
+      calculateTrialEndUnixTimestamp(price.trial_period_days)
+    );
     if (price.type === 'recurring') {
       params = {
         ...params,
@@ -64,12 +75,12 @@ export async function checkoutWithStripe(price: Price, redirectPath: string = '/
         subscription_data: {
           trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
         }
-      }
+      };
     } else if (price.type === 'one_time') {
       params = {
         ...params,
         mode: 'payment'
-      }
+      };
     }
 
     // Create a checkout session in Stripe
@@ -83,25 +94,37 @@ export async function checkoutWithStripe(price: Price, redirectPath: string = '/
 
     // Instead of returning a Response, just return the data or error.
     if (session) {
-      return {sessionId: session.id};
+      return { sessionId: session.id };
     } else {
       throw new Error('Unable to create checkout session.');
     }
   } catch (error) {
     if (error instanceof Error) {
-      return {errorRedirect: getErrorRedirect(redirectPath, error.message, 'Please try again later or contact a system administrator.')};
+      return {
+        errorRedirect: getErrorRedirect(
+          redirectPath,
+          error.message,
+          'Please try again later or contact a system administrator.'
+        )
+      };
     } else {
-      return {errorRedirect: getErrorRedirect(redirectPath, 'An unknown error occurred.', 'Please try again later or contact a system administrator.')};
+      return {
+        errorRedirect: getErrorRedirect(
+          redirectPath,
+          'An unknown error occurred.',
+          'Please try again later or contact a system administrator.'
+        )
+      };
     }
   }
 }
 
 export async function createStripePortal(currentPath: string) {
   try {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     const {
-      error, data: { user }
+      error,
+      data: { user }
     } = await supabase.auth.getUser();
 
     if (!user) {
@@ -142,9 +165,17 @@ export async function createStripePortal(currentPath: string) {
   } catch (error) {
     if (error instanceof Error) {
       console.error(error);
-      return getErrorRedirect(currentPath, error.message, 'Please try again later or contact a system administrator.');
+      return getErrorRedirect(
+        currentPath,
+        error.message,
+        'Please try again later or contact a system administrator.'
+      );
     } else {
-      return getErrorRedirect(currentPath, 'An unknown error occurred.', 'Please try again later or contact a system administrator.');
+      return getErrorRedirect(
+        currentPath,
+        'An unknown error occurred.',
+        'Please try again later or contact a system administrator.'
+      );
     }
   }
 }
