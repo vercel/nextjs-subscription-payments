@@ -8,7 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
-    "generate-types": "npx supabase gen types typescript --project-id YOUR_PROJECT_ID --schema public > types_db.ts"
+    "stripe:fixtures": "stripe fixtures fixtures/stripe-fixtures.json --project-name=saas-starter",
+    "supabase:start": "npx supabase start",
+    "supabase:link": "node supabase/link.js",
+    "supabase:generate-types": "npx supabase gen types typescript --local --schema public > types_db.ts",
+    "supabase:generate-migration": "npx supabase db diff | npx supabase migration new update",
+    "supabase:migrate": "npx supabase migration up --linked"
   },
   "dependencies": {
     "@radix-ui/react-toast": "^1.1.5",
@@ -23,21 +28,21 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-merge-refs": "^2.1.1",
-    "stripe": "^14.14.0",
+    "stripe": "^14.15.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
-    "@types/react": "^18.2.52",
+    "@types/react": "^18.2.54",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-tailwindcss": "^3.14.1",
-    "postcss": "^8.4.33",
+    "postcss": "^8.4.34",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "supabase": "^1.136.3",

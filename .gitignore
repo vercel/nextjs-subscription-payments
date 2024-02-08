@@ -36,4 +36,5 @@ yarn-error.log*
 # editors
 .vscode
 
+# certificates
 certificates
