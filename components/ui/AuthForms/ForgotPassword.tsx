@@ -62,13 +62,13 @@ export default function ForgotPassword({
       </form>
       <p>
         <Link href="/signin/password_signin" className="font-light text-sm">
-          Sign in with password
+          Sign in with email and password
         </Link>
       </p>
       {allowEmail && (
         <p>
           <Link href="/signin/email_signin" className="font-light text-sm">
-            Sign in with email
+            Sign in via magic link
           </Link>
         </p>
       )}

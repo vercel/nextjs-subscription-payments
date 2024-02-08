@@ -74,7 +74,7 @@ export default function PasswordSignIn({
       {allowEmail && (
         <p>
           <Link href="/signin/email_signin" className="font-light text-sm">
-            Sign in with email
+            Sign in via magic link
           </Link>
         </p>
       )}

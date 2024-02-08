@@ -24,7 +24,7 @@
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
-    "lucide-react": "0.321.0",
+    "lucide-react": "0.323.0",
     "next": "14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,17 +36,17 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
-    "@types/react": "^18.2.54",
+    "@types/react": "^18.2.55",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-tailwindcss": "^3.14.1",
-    "postcss": "^8.4.34",
+    "eslint-plugin-tailwindcss": "^3.14.2",
+    "postcss": "^8.4.35",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "supabase": "^1.136.3",
+    "supabase": "^1.142.2",
     "typescript": "^5.3.3"
   }
 }

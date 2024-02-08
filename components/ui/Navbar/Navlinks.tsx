@@ -21,7 +21,7 @@ export default function Navlinks({ user }: NavlinksProps) {
         <Link href="/" className={s.logo} aria-label="Logo">
           <Logo />
         </Link>
-        <nav className="hidden ml-6 space-x-2 lg:block">
+        <nav className="ml-6 space-x-2 lg:block">
           <Link href="/" className={s.link}>
             Pricing
           </Link>
@@ -32,7 +32,7 @@ export default function Navlinks({ user }: NavlinksProps) {
           )}
         </nav>
       </div>
-      <div className="flex justify-end flex-1 space-x-8">
+      <div className="flex justify-end space-x-8">
         {user ? (
           <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
             <input type="hidden" name="pathName" value={usePathname()} />
