@@ -1,1 +1,1 @@
-export { default } from './LogoCloud'
+export { default } from './LogoCloud';

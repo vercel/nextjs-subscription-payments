@@ -35,13 +35,15 @@ export function Toaster() {
       // so that the toast doesn't show up again on refresh, but leave any other search params
       // intact.
       const newSearchParams = new URLSearchParams(searchParams.toString());
-      const paramsToRemove = ['error', 'status', 'status_description', 'error_description'];
-      paramsToRemove.forEach(param => newSearchParams.delete(param));
+      const paramsToRemove = [
+        'error',
+        'status',
+        'status_description',
+        'error_description'
+      ];
+      paramsToRemove.forEach((param) => newSearchParams.delete(param));
       const redirectPath = `${pathname}?${newSearchParams.toString()}`;
-      router.replace(
-        redirectPath,
-        { scroll: false }
-      );
+      router.replace(redirectPath, { scroll: false });
     }
   }, [searchParams]);
 

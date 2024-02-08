@@ -18,7 +18,7 @@ const meta = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  return({
+  return {
     title: meta.title,
     description: meta.description,
     referrer: 'origin-when-cross-origin',
@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     creator: 'Vercel',
     publisher: 'Vercel',
     robots: meta.robots,
-    icons: {icon: meta.favicon},
+    icons: { icon: meta.favicon },
     metadataBase: new URL(meta.url),
     openGraph: {
       url: meta.url,
@@ -45,8 +45,8 @@ export async function generateMetadata(): Promise<Metadata> {
       description: meta.description,
       images: [meta.cardImage]
     }
-  });
-};
+  };
+}
 
 export default async function RootLayout({
   // Layouts must accept a children prop.
@@ -56,17 +56,17 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="bg-black loading">
-          <Navbar />
-          <main
-            id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
-          >
-            {children}
-          </main>
-          <Footer />
-          <Suspense>
-            <Toaster />
-          </Suspense>
+        <Navbar />
+        <main
+          id="skip"
+          className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+        >
+          {children}
+        </main>
+        <Footer />
+        <Suspense>
+          <Toaster />
+        </Suspense>
       </body>
     </html>
   );

@@ -4,17 +4,15 @@ import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm'
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export default async function Account() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createClient();
 
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  
+
   const { data: userDetails } = await supabase
     .from('users')
     .select('*')
@@ -53,4 +51,4 @@ export default async function Account() {
       </div>
     </section>
   );
-};
+}

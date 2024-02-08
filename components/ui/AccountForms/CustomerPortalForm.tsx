@@ -13,16 +13,18 @@ type Price = Tables<'prices'>;
 type Product = Tables<'products'>;
 
 type SubscriptionWithPriceAndProduct = Subscription & {
-  prices: (Price & {
-    products: Product | null;
-  }) | null;
+  prices:
+    | (Price & {
+        products: Product | null;
+      })
+    | null;
 };
 
 interface Props {
   subscription: SubscriptionWithPriceAndProduct | null;
 }
 
-export default function CustomerPortalForm ({ subscription }: Props) {
+export default function CustomerPortalForm({ subscription }: Props) {
   const router = useRouter();
   const currentPath = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +63,8 @@ export default function CustomerPortalForm ({ subscription }: Props) {
             Open customer portal
           </Button>
         </div>
-      }>
+      }
+    >
       <div className="mt-8 mb-4 text-xl font-semibold">
         {subscription ? (
           `${subscriptionPrice}/${subscription?.prices?.interval}`
@@ -71,4 +74,4 @@ export default function CustomerPortalForm ({ subscription }: Props) {
       </div>
     </Card>
   );
-};
+}

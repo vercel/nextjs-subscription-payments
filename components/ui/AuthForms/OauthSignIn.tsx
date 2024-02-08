@@ -9,9 +9,9 @@ import { useState } from 'react';
 type OAuthProviders = {
   name: Provider;
   icon: JSX.Element;
- };
+};
 
-export default function OauthSignIn() {  
+export default function OauthSignIn() {
   const oAuthProviders: OAuthProviders[] = [
     { name: 'github', icon: <Github className="h-5 w-5" /> }
     /* Add desired OAuth providers here */
@@ -24,10 +24,14 @@ export default function OauthSignIn() {
     setIsSubmitting(false);
   };
 
-  return (    
+  return (
     <div className="mt-8">
       {oAuthProviders.map((provider) => (
-        <form key={provider.name} className="pb-2" onSubmit={(e) => handleSubmit(e)}>
+        <form
+          key={provider.name}
+          className="pb-2"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <input type="hidden" name="provider" value={provider.name} />
           <Button
             variant="slim"
@@ -41,5 +45,5 @@ export default function OauthSignIn() {
         </form>
       ))}
     </div>
-  )
-};
+  );
+}
