@@ -7,10 +7,12 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface UpdatePasswordProps {
-  redirectMethod: string
+  redirectMethod: string;
 }
 
-export default function UpdatePassword({redirectMethod}: UpdatePasswordProps) {
+export default function UpdatePassword({
+  redirectMethod
+}: UpdatePasswordProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -19,10 +21,14 @@ export default function UpdatePassword({redirectMethod}: UpdatePasswordProps) {
     await handleRequest(e, updatePassword, router);
     setIsSubmitting(false);
   };
-  
+
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={(e) => handleSubmit(e)}>
+      <form
+        noValidate={true}
+        className="mb-4"
+        onSubmit={(e) => handleSubmit(e)}
+      >
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="password">New Password</label>
@@ -55,5 +61,5 @@ export default function UpdatePassword({redirectMethod}: UpdatePasswordProps) {
         </div>
       </form>
     </div>
-  )
-};
+  );
+}

@@ -8,22 +8,27 @@ const allowPassword = true;
 const allowServerRedirect = false;
 
 // Check that at least one of allowPassword and allowEmail is true
-if (!allowPassword && !allowEmail) throw new Error(
-  'At least one of allowPassword and allowEmail must be true'
-);
+if (!allowPassword && !allowEmail)
+  throw new Error('At least one of allowPassword and allowEmail must be true');
 
 export const getAuthTypes = () => {
   return { allowOauth, allowEmail, allowPassword };
 };
 
-export const getViewTypes = () => {  
+export const getViewTypes = () => {
   // Define the valid view types
   let viewTypes: string[] = [];
   if (allowEmail) {
-    viewTypes = [...viewTypes, "email_signin"];
+    viewTypes = [...viewTypes, 'email_signin'];
   }
   if (allowPassword) {
-    viewTypes = [...viewTypes, "password_signin", "forgot_password", "update_password", "signup"];
+    viewTypes = [
+      ...viewTypes,
+      'password_signin',
+      'forgot_password',
+      'update_password',
+      'signup'
+    ];
   }
 
   return viewTypes;
@@ -31,8 +36,8 @@ export const getViewTypes = () => {
 
 export const getDefaultSignInView = (preferredSignInView: string | null) => {
   // Define the default sign in view
-  let defaultView = allowPassword ? "password_signin" : "email_signin";
-  if (preferredSignInView && (getViewTypes()).includes(preferredSignInView)) {
+  let defaultView = allowPassword ? 'password_signin' : 'email_signin';
+  if (preferredSignInView && getViewTypes().includes(preferredSignInView)) {
     defaultView = preferredSignInView;
   }
 

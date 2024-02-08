@@ -14,7 +14,11 @@ interface ForgotPasswordProps {
   disableButton?: boolean;
 }
 
-export default function ForgotPassword({ allowEmail, redirectMethod, disableButton }: ForgotPasswordProps) {
+export default function ForgotPassword({
+  allowEmail,
+  redirectMethod,
+  disableButton
+}: ForgotPasswordProps) {
   const router = redirectMethod === 'client' ? useRouter() : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -23,10 +27,14 @@ export default function ForgotPassword({ allowEmail, redirectMethod, disableButt
     await handleRequest(e, requestPasswordUpdate, router);
     setIsSubmitting(false);
   };
-  
+
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={(e) => handleSubmit(e)}>
+      <form
+        noValidate={true}
+        className="mb-4"
+        onSubmit={(e) => handleSubmit(e)}
+      >
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>
@@ -52,9 +60,23 @@ export default function ForgotPassword({ allowEmail, redirectMethod, disableButt
           </Button>
         </div>
       </form>
-      <p><Link href="/signin/password_signin" className="font-light text-sm">Sign in with password</Link></p>
-      {allowEmail && <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>}
-      <p><Link href="/signin/signup" className="font-light text-sm">Don't have an account? Sign up</Link></p>
+      <p>
+        <Link href="/signin/password_signin" className="font-light text-sm">
+          Sign in with password
+        </Link>
+      </p>
+      {allowEmail && (
+        <p>
+          <Link href="/signin/email_signin" className="font-light text-sm">
+            Sign in with email
+          </Link>
+        </p>
+      )}
+      <p>
+        <Link href="/signin/signup" className="font-light text-sm">
+          Don't have an account? Sign up
+        </Link>
+      </p>
     </div>
-  )
-};
+  );
+}

@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import React from 'react';
 import Link from 'next/link';
-import { signUp } from '@/utils/auth-helpers/server'
+import { signUp } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -26,7 +26,11 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
 
   return (
     <div className="my-8">
-      <form noValidate={true} className="mb-4" onSubmit={(e) => handleSubmit(e)}>
+      <form
+        noValidate={true}
+        className="mb-4"
+        onSubmit={(e) => handleSubmit(e)}
+      >
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="fullName">Full Name</label>
@@ -72,8 +76,18 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
         </div>
       </form>
       <p>Already have an account?</p>
-      <p><Link href="/signin/password_signin" className="font-light text-sm">Sign in with password</Link></p>
-      {allowEmail && <p><Link href="/signin/email_signin" className="font-light text-sm">Sign in with email</Link></p>}
+      <p>
+        <Link href="/signin/password_signin" className="font-light text-sm">
+          Sign in with password
+        </Link>
+      </p>
+      {allowEmail && (
+        <p>
+          <Link href="/signin/email_signin" className="font-light text-sm">
+            Sign in with email
+          </Link>
+        </p>
+      )}
     </div>
-  )
-};
+  );
+}
