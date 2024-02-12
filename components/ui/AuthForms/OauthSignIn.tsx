@@ -8,12 +8,13 @@ import { useState } from 'react';
 
 type OAuthProviders = {
   name: Provider;
+  displayName: string;
   icon: JSX.Element;
 };
 
 export default function OauthSignIn() {
   const oAuthProviders: OAuthProviders[] = [
-    { name: 'github', icon: <Github className="h-5 w-5" /> }
+    { name: 'github', displayName: 'GitHub', icon: <Github className="h-5 w-5" /> }
     /* Add desired OAuth providers here */
   ];
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +41,7 @@ export default function OauthSignIn() {
             loading={isSubmitting}
           >
             <span className="mr-2">{provider.icon}</span>
-            <span className="capitalize">{provider.name}</span>
+            <span>{provider.displayName}</span>
           </Button>
         </form>
       ))}

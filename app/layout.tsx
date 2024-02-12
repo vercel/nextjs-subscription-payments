@@ -1,5 +1,3 @@
-'use server';
-
 import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
@@ -49,8 +47,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
   children
 }: PropsWithChildren) {
   return (
