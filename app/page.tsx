@@ -1,22 +1,35 @@
-import Pricing from '@/components/Pricing';
-import {
-  getSession,
-  getSubscription,
-  getActiveProductsWithPrices
-} from '@/app/supabase-server';
+import Pricing from '@/components/ui/Pricing/Pricing';
+import { createClient } from '@/utils/supabase/server';
 
 export default async function PricingPage() {
-  const [session, products, subscription] = await Promise.all([
-    getSession(),
-    getActiveProductsWithPrices(),
-    getSubscription()
-  ]);
+  const supabase = createClient();
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  const { data: subscription, error } = await supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .in('status', ['trialing', 'active'])
+    .maybeSingle();
+
+  if (error) {
+    console.log(error);
+  }
+
+  const { data: products } = await supabase
+    .from('products')
+    .select('*, prices(*)')
+    .eq('active', true)
+    .eq('prices.active', true)
+    .order('metadata->index')
+    .order('unit_amount', { referencedTable: 'prices' });
 
   return (
     <Pricing
-      session={session}
-      user={session?.user}
-      products={products}
+      user={user}
+      products={products ?? []}
       subscription={subscription}
     />
   );

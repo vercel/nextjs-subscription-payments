@@ -1,3 +1,4 @@
+@ -1,145 +0,0 @@
 /** 
 * USERS
 * Note: This table contains user data. Users should only be able to view and update their own data.
