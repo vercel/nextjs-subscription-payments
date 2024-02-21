@@ -117,7 +117,7 @@ I know, that was quite a lot to get through, but it's worth it. You're now ready
 
 If you haven't already done so, clone your Github repository to your local machine.
 
-Next, use the [Vercel CLI](https://vercel.com/download) to link your project:
+Next, use the [Vercel CLI](https://vercel.com/docs/cli) to link your project:
 
 ```bash
 vercel login
