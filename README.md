@@ -159,6 +159,8 @@ pnpm supabase:start
 
 The terminal output will provide you with URLs to access the different services within the Supabase stack. The Supabase Studio is where you can make changes to your local database instance.
 
+Copy the value for the `service_role_key` and paste it as the value for the `SUPABASE_SERVICE_ROLE_KEY` in your `.env.local` file.
+
 You can print out these URLs at any time with the following command:
 
 ```bash
