@@ -73,7 +73,7 @@ We need to create a webhook in the `Developers` section of Stripe. Pictured in t
 1. Enter your production deployment URL followed by `/api/webhooks` for the endpoint URL. (e.g. `https://your-deployment-url.vercel.app/api/webhooks`)
 1. Click `Select events` under the `Select events to listen to` heading.
 1. Click `Select all events` in the `Select events to send` section.
-1. Copy `Signing secret` as we'll need that in the next step.
+1. Copy `Signing secret` as we'll need that in the next step (e.g `whsec_xxx`) (/!\ be careful no to copy the webook id we_xxxx).
 1. In addition to the `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` and the `STRIPE_SECRET_KEY` we've set earlier during deployment, we need to add the webhook secret as `STRIPE_WEBHOOK_SECRET` env var.
 
 #### Redeploy with new env vars
