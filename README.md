@@ -125,7 +125,7 @@ Ensure you have [pnpm](https://pnpm.io/installation) installed and run:
 pnpm install
 ```
 
-Next, use the [Vercel CLI](https://vercel.com/download) to link your project:
+Next, use the [Vercel CLI](https://vercel.com/docs/cli) to link your project:
 
 ```bash
 pnpm dlx vercel login
