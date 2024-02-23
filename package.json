@@ -8,13 +8,20 @@
     "start": "next start",
     "lint": "next lint",
     "prettier-fix": "prettier --write .",
-    "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
-    "stripe:fixtures": "stripe fixtures fixtures/stripe-fixtures.json --project-name=saas-starter",
+    "stripe:login": "stripe login",
+    "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks",
+    "stripe:fixtures": "stripe fixtures fixtures/stripe-fixtures.json",
     "supabase:start": "npx supabase start",
-    "supabase:link": "node supabase/link.js",
+    "supabase:stop": "npx supabase stop",
+    "supabase:status": "npx supabase status",
+    "supabase:restart": "npm run supabase:stop && npm run supabase:start",
+    "supabase:reset": "npx supabase reset",
+    "supabase:link": "npx supabase link",
     "supabase:generate-types": "npx supabase gen types typescript --local --schema public > types_db.ts",
-    "supabase:generate-migration": "npx supabase db diff | npx supabase migration new update",
-    "supabase:migrate": "npx supabase migration up --linked"
+    "supabase:generate-migration": "npx supabase db diff | npx supabase migration new",
+    "supabase:generate-seed": "npx supabase db dump --data-only -f supabase/seed.sql",
+    "supabase:push": "npx supabase push",
+    "supabase:pull": "npx supabase pull"
   },
   "dependencies": {
     "@radix-ui/react-toast": "^1.1.5",
@@ -37,6 +44,7 @@
   "devDependencies": {
     "@types/node": "^20.11.17",
     "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.1.0",

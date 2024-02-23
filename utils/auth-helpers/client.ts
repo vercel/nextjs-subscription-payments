@@ -16,7 +16,6 @@ export async function handleRequest(
 
   const formData = new FormData(e.currentTarget);
   const redirectUrl: string = await requestFunc(formData);
-  console.log(redirectUrl);
 
   if (router) {
     // If client-side router is provided, use it to redirect
