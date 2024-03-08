@@ -36,6 +36,7 @@ yarn-error.log*
 
 # editors
 .vscode
+*.code-workspace
 
 # certificates
 certificates
