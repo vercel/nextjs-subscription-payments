@@ -5,6 +5,8 @@ import { signInWithOAuth } from '@/utils/auth-helpers/client';
 import { type Provider } from '@supabase/supabase-js';
 import { Github } from 'lucide-react';
 import { useState } from 'react';
+import { getErrorRedirect } from '@/utils/helpers';
+import { useRouter } from 'next/navigation';
 
 type OAuthProviders = {
   name: Provider;
@@ -13,6 +15,7 @@ type OAuthProviders = {
 };
 
 export default function OauthSignIn() {
+  const router = useRouter();
   const oAuthProviders: OAuthProviders[] = [
     {
       name: 'github',
@@ -25,7 +28,14 @@ export default function OauthSignIn() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true); // Disable the button while the request is being handled
-    await signInWithOAuth(e);
+    try{
+      await signInWithOAuth(e);
+    } catch (error) {
+      return router.push(getErrorRedirect(
+        `/`,
+        "Sorry, we weren't able to log you in. Please try again."
+      ));
+    }
     setIsSubmitting(false);
   };
 

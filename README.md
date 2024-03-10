@@ -146,12 +146,11 @@ Running this command will create a new `.env.local` file in your project folder.
 
 It's highly recommended to use a local Supabase instance for development and testing. We have provided a set of custom commands for this in `package.json`.
 
-First, you will need to install [Docker](https://www.docker.com/get-started/). You should also copy or rename:
+First, you will need to install [Docker](https://www.docker.com/get-started/). You must also copy or rename the `.env.example` file to `.env` and populate it with the required environment variables, or setup of your local Supabase instance will fail.
 
-- `.env.local.example` -> `.env.local`
-- `.env.example` -> `.env`
+Follow the instructions [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) to create a Github OAuth app. When you create the app, set the homepage URL to 'http://localhost:3000/' and the authorization callback URL to 'http://localhost:54321/auth/v1/callback'. Github will provide you Client ID and secret for your OAuth app, which you should copy and paste into `.env`. Remember never to commit your `.env` file to version control!
 
-Next, run the following command to start a local Supabase instance and run the migrations to set up the database schema:
+Next, run the following command to start a local Supabase instance and to run the migrations to set up the database schema:
 
 ```bash
 pnpm supabase:start
@@ -159,7 +158,7 @@ pnpm supabase:start
 
 The terminal output will provide you with URLs to access the different services within the Supabase stack. The Supabase Studio is where you can make changes to your local database instance.
 
-Copy the value for the `service_role_key` and paste it as the value for the `SUPABASE_SERVICE_ROLE_KEY` in your `.env.local` file.
+If you haven't done so already, you'll need to copy or rename the `.env.local.example` file to `.env.local`. Then copy the value for the `service_role_key` and paste it as the value for the `SUPABASE_SERVICE_ROLE_KEY` in your `.env.local` file.
 
 You can print out these URLs at any time with the following command:
 
