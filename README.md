@@ -35,6 +35,8 @@ Should the automatic setup fail, please [create a Supabase account](https://app.
 
 ### Configure Auth
 
+This template supports password signin, email magic link signin, and OAuth providers (e.g. GitHub). To control which signin types are enabled, simply toggle the boolean variables `allowPassword`, `allowEmail`, and `allowOAuth` in the `utils/auth-helpers/settings.ts` file.
+
 Follow [this guide](https://supabase.com/docs/guides/auth/social-login/auth-github) to set up an OAuth app with GitHub and configure Supabase to use it as an auth provider.
 
 In your Supabase project, navigate to [auth > URL configuration](https://app.supabase.com/project/_/auth/url-configuration) and set your main production URL (e.g. https://your-deployment-url.vercel.app) as the site url.
@@ -95,7 +97,7 @@ For example, you can create business models with different pricing tiers, e.g.:
   - Price 1: 20 USD per month
   - Price 2: 200 USD per year
 
-Optionally, to speed up the setup, we have added a [fixtures file](fixtures/stripe-fixtures.json) to bootstrap test product and pricing data in your Stripe account. The [Stripe CLI](https://stripe.com/docs/stripe-cli#install) `fixtures` command executes a series of API requests defined in this JSON file. Simply run `stripe fixtures fixtures/stripe-fixtures.json`.
+Optionally, to speed up the setup, we have added a [fixtures file](fixtures/stripe-fixtures.json) to bootstrap test product and pricing data in your Stripe account. The [Stripe CLI](https://stripe.com/docs/stripe-cli#install) `fixtures` command executes a series of API requests defined in this JSON file. Simply run `stripe fixtures fixtures/stripe-fixtures.json`. (Note the use of a numerical index in the product metadata to control display sequence in the UI).
 
 **Important:** Make sure that you've configured your Stripe webhook correctly and redeployed with all needed environment variables.
 
@@ -209,7 +211,9 @@ And push those changes to your remote database with:
 pnpm supabase:push
 ```
 
-Remember to test your changes thoroughly in your `local` and `staging` or `preview` environments before deploying them to `production`!
+Remember to test your changes thoroughly in your `local` and `staging` or `preview` environments before deploying them to `production`.
+
+Note that to add more OAuth providers, you will need to add new secrets to `.env` and then configure the `[auth.external.github]` section of `supabase/config.toml` to look for the new environment variables. See the Supabase docs on [managing config and secrets](https://supabase.com/docs/guides/cli/managing-config) and [CLI configuration](https://supabase.com/docs/guides/cli/config) for more information on configuring your local Supabase instance.
 
 ### Use the Stripe CLI to test webhooks
 
