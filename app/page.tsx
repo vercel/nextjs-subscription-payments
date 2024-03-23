@@ -9,10 +9,13 @@ export default async function PricingPage() {
   } = await supabase.auth.getUser();
 
   const { data: subscription, error } = await supabase
-    .from('subscriptions')
-    .select('*, prices(*, products(*))')
-    .in('status', ['trialing', 'active'])
-    .maybeSingle();
+  .from('subscriptions')
+  .select('*, prices(*, products(*))')
+  .eq('user_id', String(user?.id))
+  .in('status', ['trialing', 'active'])
+  .order('current_period_end', { ascending: false })
+  .limit(1)
+  .single();
 
   if (error) {
     console.log(error);

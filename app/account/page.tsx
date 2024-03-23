@@ -19,8 +19,11 @@ export default async function Account() {
   const { data: subscription, error } = await supabase
     .from('subscriptions')
     .select('*, prices(*, products(*))')
+    .eq('user_id', String(user?.id))
     .in('status', ['trialing', 'active'])
-    .maybeSingle();
+    .order('current_period_end', { ascending: false })
+    .limit(1)
+    .single();
 
   if (error) {
     console.log(error);
