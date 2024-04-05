@@ -17,7 +17,7 @@ The all-in-one starter kit for high-performance SaaS applications.
 
 ## Architecture
 
-![Architecture diagram](./public/architecture_diagram.svg)
+![Architecture diagram](./public/architecture_diagram.png)
 
 ## Step-by-step setup
 
