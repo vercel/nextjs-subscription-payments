@@ -29,7 +29,6 @@
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.39.3",
     "class-variance-authority": "^0.7.0",
-    "classnames": "^2.5.1",
     "clsx": "^2.1.0",
     "lucide-react": "0.330.0",
     "next": "14.1.0",
