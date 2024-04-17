@@ -199,7 +199,13 @@ export default function Pricing({ user, products, subscription }: Props) {
                       variant="slim"
                       type="button"
                       loading={priceIdLoading === price.id}
-                      onClick={() => handleStripeCheckout(price)}
+                      onClick={() => {
+                        if (subscription) {
+                          router.push('/account'); // Redirect to the account management to manage subscription
+                        } else {
+                          handleStripeCheckout(price); // Proceed with checkout for new subscription
+                        }
+                      }}
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
                       {subscription ? 'Manage' : 'Subscribe'}
