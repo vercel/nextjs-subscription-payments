@@ -1,6 +1,5 @@
 import React, { InputHTMLAttributes, ChangeEvent } from 'react';
-import cn from 'classnames';
-
+import { cn } from '@/utils/cn';
 import s from './Input.module.css';
 
 interface Props extends Omit<InputHTMLAttributes<any>, 'onChange'> {
