@@ -1,17 +1,13 @@
 import { cache } from 'react';
 
-import { createClient } from '@/utils/supabase/server';
-
-const supabase = createClient();
-
-export const getUser = cache(async () => {
+export const getUser = cache(async (supabase: any) => {
   const {
     data: { user }
   } = await supabase.auth.getUser();
   return user;
 });
 
-export const getSubscription = cache(async () => {
+export const getSubscription = cache(async (supabase: any) => {
   const { data: subscription, error } = await supabase
     .from('subscriptions')
     .select('*, prices(*, products(*))')
@@ -21,7 +17,7 @@ export const getSubscription = cache(async () => {
   return subscription;
 });
 
-export const getProducts = cache(async () => {
+export const getProducts = cache(async (supabase: any) => {
   const { data: products, error } = await supabase
     .from('products')
     .select('*, prices(*)')
@@ -33,7 +29,7 @@ export const getProducts = cache(async () => {
   return products;
 });
 
-export const getUserDetails = cache(async () => {
+export const getUserDetails = cache(async (supabase: any) => {
   const { data: userDetails } = await supabase
     .from('users')
     .select('*')
