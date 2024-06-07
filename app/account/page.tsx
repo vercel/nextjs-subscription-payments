@@ -1,30 +1,21 @@
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
-import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { createClient } from '@/utils/supabase/server';
+import {
+  getUserDetails,
+  getSubscription,
+  getUser
+} from '@/utils/supabase/queries';
 
 export default async function Account() {
   const supabase = createClient();
-
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-
-  const { data: userDetails } = await supabase
-    .from('users')
-    .select('*')
-    .single();
-
-  const { data: subscription, error } = await supabase
-    .from('subscriptions')
-    .select('*, prices(*, products(*))')
-    .in('status', ['trialing', 'active'])
-    .maybeSingle();
-
-  if (error) {
-    console.log(error);
-  }
+  const [user, userDetails, subscription] = await Promise.all([
+    getUser(supabase),
+    getUserDetails(supabase),
+    getSubscription(supabase)
+  ]);
 
   if (!user) {
     return redirect('/signin');
