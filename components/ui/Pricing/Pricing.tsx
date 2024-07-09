@@ -154,6 +154,9 @@ export default function Pricing({ user, products, subscription }: Props) {
                 currency: price.currency!,
                 minimumFractionDigits: 0
               }).format((price?.unit_amount || 0) / 100);
+
+              const isSubscribedToCurrentInterval = subscription?.prices?.interval === billingInterval;
+
               return (
                 <div
                   key={product.id}
@@ -189,7 +192,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                       onClick={() => handleStripeCheckout(price)}
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
-                      {subscription ? 'Manage' : 'Subscribe'}
+                      {subscription && isSubscribedToCurrentInterval ? 'Manage' : 'Subscribe'}
                     </Button>
                   </div>
                 </div>
