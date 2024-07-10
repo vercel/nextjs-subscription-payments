@@ -27,12 +27,12 @@ interface SubscriptionWithProduct extends Subscription {
 interface Props {
   user: User | null | undefined;
   products: ProductWithPrices[];
-  subscription: SubscriptionWithProduct | null;
+  subscriptions: SubscriptionWithProduct[];
 }
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
 
-export default function Pricing({ user, products, subscription }: Props) {
+export default function Pricing({ user, products, subscriptions }: Props) {
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -52,6 +52,11 @@ export default function Pricing({ user, products, subscription }: Props) {
     if (!user) {
       setPriceIdLoading(undefined);
       return router.push('/signin/signup');
+    }
+
+    if (isSubscribedToPrice(price.id)) {
+      // Redirect to management page
+      return router.push('/account'); // 假设这是用户的订阅管理页面
     }
 
     const { errorRedirect, sessionId } = await checkoutWithStripe(
@@ -80,6 +85,15 @@ export default function Pricing({ user, products, subscription }: Props) {
 
     setPriceIdLoading(undefined);
   };
+
+  const isSubscribedToPrice = (priceId: string) =>
+    subscriptions.some(sub => sub.price_id === priceId);
+
+  const isSubscribedToCurrentInterval = (product: ProductWithPrices) =>
+    subscriptions.some(sub => 
+      sub.prices?.interval === billingInterval && 
+      sub.prices.products?.id === product.id
+    );
 
   if (!products.length) {
     return (
@@ -155,7 +169,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                 minimumFractionDigits: 0
               }).format((price?.unit_amount || 0) / 100);
 
-              const isSubscribedToCurrentInterval = subscription?.prices?.interval === billingInterval;
+              const isSubscribed = isSubscribedToCurrentInterval(product);
 
               return (
                 <div
@@ -163,9 +177,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                   className={cn(
                     'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
                     {
-                      'border border-pink-500': subscription
-                        ? product.name === subscription?.prices?.products?.name
-                        : product.name === 'Freelancer'
+                      'border border-pink-500': isSubscribed
                     },
                     'flex-1', // This makes the flex item grow to fill the space
                     'basis-1/3', // Assuming you want each card to take up roughly a third of the container's width
@@ -192,7 +204,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                       onClick={() => handleStripeCheckout(price)}
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
-                      {subscription && isSubscribedToCurrentInterval ? 'Manage' : 'Subscribe'}
+                      {isSubscribed ? 'Manage' : 'Subscribe'}
                     </Button>
                   </div>
                 </div>
