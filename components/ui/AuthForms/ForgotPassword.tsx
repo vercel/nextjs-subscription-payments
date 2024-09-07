@@ -19,12 +19,13 @@ export default function ForgotPassword({
   redirectMethod,
   disableButton
 }: ForgotPasswordProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const routerMethod = redirectMethod === 'client' ? router : null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, requestPasswordUpdate, router);
+    await handleRequest(e, requestPasswordUpdate, routerMethod);
     setIsSubmitting(false);
   };
 
