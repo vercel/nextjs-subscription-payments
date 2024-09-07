@@ -6,15 +6,17 @@ import { createClient } from '@/utils/supabase/server';
 import {
   getUserDetails,
   getSubscription,
-  getUser
+  getUser,
+  getUserSubscriptions
 } from '@/utils/supabase/queries';
 
 export default async function Account() {
   const supabase = createClient();
-  const [user, userDetails, subscription] = await Promise.all([
-    getUser(supabase),
+  const user = await getUser(supabase);
+  const [userDetails, subscriptions] = await Promise.all([
+    // getUser(supabase),
     getUserDetails(supabase),
-    getSubscription(supabase)
+    getUserSubscriptions(supabase, user)
   ]);
 
   if (!user) {
@@ -34,7 +36,7 @@ export default async function Account() {
         </div>
       </div>
       <div className="p-4">
-        <CustomerPortalForm subscription={subscription} />
+        <CustomerPortalForm subscription={subscriptions[0]} />
         <NameForm userName={userDetails?.full_name ?? ''} />
         <EmailForm userEmail={user.email} />
       </div>

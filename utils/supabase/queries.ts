@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 import { cache } from 'react';
 
 export const getUser = cache(async (supabase: SupabaseClient) => {
@@ -15,6 +15,12 @@ export const getSubscription = cache(async (supabase: SupabaseClient) => {
     .in('status', ['trialing', 'active'])
     .maybeSingle();
 
+  if (error) {
+    console.error('Error fetching subscription:', error);
+  }
+
+  console.log('Fetched subscription:', subscription);
+  
   return subscription;
 });
 
@@ -36,4 +42,25 @@ export const getUserDetails = cache(async (supabase: SupabaseClient) => {
     .select('*')
     .single();
   return userDetails;
+});
+
+export const getUserSubscriptions = cache(async (supabase: SupabaseClient, user: User | null) => {
+  if (!user) {
+    return [];
+  }
+  const { data: subscriptions, error } = await supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .eq('user_id', user.id)
+    .in('status', ['trialing', 'active'])
+    .order('created', { ascending: false });  // Order By created DESC
+
+
+  if (error) {
+    console.error('Error fetching subscriptions:', error);
+    return [];
+  }
+
+  console.log('Fetched subscriptions:', subscriptions);
+  return subscriptions;
 });
