@@ -7,6 +7,8 @@ import {
   deleteProductRecord,
   deletePriceRecord
 } from '@/utils/supabase/admin';
+import { NextRequest } from 'next/server';
+import { headers } from 'next/headers';
 
 const relevantEvents = new Set([
   'product.created',
@@ -21,9 +23,9 @@ const relevantEvents = new Set([
   'customer.subscription.deleted'
 ]);
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.text();
-  const sig = req.headers.get('stripe-signature') as string;
+  const sig = headers().get('stripe-signature') as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   let event: Stripe.Event;
 
