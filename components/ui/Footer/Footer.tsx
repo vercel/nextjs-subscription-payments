@@ -1,110 +1,171 @@
 import Link from 'next/link';
-
-import Logo from '@/components/icons/Logo';
-import GitHub from '@/components/icons/GitHub';
+import {
+  Github,
+  Twitter,
+  Linkedin,
+  Mail,
+  Globe,
+  FileCode,
+  Users,
+  BookOpen
+} from 'lucide-react';
 
 export default function Footer() {
+  const socialLinks = [
+    {
+      icon: Github,
+      href: 'https://github.com/farajabien',
+      label: 'GitHub'
+    },
+    {
+      icon: Twitter,
+      href: 'https://twitter.com/farajabien',
+      label: 'Twitter'
+    },
+    {
+      icon: Linkedin,
+      href: 'https://linkedin.com/in/bienvenufaraja',
+      label: 'LinkedIn'
+    },
+    {
+      icon: Mail,
+      href: 'mailto:farajabien@gmail.com',
+      label: 'Email'
+    }
+  ];
+
   return (
-    <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900">
-      <div className="grid grid-cols-1 gap-8 py-12 text-white transition-colors duration-150 border-b lg:grid-cols-12 border-zinc-600 bg-zinc-900">
-        <div className="col-span-1 lg:col-span-2">
-          <Link
-            href="/"
-            className="flex items-center flex-initial font-bold md:mr-24"
-          >
-            <span className="mr-2 border rounded-full border-zinc-700">
-              <Logo />
-            </span>
-            <span>ACME</span>
-          </Link>
-        </div>
-        <div className="col-span-1 lg:col-span-2">
-          <ul className="flex flex-col flex-initial md:flex-1">
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link
-                href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
-              >
-                Home
-              </Link>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link
-                href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
-              >
-                About
-              </Link>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link
-                href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
-              >
-                Careers
-              </Link>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link
-                href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
-              >
-                Blog
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="col-span-1 lg:col-span-2">
-          <ul className="flex flex-col flex-initial md:flex-1">
-            <li className="py-3 md:py-0 md:pb-4">
-              <p className="font-bold text-white transition duration-150 ease-in-out hover:text-zinc-200">
-                LEGAL
-              </p>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link
-                href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
-              >
-                Privacy Policy
-              </Link>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link
-                href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
-              >
-                Terms of Use
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="flex items-start col-span-1 text-white lg:col-span-6 lg:justify-end">
-          <div className="flex items-center h-10 space-x-6">
-            <a
-              aria-label="Github Repository"
-              href="https://github.com/vercel/nextjs-subscription-payments"
+    <footer className="w-full bg-background border-t">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 py-12 transition-colors duration-150 lg:grid-cols-12">
+          {/* Brand Section */}
+          <div className="col-span-1 lg:col-span-3">
+            <Link
+              href="https://fbien.com"
+              className="flex items-center gap-2 font-bold text-lg hover:text-primary transition-colors"
             >
-              <GitHub />
-            </a>
+              <Globe className="h-6 w-6" />
+              <span>Faraja Bien</span>
+            </Link>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Building SaaS products for African markets with modern tech stack
+              and local payment integrations.
+            </p>
+          </div>
+
+          {/* Services Section */}
+          <div className="col-span-1 lg:col-span-3">
+            <h3 className="font-semibold mb-4">Services</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="https://fbien.com/services/startup-validation"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Startup Validation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://fbien.com/services/mvp-development"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  MVP Development
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://fbien.com/services/saas-template"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  SaaS Template
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources Section */}
+          <div className="col-span-1 lg:col-span-3">
+            <h3 className="font-semibold mb-4">Resources</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/resources/next-saas-starter"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Free SaaS Template
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/resources/validation-framework"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Validation Framework
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://github.com/farajabien"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Open Source Projects
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Quick Links Section */}
+          <div className="col-span-1 lg:col-span-3">
+            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="https://fbien.com"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Portfolio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://fbien.com/services"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/254793643308"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Contact
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col items-center justify-between py-12 space-y-4 md:flex-row bg-zinc-900">
-        <div>
-          <span>
-            &copy; {new Date().getFullYear()} ACME, Inc. All rights reserved.
-          </span>
-        </div>
-        <div className="flex items-center">
-          <span className="text-white">Crafted by</span>
-          <a href="https://vercel.com" aria-label="Vercel.com Link">
-            <img
-              src="/vercel.svg"
-              alt="Vercel.com Logo"
-              className="inline-block h-6 ml-4 text-white"
-            />
-          </a>
+
+        {/* Bottom Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center py-8 border-t">
+          <div className="text-sm text-muted-foreground mb-4 md:mb-0">
+            &copy; {new Date().getFullYear()} Faraja Bien. All rights reserved.
+          </div>
+          <div className="flex items-center space-x-4">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label={link.label}
+              >
+                <link.icon className="h-5 w-5" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
