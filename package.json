@@ -22,6 +22,7 @@
     "supabase:pull": "npx supabase db pull"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.1.5",
     "@stripe/stripe-js": "2.4.0",
     "@supabase/ssr": "^0.1.0",

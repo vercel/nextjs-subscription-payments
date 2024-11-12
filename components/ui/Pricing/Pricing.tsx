@@ -1,6 +1,5 @@
 'use client';
 
-import Button from '@/components/ui/Button';
 import LogoCloud from '@/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
 import { getStripe } from '@/utils/stripe/client';
@@ -10,6 +9,7 @@ import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import Button from '../CustomButton';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
