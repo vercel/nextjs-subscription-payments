@@ -10,8 +10,8 @@ export function Terminal() {
 
   const terminalSteps = [
     '# Clone and install',
-    'git clone https://github.com/farajabien/next-saas-starter',
-    'cd next-saas-starter',
+    'git clone https://github.com/farajabien/supabase-saas-starter',
+    'cd supabase-saas-starter',
     'pnpm install',
     '',
     '# Configure environment',

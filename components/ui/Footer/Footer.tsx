@@ -90,7 +90,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/resources/next-saas-starter"
+                  href="/resources/supabase-saas-starter"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Free SaaS Template

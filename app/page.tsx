@@ -72,7 +72,7 @@ export default function Component() {
                   className="bg-orange-500 hover:bg-orange-600 text-white"
                 >
                   <a
-                    href="https://github.com/farajabien/next-saas-starter"
+                    href="https://github.com/farajabien/supabase-saas-starter"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2"
@@ -158,7 +158,7 @@ export default function Component() {
                 className="bg-orange-500 hover:bg-orange-600 text-white"
               >
                 <a
-                  href="https://github.com/farajabien/next-saas-starter"
+                  href="https://github.com/farajabien/supabase-saas-starter"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2"
