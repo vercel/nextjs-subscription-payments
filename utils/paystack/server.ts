@@ -33,10 +33,16 @@ export async function checkoutWithPaystack(
     // Retrieve or create the customer in Paystack
     let customer: string;
     try {
-      customer = await createOrRetrieveCustomer({
+      const customerResult = await createOrRetrieveCustomer({
         uuid: user?.id || '',
         email: user?.email || ''
       });
+
+      if (!customerResult) {
+        throw new Error('Customer record is null.');
+      }
+
+      customer = customerResult;
     } catch (err) {
       console.error(err);
       throw new Error('Unable to access customer record.');
