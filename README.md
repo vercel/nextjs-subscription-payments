@@ -28,11 +28,32 @@ The template uses the following technology stack:
 
 ## Setup
 
+<<<<<<< HEAD
 ### 1. Clone and Install
 
 ```bash
 git clone https://github.com/yourusername/your-repo
 cd your-repo
+=======
+### 1. Clone and Deploy
+
+#### Option 1: Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffarajabien%2Fsupabase-saas-starter)
+
+The deployment will:
+
+- Create a new repository with this template
+- Set up a new Supabase project
+- Configure necessary environment variables
+- Run database migrations
+
+#### Option 2: Clone Locally
+
+```bash
+git clone https://github.com/farajabien/supabase-saas-starter
+cd supabase-saas-starter
+>>>>>>> main
 pnpm install
 ```
 
