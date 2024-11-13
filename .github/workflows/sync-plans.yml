@@ -1,0 +1,39 @@
+# .github/workflows/sync-plans.yml
+name: Sync Paystack Plans
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at midnight every day
+  workflow_dispatch: # Allows manual trigger
+  push:
+    branches:
+      - main # Or your default branch name
+    paths:
+      - 'scripts/sync-plans.ts' # Only run when sync script changes
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run sync script
+        run: pnpm paystack:sync-plans
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          PAYSTACK_SECRET_KEY: ${{ secrets.PAYSTACK_SECRET_KEY }}
+          NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY }}
