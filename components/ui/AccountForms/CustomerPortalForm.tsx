@@ -1,11 +1,12 @@
+// components/CustomerPortalForm.tsx
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { createStripePortal } from '@/utils/stripe/server';
 import Link from 'next/link';
 import Card from '@/components/ui/Card';
 import { Tables } from '@/types_db';
+import { toast } from 'sonner';
 import Button from '../CustomButton';
 
 type Subscription = Tables<'subscriptions'>;
@@ -26,7 +27,6 @@ interface Props {
 
 export default function CustomerPortalForm({ subscription }: Props) {
   const router = useRouter();
-  const currentPath = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subscriptionPrice =
@@ -37,11 +37,31 @@ export default function CustomerPortalForm({ subscription }: Props) {
       minimumFractionDigits: 0
     }).format((subscription?.prices?.unit_amount || 0) / 100);
 
-  const handleStripePortalRequest = async () => {
+  const handleSubscriptionCancel = async () => {
     setIsSubmitting(true);
-    const redirectUrl = await createStripePortal(currentPath);
-    setIsSubmitting(false);
-    return router.push(redirectUrl);
+    try {
+      const response = await fetch('/api/subscription/cancel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          subscriptionId: subscription?.id
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to cancel subscription');
+      }
+
+      toast.success('Subscription cancelled successfully');
+      router.refresh();
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      toast.error('Failed to cancel subscription');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -54,20 +74,30 @@ export default function CustomerPortalForm({ subscription }: Props) {
       }
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">Manage your subscription on Stripe.</p>
-          <Button
-            variant="slim"
-            onClick={handleStripePortalRequest}
-            loading={isSubmitting}
-          >
-            Open customer portal (Stripe)
-          </Button>
+          <p className="pb-4 sm:pb-0">Manage your subscription.</p>
+          {subscription && (
+            <Button
+              variant="slim"
+              onClick={handleSubscriptionCancel}
+              loading={isSubmitting}
+            >
+              Cancel subscription
+            </Button>
+          )}
         </div>
       }
     >
       <div className="mt-8 mb-4 text-xl font-semibold">
         {subscription ? (
-          `${subscriptionPrice}/${subscription?.prices?.interval}`
+          <>
+            {subscriptionPrice}/{subscription?.prices?.interval}
+            <div className="mt-4 text-sm">
+              Status: <span className="capitalize">{subscription.status}</span>
+              <br />
+              Next billing date:{' '}
+              {new Date(subscription.current_period_end).toLocaleDateString()}
+            </div>
+          </>
         ) : (
           <Link href="/">Choose your plan</Link>
         )}
