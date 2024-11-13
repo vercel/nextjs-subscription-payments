@@ -1,13 +1,12 @@
-// components/CustomerPortalForm.tsx
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import Card from '@/components/ui/Card';
 import { Tables } from '@/types_db';
-import { toast } from 'sonner';
 import Button from '../CustomButton';
+import { toast } from 'sonner';
 
 type Subscription = Tables<'subscriptions'>;
 type Price = Tables<'prices'>;
@@ -74,7 +73,9 @@ export default function CustomerPortalForm({ subscription }: Props) {
       }
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">Manage your subscription.</p>
+          <p className="pb-4 sm:pb-0">
+            Manage your subscription with Paystack.
+          </p>
           {subscription && (
             <Button
               variant="slim"
@@ -99,7 +100,7 @@ export default function CustomerPortalForm({ subscription }: Props) {
             </div>
           </>
         ) : (
-          <Link href="/">Choose your plan</Link>
+          <Link href="/pricing">Choose your plan</Link>
         )}
       </div>
     </Card>
