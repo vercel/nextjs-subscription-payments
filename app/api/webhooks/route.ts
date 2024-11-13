@@ -4,7 +4,6 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types_db';
 import crypto from 'crypto';
 
-// Validate Paystack webhook signature
 function validatePaystackWebhook(
   requestBody: string,
   paystackSignature: string
@@ -31,9 +30,10 @@ const relevantEvents = new Set([
   'subscription.create',
   'subscription.disable',
   'subscription.enable',
-  'plan.create',
-  'plan.update',
-  'charge.success'
+  'charge.success',
+  'transfer.success',
+  'transfer.failed',
+  'customer.created'
 ]);
 
 export async function POST(req: Request) {
@@ -42,11 +42,10 @@ export async function POST(req: Request) {
 
   try {
     if (!signature) {
-      console.error('No Paystack signature found in headers');
+      console.error('No Paystack signature found');
       return new Response('No signature found.', { status: 400 });
     }
 
-    // Validate webhook signature
     if (!validatePaystackWebhook(body, signature)) {
       console.error('Invalid Paystack signature');
       return new Response('Invalid signature.', { status: 400 });
@@ -56,54 +55,26 @@ export async function POST(req: Request) {
     console.log(`🔔 Webhook received: ${event.event}`);
     console.log('Event data:', JSON.stringify(event.data, null, 2));
 
+    const supabase = createRouteHandlerClient<Database>({ cookies });
+
     if (relevantEvents.has(event.event)) {
       try {
-        // Create a Supabase client that works with Route Handlers
-        const supabase = createRouteHandlerClient<Database>({ cookies });
-
         switch (event.event) {
-          case 'plan.create':
-          case 'plan.update':
-            console.log('Processing plan create/update:', event.data.name);
-            // Handle plan creation/update
-            await supabase.from('products').upsert({
-              id: event.data.plan_code,
-              name: event.data.name,
-              description: event.data.description,
-              active: true,
-              metadata: {
-                paystack_id: event.data.id,
-                integration: event.data.integration,
-                features: event.data.description?.split('\n') || []
-              }
+          case 'customer.created':
+            console.log(
+              'Creating/updating customer:',
+              event.data.customer_code
+            );
+            // Upsert customer record
+            await supabase.from('customers').upsert({
+              id: event.data.metadata.user_id,
+              paystack_customer_id: event.data.customer_code
             });
-
-            await supabase.from('prices').upsert({
-              id: event.data.plan_code,
-              product_id: event.data.plan_code,
-              active: true,
-              currency: event.data.currency,
-              type: 'recurring',
-              unit_amount: event.data.amount,
-              interval:
-                event.data.interval === 'annually'
-                  ? 'year'
-                  : event.data.interval.replace('ly', ''),
-              interval_count: 1,
-              metadata: {
-                paystack_id: event.data.id,
-                integration: event.data.integration
-              }
-            });
-            console.log('Plan synced successfully');
             break;
 
           case 'subscription.create':
-            console.log(
-              'Processing subscription create:',
-              event.data.subscription_code
-            );
-            // Get customer data
+            console.log('Creating subscription:', event.data.subscription_code);
+            // Ensure customer exists
             const { data: customerData } = await supabase
               .from('customers')
               .select('id')
@@ -111,21 +82,19 @@ export async function POST(req: Request) {
               .single();
 
             if (!customerData) {
-              console.error(
-                'Customer not found:',
-                event.data.customer.customer_code
-              );
-              throw new Error('Customer not found');
+              console.log('Customer not found, creating...');
+              // Create customer record if it doesn't exist
+              await supabase.from('customers').insert({
+                id: event.data.metadata.user_id,
+                paystack_customer_id: event.data.customer.customer_code
+              });
             }
 
+            // Create subscription
             await supabase.from('subscriptions').upsert({
               id: event.data.subscription_code,
-              user_id: customerData.id,
+              user_id: event.data.metadata.user_id,
               status: 'active',
-              metadata: {
-                paystack_status: event.data.status,
-                paystack_subscription_id: event.data.id
-              },
               price_id: event.data.plan.plan_code,
               quantity: 1,
               cancel_at_period_end: false,
@@ -135,35 +104,31 @@ export async function POST(req: Request) {
               ).toISOString(),
               current_period_end: new Date(
                 event.data.current_period_end
-              ).toISOString()
+              ).toISOString(),
+              metadata: {
+                paystack_subscription_id: event.data.id,
+                paystack_status: event.data.status,
+                plan_name: event.data.plan.name,
+                customer_code: event.data.customer.customer_code
+              }
             });
-            console.log('Subscription created successfully');
             break;
 
           case 'subscription.disable':
-            console.log(
-              'Processing subscription disable:',
-              event.data.subscription_code
-            );
             await supabase
               .from('subscriptions')
               .update({
                 status: 'canceled',
+                canceled_at: new Date().toISOString(),
                 metadata: {
                   paystack_status: 'canceled',
                   canceled_reason: event.data.reason
-                },
-                canceled_at: new Date().toISOString()
+                }
               })
               .eq('id', event.data.subscription_code);
-            console.log('Subscription disabled successfully');
             break;
 
           case 'subscription.enable':
-            console.log(
-              'Processing subscription enable:',
-              event.data.subscription_code
-            );
             await supabase
               .from('subscriptions')
               .update({
@@ -173,12 +138,11 @@ export async function POST(req: Request) {
                 }
               })
               .eq('id', event.data.subscription_code);
-            console.log('Subscription enabled successfully');
             break;
 
           case 'charge.success':
-            console.log('Processing charge success');
             if (event.data.plan) {
+              const subscriptionCode = event.data.metadata.subscription_code;
               await supabase
                 .from('subscriptions')
                 .update({
@@ -188,9 +152,8 @@ export async function POST(req: Request) {
                       event.data.plan.interval * 86400000
                   ).toISOString()
                 })
-                .eq('price_id', event.data.plan.plan_code)
+                .eq('id', subscriptionCode)
                 .eq('user_id', event.data.metadata.user_id);
-              console.log('Charge processed successfully');
             }
             break;
 
@@ -208,12 +171,10 @@ export async function POST(req: Request) {
 
     return new Response(JSON.stringify({ received: true }));
   } catch (err) {
-    if (err instanceof Error) {
-      console.error(`❌ Error message: ${err.message}`);
-    } else {
-      console.error('❌ Unknown error occurred');
-    }
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    return new Response(`Webhook Error: ${errorMessage}`, { status: 400 });
+    console.error('Webhook Error:', err);
+    return new Response(
+      `Webhook Error: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      { status: 400 }
+    );
   }
 }

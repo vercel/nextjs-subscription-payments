@@ -3,9 +3,9 @@
 
 import { paystack } from '@/utils/paystack/config';
 import { createClient } from '@/utils/supabase/server';
-import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
 import { getURL, getErrorRedirect } from '@/utils/helpers';
 import { Tables } from '@/types_db';
+import { randomUUID } from 'crypto';
 
 type Price = Tables<'prices'>;
 
@@ -19,9 +19,6 @@ export async function checkoutWithPaystack(
   redirectPath: string = '/account'
 ): Promise<CheckoutResponse> {
   try {
-    // Log incoming price data
-    console.log('Incoming price data:', JSON.stringify(price, null, 2));
-
     // Get the user from Supabase auth
     const supabase = createClient();
     const {
@@ -30,50 +27,70 @@ export async function checkoutWithPaystack(
     } = await supabase.auth.getUser();
 
     if (error || !user) {
-      console.error('Auth error:', error);
+      console.error(error);
       throw new Error('Could not get user session.');
     }
 
-    // Initialize transaction with Paystack directly without plan
+    // Create a unique reference
+    const reference = `sub_${randomUUID()}`;
+
+    // Initialize transaction with Paystack
     try {
-      console.log('Initializing Paystack transaction');
-
-      // Format amount - ensure it's in the smallest currency unit
-      const amount = price.unit_amount || 0;
-      console.log('Amount:', amount);
-
-      const callbackUrl = getURL(
+      const callback_url = getURL(
         `${redirectPath}?session_id={CHECKOUT_SESSION_ID}`
       );
-      console.log('Callback URL:', callbackUrl);
+      console.log('Initializing Paystack transaction:', {
+        email: user.email,
+        amount: price.unit_amount,
+        plan: price.id,
+        callback_url
+      });
 
-      // Initialize transaction without a plan, just a one-time payment
       const response = await paystack.initializeTransaction({
         email: user.email!,
-        amount: amount,
-        callback_url: callbackUrl,
+        amount: price.unit_amount!, // Amount should be in kobo/cents
+        plan: price.id, // Your plan code in Paystack
+        callback_url,
         metadata: {
           user_id: user.id,
           price_id: price.id,
           product_id: price.product_id,
-          interval: price.interval,
-          currency: price.currency
+          reference,
+          custom_fields: [
+            {
+              display_name: 'User ID',
+              variable_name: 'user_id',
+              value: user.id
+            },
+            {
+              display_name: 'Price ID',
+              variable_name: 'price_id',
+              value: price.id
+            }
+          ]
         }
       });
 
-      console.log('Paystack initialization response:', response);
+      console.log('Paystack response:', response);
 
-      if (!response.data?.authorization_url) {
-        throw new Error('No authorization URL received from Paystack');
+      // Create a temporary customer record if it doesn't exist
+      const { data: existingCustomer } = await supabase
+        .from('customers')
+        .select()
+        .eq('id', user.id)
+        .single();
+
+      if (!existingCustomer) {
+        await supabase.from('customers').insert({
+          id: user.id,
+          paystack_customer_id: null // Will be updated by webhook
+        });
       }
 
       return { authorizationUrl: response.data.authorization_url };
-    } catch (err: any) {
+    } catch (err) {
       console.error('Paystack initialization error:', err);
-      console.error('Error response:', err.response?.data);
-      throw new Error(
-        err.response?.data?.message || 'Unable to initialize payment.'
-      );
+      throw new Error('Unable to initialize payment.');
     }
   } catch (error) {
     console.error('Checkout error:', error);

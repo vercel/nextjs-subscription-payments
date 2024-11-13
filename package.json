@@ -20,8 +20,7 @@
     "supabase:generate-seed": "npx supabase db dump --data-only -f supabase/seed.sql",
     "supabase:push": "npx supabase db push",
     "supabase:pull": "npx supabase db pull",
-    "paystack:create-plans": "ts-node -r dotenv/config --project tsconfig.node.json scripts/create-plans.ts"
-    ,
+    "paystack:create-plans": "ts-node -r dotenv/config --project tsconfig.node.json scripts/create-plans.ts",
     "paystack:sync-plans": "ts-node --project tsconfig.script.json scripts/sync-plans.ts"
   },
   "dependencies": {
@@ -40,6 +39,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-merge-refs": "^2.1.1",
+    "sonner": "^1.7.0",
     "stripe": "^14.25.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.4",
