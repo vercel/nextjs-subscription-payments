@@ -19,7 +19,6 @@ The all-in-one starter kit for building SaaS applications with local payment int
 ## Architecture
 
 The template uses the following technology stack:
-
 - [Next.js 14](https://nextjs.org)
 - [Auth.js](https://authjs.dev)
 - [Supabase](https://supabase.io)
@@ -28,53 +27,27 @@ The template uses the following technology stack:
 
 ## Setup
 
-<<<<<<< HEAD
 ### 1. Clone and Install
-
 ```bash
 git clone https://github.com/yourusername/your-repo
 cd your-repo
-=======
-### 1. Clone and Deploy
-
-#### Option 1: Deploy to Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffarajabien%2Fsupabase-saas-starter)
-
-The deployment will:
-
-- Create a new repository with this template
-- Set up a new Supabase project
-- Configure necessary environment variables
-- Run database migrations
-
-#### Option 2: Clone Locally
-
-```bash
-git clone https://github.com/farajabien/supabase-saas-starter
-cd supabase-saas-starter
->>>>>>> main
 pnpm install
 ```
 
 ### 2. Configure Supabase
-
 1. Create a project at [Supabase](https://app.supabase.com)
 2. Run database migrations
 3. Set up auth providers
 4. Copy environment variables
 
 ### 3. Configure Paystack
-
 1. Create a [Paystack account](https://paystack.com)
 2. Get your API keys
 3. Set up webhook endpoint at `your-domain.com/api/webhooks`
 4. Configure payment methods
 
 ### 4. Environment Variables
-
 Create a `.env.local` file:
-
 ```bash
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=
@@ -90,7 +63,6 @@ NEXT_PUBLIC_SITE_URL=
 ```
 
 ### 5. Run Locally
-
 ```bash
 pnpm dev
 ```
@@ -98,7 +70,6 @@ pnpm dev
 ## Payment Flow
 
 The template handles payments through Paystack:
-
 1. User selects a plan
 2. Redirected to Paystack checkout
 3. Payment processing through:
@@ -112,7 +83,6 @@ The template handles payments through Paystack:
 ## Webhooks
 
 Paystack webhooks handle:
-
 - Subscription creation
 - Subscription updates
 - Payment success/failure
@@ -121,7 +91,6 @@ Paystack webhooks handle:
 ## Contributing
 
 Contributions welcome! Please:
-
 1. Fork the repository
 2. Create your feature branch
 3. Commit your changes
@@ -131,7 +100,6 @@ Contributions welcome! Please:
 ## Support
 
 For questions, features, or support:
-
 - Email: your.email@example.com
 - Twitter: @yourhandle
 
