@@ -8,10 +8,30 @@ type Price = Tables<'prices'>;
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
-const supabaseAdmin = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+let adminClient: ReturnType<typeof createClient<Database>> | null = null;
+
+export function createAdminClient() {
+  if (adminClient) return adminClient;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceRole) {
+    throw new Error('Missing Supabase admin credentials');
+  }
+
+  adminClient = createClient<Database>(supabaseUrl, supabaseServiceRole, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
+
+  return adminClient;
+}
+
+// Use the admin client for all operations
+const supabaseAdmin = createAdminClient();
 
 const upsertProductRecord = async (paystackPlan: any) => {
   const productData: Product = {
@@ -117,7 +137,7 @@ const createOrRetrieveCustomer = async ({
   uuid: string;
 }) => {
   try {
-    // Check if the customer already exists in Supabase
+    // Check if customer exists
     const { data: existingCustomer, error: queryError } = await supabaseAdmin
       .from('customers')
       .select('*')
@@ -125,18 +145,25 @@ const createOrRetrieveCustomer = async ({
       .maybeSingle();
 
     if (queryError) {
-      throw new Error(`Supabase customer lookup failed: ${queryError.message}`);
+      throw new Error(`Customer lookup failed: ${queryError.message}`);
     }
 
     if (existingCustomer?.paystack_customer_id) {
       return existingCustomer.paystack_customer_id;
     }
 
-    // If no customer exists, return null - the customer will be created during checkout
-    console.log(
-      'Supabase customer record was missing. Will be created during checkout.'
-    );
-    return null;
+    // Create new customer record
+    const { data: newCustomer, error: insertError } = await supabaseAdmin
+      .from('customers')
+      .insert([{ id: uuid }])
+      .select()
+      .single();
+
+    if (insertError) {
+      throw new Error(`Failed to create customer: ${insertError.message}`);
+    }
+
+    return null; // Will be updated with Paystack customer ID during checkout
   } catch (error) {
     console.error('Error in createOrRetrieveCustomer:', error);
     throw error;
