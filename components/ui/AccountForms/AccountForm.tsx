@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/CustomButton';
 import { toast } from 'sonner';
 import { Tables } from '@/types_db';
-
+import { User } from '@supabase/supabase-js';
 interface Props {
-  user: Tables<'users'>;
+  user: Tables<'users'> & Pick<User, 'email'>;
   subscription:
     | (Tables<'subscriptions'> & {
         prices:
@@ -25,7 +25,7 @@ export default function AccountForm({ user, subscription }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: user?.full_name || '',
-    email: user?.id || ''
+    email: user?.email || ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,18 +36,25 @@ export default function AccountForm({ user, subscription }: Props) {
       const response = await fetch('/api/account/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email
+        })
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to update account');
+        throw new Error(data.error || 'Failed to update account');
       }
 
       toast.success('Account updated successfully');
       router.refresh();
     } catch (error) {
       console.error('Error updating account:', error);
-      toast.error('Failed to update account');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to update account'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -106,6 +113,12 @@ export default function AccountForm({ user, subscription }: Props) {
             Current Plan:{' '}
             <span className="font-semibold text-white">
               {subscription.prices?.products?.name}
+            </span>
+          </p>
+          <p>
+            Next billing:{' '}
+            <span className="font-semibold text-white">
+              {new Date(subscription.current_period_end).toLocaleDateString()}
             </span>
           </p>
         </div>
