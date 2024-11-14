@@ -3,11 +3,14 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Card from '@/components/ui/Card';
+import { Database } from '@/types_db';
 import AccountForm from '@/components/ui/AccountForms/AccountForm';
-import ManageSubscriptionForm from '@/components/ui/AccountForms/ManageSubscriptionForm';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Account() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const {
     data: { user },
@@ -48,32 +51,61 @@ export default async function Account() {
             Manage your account and subscription here.
           </p>
         </div>
-      </div>
-      <div className="p-4">
-        <div className="max-w-6xl mx-auto space-y-8">
-          {/* Account Details Card */}
+        <div className="mt-12 space-y-6">
+          {/* Account Settings */}
           <Card
-            title="Account Details"
-            description="Update your account information."
+            title="Account Settings"
+            description="Manage your account preferences."
           >
-            <div className="mt-8 mb-4 space-y-4">
-              <AccountForm user={userData} subscription={subscription} />
+            <div className="mt-8">
+              {userData && (
+                <AccountForm user={userData} subscription={subscription} />
+              )}
             </div>
           </Card>
 
-          {/* Subscription Management */}
+          {/* Subscription Info */}
           {subscription ? (
             <Card
-              title="Subscription Plan"
+              title="Subscription"
               description="Manage your subscription here."
               footer={
-                <div className="text-sm">
-                  For any billing issues, please contact support.
+                <div className="text-sm text-zinc-500">
+                  For billing issues, please contact support.
                 </div>
               }
             >
-              <div className="mt-8 mb-4">
-                <ManageSubscriptionForm subscription={subscription} />
+              <div className="mt-8 mb-4 space-y-4">
+                <div className="flex justify-between">
+                  <span>Plan</span>
+                  <span className="font-semibold">
+                    {subscription.prices?.products?.name}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Price</span>
+                  <span className="font-semibold">
+                    {new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: subscription.prices?.currency || 'USD'
+                    }).format((subscription.prices?.unit_amount || 0) / 100)}
+                    /{subscription.prices?.interval}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Status</span>
+                  <span className="font-semibold capitalize">
+                    {subscription.status}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Next billing date</span>
+                  <span className="font-semibold">
+                    {new Date(
+                      subscription.current_period_end
+                    ).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
             </Card>
           ) : (
@@ -81,7 +113,7 @@ export default async function Account() {
               title="No Active Subscription"
               description="Choose a plan to get started."
               footer={
-                <div className="text-sm">
+                <div className="text-sm text-zinc-500">
                   View our pricing plans to subscribe.
                 </div>
               }

@@ -6,6 +6,9 @@ import Card from '@/components/ui/Card';
 import { Database } from '@/types_db';
 import ManageSubscriptionForm from '@/components/ui/AccountForms/ManageSubscriptionForm';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function ManageSubscription() {
   const supabase = createServerComponentClient<Database>({
     cookies
@@ -47,7 +50,6 @@ export default async function ManageSubscription() {
           </p>
         </div>
         <div className="mt-12 space-y-4">
-          {/* Current Plan Info */}
           <Card
             title={subscription.prices?.products?.name || 'Current Plan'}
             description={`You are currently on the ${subscription.prices?.interval}ly plan.`}
@@ -69,29 +71,17 @@ export default async function ManageSubscription() {
               </div>
             }
           >
-            {/* You can add payment history here by querying your transactions table */}
             <div className="mt-8 space-y-4">
               <ManageSubscriptionForm subscription={subscription} />
             </div>
           </Card>
 
-          {/* Payment History */}
           <Card
             title="Payment History"
             description="Your recent payments and upcoming charges."
           >
             <div className="mt-8 space-y-4">
-              {/* You can add payment history here by querying your transactions table */}
-            </div>
-          </Card>
-
-          {/* Additional Settings */}
-          <Card
-            title="Subscription Settings"
-            description="Manage your subscription preferences."
-          >
-            <div className="mt-8 space-y-4">
-              {/* Add settings like auto-renewal, email notifications, etc. */}
+              <p className="text-zinc-400">Coming soon...</p>
             </div>
           </Card>
         </div>

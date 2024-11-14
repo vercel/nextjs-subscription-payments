@@ -1,10 +1,9 @@
 'use server';
 
-import { paystack } from '@/utils/paystack/config';
 import { createClient } from '@/utils/supabase/server';
-import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
 import { getURL, getErrorRedirect } from '@/utils/helpers';
 import { Tables } from '@/types_db';
+import { randomUUID } from 'crypto';
 
 type Price = Tables<'prices'>;
 
@@ -30,22 +29,22 @@ export async function checkoutWithPaystack(
       throw new Error('Could not get user session.');
     }
 
-    // Retrieve or create the customer in Paystack
-    let customer: string;
-    try {
-      const customerResult = await createOrRetrieveCustomer({
-        uuid: user?.id || '',
-        email: user?.email || ''
+    // Create a reference ID for this transaction
+    const reference = `sub_${randomUUID()}`;
+
+    // Check if customer exists in our database
+    const { data: customerData } = await supabase
+      .from('customers')
+      .select('paystack_customer_id')
+      .eq('id', user.id)
+      .single();
+
+    if (!customerData?.paystack_customer_id) {
+      // Create customer record if it doesn't exist
+      await supabase.from('customers').upsert({
+        id: user.id,
+        paystack_customer_id: null // Will be updated by webhook after successful payment
       });
-
-      if (!customerResult) {
-        throw new Error('Customer record is null.');
-      }
-
-      customer = customerResult;
-    } catch (err) {
-      console.error(err);
-      throw new Error('Unable to access customer record.');
     }
 
     // Initialize transaction with Paystack
@@ -62,30 +61,42 @@ export async function checkoutWithPaystack(
             email: user.email,
             amount: price.unit_amount, // Amount should be in kobo/cents
             plan: price.id, // This is your plan code in Paystack
-            callback_url: getURL(
-              `${redirectPath}?session_id={CHECKOUT_SESSION_ID}`
-            ),
+            callback_url: getURL(`${redirectPath}?reference=${reference}`),
             metadata: {
               user_id: user.id,
-              price_id: price.id
+              price_id: price.id,
+              reference,
+              custom_fields: [
+                {
+                  display_name: 'User ID',
+                  variable_name: 'user_id',
+                  value: user.id
+                },
+                {
+                  display_name: 'Price ID',
+                  variable_name: 'price_id',
+                  value: price.id
+                }
+              ]
             }
           })
         }
       );
 
       const data = await response.json();
+      console.log('Paystack initialization response:', data);
 
       if (!data.status) {
         throw new Error(data.message);
       }
 
-      // Return the authorization URL where the customer will complete payment
       return { authorizationUrl: data.data.authorization_url };
     } catch (err) {
-      console.error(err);
+      console.error('Paystack initialization error:', err);
       throw new Error('Unable to initialize payment.');
     }
   } catch (error) {
+    console.error('Checkout error:', error);
     if (error instanceof Error) {
       return {
         errorRedirect: getErrorRedirect(
@@ -102,42 +113,6 @@ export async function checkoutWithPaystack(
           'Please try again later or contact a system administrator.'
         )
       };
-    }
-  }
-}
-
-export async function createPaystackPortal(currentPath: string) {
-  try {
-    const supabase = createClient();
-    const {
-      error,
-      data: { user }
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      if (error) {
-        console.error(error);
-      }
-      throw new Error('Could not get user session.');
-    }
-
-    // For Paystack, we'll need to create a custom management page
-    // as they don't have a direct equivalent to Stripe's customer portal
-    return getURL('/account/manage-subscription');
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error);
-      return getErrorRedirect(
-        currentPath,
-        error.message,
-        'Please try again later or contact a system administrator.'
-      );
-    } else {
-      return getErrorRedirect(
-        currentPath,
-        'An unknown error occurred.',
-        'Please try again later or contact a system administrator.'
-      );
     }
   }
 }
