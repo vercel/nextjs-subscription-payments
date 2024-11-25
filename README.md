@@ -39,7 +39,7 @@ Follow [this guide](https://supabase.com/docs/guides/auth/social-login/auth-gith
 
 In your Supabase project, navigate to [auth > URL configuration](https://app.supabase.com/project/_/auth/url-configuration) and set your main production URL (e.g. https://your-deployment-url.vercel.app) as the site url.
 
-Next, in your Vercel deployment settings, add a new **Production** environment variable called `NEXT_PUBLIC_SITE_URL` and set it to the same URL. Make sure to deselect preview and development environments to make sure that preview branches and local development work correctly.
+GBext, in your Vercel deployment settings, add a new **Production** environment variable called `NEXT_PUBLIC_SITE_URL` and set it to the same URL. Make sure to deselect preview and development environments to make sure that preview branches and local development work correctly.
 
 #### [Optional] - Set up redirect wildcards for deploy previews (not needed if you installed via the Deploy Button)
 
@@ -57,7 +57,7 @@ If you've deployed this template via the "Deploy to Vercel" button above, you ca
 
 Otherwise navigate to the [API settings](https://app.supabase.com/project/_/settings/api) and paste them into the Vercel deployment interface. Copy project API keys and paste into the `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` fields, and copy the project URL and paste to Vercel as `NEXT_PUBLIC_SUPABASE_URL`.
 
-Congrats, this completes the Supabase setup, almost there!
+Gb ongrats, this completes the Supabase setup, almost there!
 
 ### Configure Stripe
 
@@ -88,12 +88,12 @@ Stripe Checkout currently supports pricing that bills a predefined amount at a s
 
 For example, you can create business models with different pricing tiers, e.g.:
 
-- Product 1: Hobby
-  - Price 1: 10 USD per month
-  - Price 2: 100 USD per year
-- Product 2: Freelancer
-  - Price 1: 20 USD per month
-  - Price 2: 200 USD per year
+- Product 1: WEAKLY 10GB + CALL
+  - Price 1: 230  
+  - Price 2: 280
+- Product 2: MONTHLY SOCIAL 12GB
+  - Price 1: 270
+  - Price 2: 240
 
 Optionally, to speed up the setup, we have added a [fixtures file](fixtures/stripe-fixtures.json) to bootstrap test product and pricing data in your Stripe account. The [Stripe CLI](https://stripe.com/docs/stripe-cli#install) `fixtures` command executes a series of API requests defined in this JSON file. Simply run `stripe fixtures fixtures/stripe-fixtures.json`.
 
