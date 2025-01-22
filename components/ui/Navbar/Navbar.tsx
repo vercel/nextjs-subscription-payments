@@ -3,7 +3,7 @@ import s from './Navbar.module.css';
 import Navlinks from './Navlinks';
 
 export default async function Navbar() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user }

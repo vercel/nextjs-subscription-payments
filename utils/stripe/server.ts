@@ -1,15 +1,15 @@
 'use server';
 
-import Stripe from 'stripe';
-import { stripe } from '@/utils/stripe/config';
-import { createClient } from '@/utils/supabase/server';
-import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
-import {
-  getURL,
-  getErrorRedirect,
-  calculateTrialEndUnixTimestamp
-} from '@/utils/helpers';
 import { Tables } from '@/types_db';
+import {
+  calculateTrialEndUnixTimestamp,
+  getErrorRedirect,
+  getURL
+} from '@/utils/helpers';
+import { stripe } from '@/utils/stripe/config';
+import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
+import { createClient } from '@/utils/supabase/server';
+import Stripe from 'stripe';
 
 type Price = Tables<'prices'>;
 
@@ -24,7 +24,7 @@ export async function checkoutWithStripe(
 ): Promise<CheckoutResponse> {
   try {
     // Get the user from Supabase auth
-    const supabase = createClient();
+    const supabase = await createClient();
     const {
       error,
       data: { user }
@@ -121,7 +121,7 @@ export async function checkoutWithStripe(
 
 export async function createStripePortal(currentPath: string) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const {
       error,
       data: { user }

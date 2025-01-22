@@ -9,7 +9,7 @@ import { useState } from 'react';
 type OAuthProviders = {
   name: Provider;
   displayName: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
 };
 
 export default function OauthSignIn() {
