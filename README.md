@@ -1,6 +1,8 @@
 # Next.js Subscription Payments Starter
 
-The all-in-one starter kit for high-performance SaaS applications.
+
+> [!WARNING]  
+> This repo has been sunset and replaced by a new template: https://github.com/nextjs/saas-starter
 
 ## Features
 
