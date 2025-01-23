@@ -3,6 +3,15 @@ import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers';
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "";
+
+if (!baseUrl) {
+  throw new Error("Base URL is not defined! Please set NEXT_PUBLIC_SITE_URL in your environment variables.");
+}
+
 export async function GET(request: NextRequest) {
   // The `/auth/callback` route is required for the server-side auth flow implemented
   // by the `@supabase/ssr` package. It exchanges an auth code for the user's session.
@@ -17,7 +26,7 @@ export async function GET(request: NextRequest) {
     if (error) {
       return NextResponse.redirect(
         getErrorRedirect(
-          `${requestUrl.origin}/signin`,
+          `${baseUrl}/signin`,
           error.name,
           "Sorry, we weren't able to log you in. Please try again."
         )
@@ -28,7 +37,7 @@ export async function GET(request: NextRequest) {
   // URL to redirect to after sign in process completes
   return NextResponse.redirect(
     getStatusRedirect(
-      `${requestUrl.origin}/account`,
+      `${baseUrl}/account`,
       'Success!',
       'You are now signed in.'
     )
